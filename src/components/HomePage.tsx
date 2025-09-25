@@ -26,6 +26,18 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
   const todayStr = today.toISOString().split('T')[0];
   const todayEntry = entries.find(entry => entry.date === todayStr);
 
+  // Déterminer le message d'accueil selon l'heure
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour >= 6 && hour < 18) {
+      return { message: 'Bonjour !', emoji: '☀️' };
+    } else {
+      return { message: 'Bonsoir !', emoji: '🌙' };
+    }
+  };
+
+  const greeting = getGreeting();
+
   return (
     <div className="min-h-screen p-6 pb-24 flex flex-col">
       {/* Header avec salutation */}
@@ -34,7 +46,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
           <Sparkles className="w-8 h-8 text-primary mx-auto mb-4" />
         </div>
         <h1 className="text-4xl font-bold text-gradient-primary mb-2">
-          Bonsoir ! 🌙
+          {greeting.message} {greeting.emoji}
         </h1>
         <p className="text-lg text-muted-foreground max-w-md mx-auto">
           {user 

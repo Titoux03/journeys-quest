@@ -132,7 +132,7 @@ const ProgressScreenContent: React.FC<ProgressScreenProps> = ({ entries, onNavig
                     )}
                   </div>
                   <div className={`score-indicator ${getScoreClass(entry.totalScore)} !w-12 !h-12 !text-sm`}>
-                    {entry.totalScore}
+                    {entry.totalScore > 10 ? Math.round(entry.totalScore) : entry.totalScore}
                   </div>
                 </div>
               </div>
