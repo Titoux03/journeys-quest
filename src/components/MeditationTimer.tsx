@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, RotateCcw, Brain, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PremiumLock } from '@/components/PremiumLock';
+import { playStartSound, playEndSound } from '@/utils/audioUtils';
+import { useToast } from '@/hooks/use-toast';
 
 interface MeditationTimerProps {
   onNavigate: (screen: string) => void;
@@ -31,6 +33,7 @@ const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) 
   const [timeLeft, setTimeLeft] = useState(15 * 60); // seconds
   const [timerState, setTimerState] = useState<TimerState>('idle');
   const intervalRef = useRef<NodeJS.Timeout>();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (timerState === 'running') {
@@ -38,6 +41,10 @@ const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) 
         setTimeLeft(prev => {
           if (prev <= 1) {
             setTimerState('completed');
+            // Jouer le son de fin
+            playEndSound().catch(() => {
+              // Son non critique, ne pas bloquer l'interface
+            });
             return 0;
           }
           return prev - 1;
@@ -62,10 +69,23 @@ const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) 
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const handleStart = () => {
+  const handleStart = async () => {
     if (timerState === 'idle') {
       setTimeLeft(duration * 60);
     }
+    
+    // Jouer le son de début
+    try {
+      await playStartSound();
+    } catch (error) {
+      // Son non critique, continuer même en cas d'erreur
+      toast({
+        title: "Son non disponible",
+        description: "Les sons de méditation nécessitent l'interaction utilisateur.",
+        variant: "default",
+      });
+    }
+    
     setTimerState('running');
   };
 
