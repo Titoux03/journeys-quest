@@ -1,14 +1,17 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface PremiumContextType {
   isPremium: boolean;
   productId: string | null;
   subscriptionEnd: string | null;
   isLoading: boolean;
-  checkSubscription: () => Promise<void>;
+  checkPremiumStatus: () => Promise<void>;
   showUpgradeModal: () => void;
   hideUpgradeModal: () => void;
   upgradeModalVisible: boolean;
+  purchasePremium: () => Promise<void>;
+  loading: boolean;
 }
 
 const PremiumContext = createContext<PremiumContextType | undefined>(undefined);
@@ -23,26 +26,46 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [upgradeModalVisible, setUpgradeModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // For demo purposes - in real app this would check with Supabase/Stripe
-  const checkSubscription = async () => {
+  const checkPremiumStatus = async () => {
     setIsLoading(true);
     try {
-      // Simulate API call - replace with actual Supabase function call
-      const stored = localStorage.getItem('journeys-premium');
-      if (stored === 'true') {
+      const { data } = await supabase.functions.invoke('check-premium');
+      if (data?.isPremium) {
         setIsPremium(true);
-        setProductId('prod_T7VWYhmpYJxGnB');
-        setSubscriptionEnd(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString());
+        setProductId('prod_T7WZyN63dpDW6k');
+        setSubscriptionEnd(data.purchaseDate);
       } else {
         setIsPremium(false);
         setProductId(null);
         setSubscriptionEnd(null);
       }
     } catch (error) {
-      console.error('Error checking subscription:', error);
+      console.error('Error checking premium status:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const purchasePremium = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase.functions.invoke('create-payment');
+      
+      if (error) {
+        console.error('Error creating payment:', error);
+        return;
+      }
+
+      if (data?.url) {
+        // Ouvrir Stripe Checkout dans un nouvel onglet
+        window.open(data.url, '_blank');
+      }
+    } catch (error) {
+      console.error('Error purchasing premium:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,9 +73,9 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
   const hideUpgradeModal = () => setUpgradeModalVisible(false);
 
   useEffect(() => {
-    checkSubscription();
+    checkPremiumStatus();
     // Check every minute for real-time updates
-    const interval = setInterval(checkSubscription, 60000);
+    const interval = setInterval(checkPremiumStatus, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -63,10 +86,12 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
         productId,
         subscriptionEnd,
         isLoading,
-        checkSubscription,
+        checkPremiumStatus,
         showUpgradeModal,
         hideUpgradeModal,
         upgradeModalVisible,
+        purchasePremium,
+        loading,
       }}
     >
       {children}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Crown, Sparkles, TrendingUp, Shield, Dumbbell, Brain, Heart, Calendar } from 'lucide-react';
+import { X, Crown, Sparkles, TrendingUp, Shield, Dumbbell, Brain, Heart, Calendar, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePremium } from '@/hooks/usePremium';
 
@@ -14,18 +14,13 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
   onClose, 
   feature 
 }) => {
-  const { isPremium } = usePremium();
+  const { isPremium, purchasePremium, loading } = usePremium();
 
   if (!isVisible || isPremium) return null;
 
   const handleUpgrade = async () => {
-    // For demo - in real app, this would create Stripe checkout session
-    try {
-      localStorage.setItem('journeys-premium', 'true');
-      window.location.reload();
-    } catch (error) {
-      console.error('Upgrade error:', error);
-    }
+    await purchasePremium();
+    onClose();
   };
 
   const premiumFeatures = [
@@ -154,11 +149,21 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
         <div className="space-y-4">
           <Button
             onClick={handleUpgrade}
+            disabled={loading}
             className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-            <Crown className="w-5 h-5 mr-2" />
-            Acheter Journeys Premium
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                Redirection...
+              </>
+            ) : (
+              <>
+                <Crown className="w-5 h-5 mr-2" />
+                Acheter Journeys Premium
+              </>
+            )}
           </Button>
           
           <div className="text-center">
