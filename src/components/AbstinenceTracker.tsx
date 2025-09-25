@@ -118,9 +118,22 @@ const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate
         <h1 className="text-3xl font-bold text-gradient-primary mb-2">
           Contrôle & Liberté
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground mb-3">
           Reprends le contrôle de tes habitudes
         </p>
+        <div className="journey-card-premium">
+          <div className="text-sm text-muted-foreground leading-relaxed">
+            <p className="mb-2">
+              <strong className="text-foreground">Libère-toi des mauvaises habitudes :</strong>
+            </p>
+            <ul className="space-y-1 pl-4">
+              <li>• Films pour adultes et contenus addictifs</li>
+              <li>• Scroll infini sur les réseaux sociaux</li>
+              <li>• Dérive et procrastination</li>
+              <li>• Toute habitude qui t'empêche d'avancer</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       {/* Main Counter */}
