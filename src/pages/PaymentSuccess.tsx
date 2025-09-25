@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Crown, CheckCircle, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { usePremium } from '@/hooks/usePremium';
+import { InstallPWAModal } from '@/components/InstallPWAModal';
 
 export const PaymentSuccess: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -13,6 +14,7 @@ export const PaymentSuccess: React.FC = () => {
   const [verifying, setVerifying] = useState(true);
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPWAModal, setShowPWAModal] = useState(false);
 
   const sessionId = searchParams.get('session_id');
 
@@ -35,6 +37,8 @@ export const PaymentSuccess: React.FC = () => {
           setVerified(true);
           // Mettre à jour le statut premium
           await checkPremiumStatus();
+          // Afficher le modal PWA après un court délai
+          setTimeout(() => setShowPWAModal(true), 1500);
         } else {
           setError('Paiement non confirmé');
         }
@@ -126,6 +130,11 @@ export const PaymentSuccess: React.FC = () => {
           </Button>
         </CardContent>
       </Card>
+      
+      <InstallPWAModal 
+        isOpen={showPWAModal} 
+        onClose={() => setShowPWAModal(false)} 
+      />
     </div>
   );
 };
