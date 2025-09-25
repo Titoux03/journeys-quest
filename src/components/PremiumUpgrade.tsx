@@ -30,6 +30,11 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
 
   const premiumFeatures = [
     {
+      icon: <Brain className="w-6 h-6" />,
+      title: "Méditation & Deep Work",
+      description: "Minuteurs premium pour concentration et sérénité"
+    },
+    {
       icon: <Shield className="w-6 h-6" />,
       title: "Compteur d'abstinence",
       description: "Suivez vos progrès avec des statistiques détaillées"
@@ -53,11 +58,6 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
       icon: <Sparkles className="w-6 h-6" />,
       title: "Citations personnalisées",
       description: "Messages inspirants générés par IA chaque jour"
-    },
-    {
-      icon: <Heart className="w-6 h-6" />,
-      title: "Support prioritaire",
-      description: "Assistance dédiée pour optimiser votre parcours"
     }
   ];
 
@@ -122,13 +122,13 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           <div className="journey-card bg-gradient-to-br from-primary/5 to-primary-glow/5 border-2 border-primary/20 mb-6">
             <div className="flex items-center justify-center space-x-4">
               <div>
-                <div className="text-3xl font-bold text-gradient-primary">9,90€</div>
-                <div className="text-sm text-muted-foreground">par mois</div>
+                <div className="text-4xl font-bold text-gradient-primary">14,99€</div>
+                <div className="text-sm text-muted-foreground">paiement unique</div>
               </div>
               <div className="h-12 w-px bg-border"></div>
               <div className="text-left">
-                <div className="text-sm text-success font-medium">7 jours gratuits</div>
-                <div className="text-xs text-muted-foreground">Résiliable à tout moment</div>
+                <div className="text-sm text-success font-medium">Accès à vie</div>
+                <div className="text-xs text-muted-foreground">Aucun abonnement</div>
               </div>
             </div>
           </div>
@@ -137,15 +137,15 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           <div className="flex items-center justify-center space-x-6 text-sm text-muted-foreground mb-6">
             <div className="flex items-center space-x-1">
               <Calendar className="w-4 h-4 text-success" />
-              <span>Essai gratuit</span>
+              <span>Achat unique</span>
             </div>
             <div className="flex items-center space-x-1">
               <Shield className="w-4 h-4 text-success" />
-              <span>Sans engagement</span>
+              <span>Accès permanent</span>
             </div>
             <div className="flex items-center space-x-1">
               <Sparkles className="w-4 h-4 text-success" />
-              <span>Accès immédiat</span>
+              <span>Toutes les fonctionnalités</span>
             </div>
           </div>
         </div>
@@ -158,7 +158,7 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           >
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
             <Crown className="w-5 h-5 mr-2" />
-            Commencer l'essai gratuit
+            Acheter Journeys Premium
           </Button>
           
           <div className="text-center">
@@ -166,7 +166,7 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
               onClick={onClose}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              Continuer avec la version gratuite
+              Continuer en version limitée
             </button>
           </div>
         </div>
@@ -180,11 +180,11 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
             </div>
             <div className="flex items-center space-x-1">
               <Heart className="w-3 h-3" />
-              <span>Satisfaction garantie</span>
+              <span>Accès à vie garanti</span>
             </div>
             <div className="flex items-center space-x-1">
               <Calendar className="w-3 h-3" />
-              <span>Annulation facile</span>
+              <span>Aucun abonnement</span>
             </div>
           </div>
         </div>

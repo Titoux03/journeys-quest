@@ -73,19 +73,32 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
           </p>
         </button>
 
-        {/* Meditation - Always Free */}
+        {/* Meditation - Now Premium */}
         <button
-          onClick={() => onNavigate('meditation')}
-          className="journey-card hover:journey-card-glow transition-all duration-300 p-6 text-left group"
+          onClick={() => isPremium ? onNavigate('meditation') : showUpgradeModal()}
+          className={`journey-card transition-all duration-300 p-6 text-left group relative ${
+            isPremium ? 'hover:journey-card-glow' : 'opacity-80'
+          }`}
         >
+          {!isPremium && (
+            <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+              <Crown className="w-3 h-3 text-primary-foreground" />
+            </div>
+          )}
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 rounded-xl bg-accent/10 text-accent group-hover:bg-accent group-hover:text-accent-foreground transition-colors">
+            <div className={`p-3 rounded-xl transition-colors ${
+              isPremium 
+                ? 'bg-accent/10 text-accent group-hover:bg-accent group-hover:text-accent-foreground'
+                : 'bg-muted/20 text-muted-foreground'
+            }`}>
               <Brain className="w-6 h-6" />
             </div>
           </div>
-          <h3 className="font-semibold text-lg mb-2">Méditation</h3>
+          <h3 className={`font-semibold text-lg mb-2 ${!isPremium && 'text-muted-foreground'}`}>
+            Méditation & Deep Work
+          </h3>
           <p className="text-sm text-muted-foreground">
-            Minuteur pour méditation et deep work
+            Minuteurs premium pour concentration
           </p>
         </button>
 
@@ -193,14 +206,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
               <Crown className="w-8 h-8 text-primary-foreground" />
             </div>
             <h3 className="text-xl font-bold text-gradient-primary mb-2">
-              Passez à Journeys Premium
+              Débloquez Journeys Premium
             </h3>
             <p className="text-muted-foreground mb-4">
-              Débloque toutes les fonctionnalités pour optimiser ton parcours
+              Accès à vie à toutes les fonctionnalités pour seulement 14,99€
             </p>
             <div className="inline-flex items-center space-x-2 px-6 py-3 rounded-xl bg-primary/10 text-primary font-medium group-hover:bg-primary/20 transition-colors">
               <Sparkles className="w-5 h-5" />
-              <span>7 jours gratuits</span>
+              <span>Paiement unique</span>
             </div>
           </div>
         </button>

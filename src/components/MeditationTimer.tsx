@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, RotateCcw, Brain, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { PremiumLock } from '@/components/PremiumLock';
 
 interface MeditationTimerProps {
   onNavigate: (screen: string) => void;
@@ -17,6 +18,14 @@ const presetDurations = [
 ];
 
 export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onNavigate }) => {
+  return (
+    <PremiumLock feature="Méditation & Deep Work" className="min-h-screen">
+      <MeditationTimerContent onNavigate={onNavigate} />
+    </PremiumLock>
+  );
+};
+
+const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) => {
   const [mode, setMode] = useState<TimerMode>('meditation');
   const [duration, setDuration] = useState(15); // minutes
   const [timeLeft, setTimeLeft] = useState(15 * 60); // seconds
