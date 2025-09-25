@@ -7,7 +7,8 @@ import {
   Timer, 
   Shield, 
   Activity,
-  LogOut 
+  LogOut,
+  LogIn
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -21,12 +22,15 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   currentScreen, 
   onNavigate 
 }) => {
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate('/auth');
+  const handleAuthAction = async () => {
+    if (user) {
+      await signOut();
+    } else {
+      navigate('/auth');
+    }
   };
 
   const navItems = [
@@ -65,11 +69,24 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
           
           <Button
             variant="ghost"
-            onClick={handleSignOut}
-            className="flex flex-col items-center justify-center gap-1 h-auto py-3 px-1 rounded-none border-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200 min-h-[72px]"
+            onClick={handleAuthAction}
+            className={`flex flex-col items-center justify-center gap-1 h-auto py-3 px-1 rounded-none border-0 transition-all duration-200 min-h-[72px] ${
+              user 
+                ? 'text-muted-foreground hover:text-destructive hover:bg-destructive/10'
+                : 'text-muted-foreground hover:text-primary hover:bg-primary/10'
+            }`}
           >
-            <LogOut size={20} className="shrink-0" />
-            <span className="text-[10px] font-medium leading-tight text-center">Sortir</span>
+            {user ? (
+              <>
+                <LogOut size={20} className="shrink-0" />
+                <span className="text-[10px] font-medium leading-tight text-center">Sortir</span>
+              </>
+            ) : (
+              <>
+                <LogIn size={20} className="shrink-0" />
+                <span className="text-[10px] font-medium leading-tight text-center">Connexion</span>
+              </>
+            )}
           </Button>
         </div>
       </div>

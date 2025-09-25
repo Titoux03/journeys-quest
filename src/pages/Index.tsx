@@ -9,6 +9,7 @@ import { StretchingRoutine } from '@/components/StretchingRoutine';
 import { DailyQuote } from '@/components/DailyQuote';
 import { PremiumUpgrade } from '@/components/PremiumUpgrade';
 import { BottomNavigation } from '@/components/BottomNavigation';
+import { UserStatus } from '@/components/UserStatus';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { usePremium } from '@/hooks/usePremium';
@@ -32,12 +33,19 @@ const Index = () => {
     totalScore: number;
   } | null>(null);
 
-  // Rediriger vers la page d'authentification si pas connecté
+  // Stocker les données localement si l'utilisateur n'est pas connecté
   useEffect(() => {
-    if (!loading && !user) {
-      navigate('/auth');
+    if (!user) {
+      const savedEntries = localStorage.getItem('journalEntries');
+      if (savedEntries) {
+        try {
+          setJournalEntries(JSON.parse(savedEntries));
+        } catch (error) {
+          console.error('Erreur lors du chargement des données locales:', error);
+        }
+      }
     }
-  }, [user, loading, navigate]);
+  }, [user]);
 
   const handleJournalComplete = (scores: Record<string, number>, totalScore: number) => {
     const today = new Date().toISOString().split('T')[0];
@@ -50,12 +58,17 @@ const Index = () => {
       mood
     };
 
-    setJournalEntries(prev => {
-      const filtered = prev.filter(e => e.date !== today);
-      return [entry, ...filtered].sort((a, b) => 
-        new Date(b.date).getTime() - new Date(a.date).getTime()
-      );
-    });
+    const newEntries = journalEntries.filter(e => e.date !== today);
+    const updatedEntries = [entry, ...newEntries].sort((a, b) => 
+      new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+
+    setJournalEntries(updatedEntries);
+    
+    // Sauvegarder en localStorage si pas d'utilisateur connecté
+    if (!user) {
+      localStorage.setItem('journalEntries', JSON.stringify(updatedEntries));
+    }
 
     setCurrentJournalData({ scores, totalScore });
     setCurrentScreen('reflection');
@@ -63,13 +76,19 @@ const Index = () => {
 
   const handleReflectionComplete = (reflection: string) => {
     const today = new Date().toISOString().split('T')[0];
-    setJournalEntries(prev => 
-      prev.map(entry => 
-        entry.date === today 
-          ? { ...entry, reflection }
-          : entry
-      )
+    const updatedEntries = journalEntries.map(entry => 
+      entry.date === today 
+        ? { ...entry, reflection }
+        : entry
     );
+    
+    setJournalEntries(updatedEntries);
+    
+    // Sauvegarder en localStorage si pas d'utilisateur connecté
+    if (!user) {
+      localStorage.setItem('journalEntries', JSON.stringify(updatedEntries));
+    }
+    
     setCurrentScreen('home');
   };
 
@@ -80,11 +99,6 @@ const Index = () => {
         <div className="w-8 h-8 animate-spin border-2 border-primary border-t-transparent rounded-full"></div>
       </div>
     );
-  }
-
-  // Si pas d'utilisateur, rien à afficher (redirection en cours)
-  if (!user) {
-    return null;
   }
 
   const renderScreen = () => {
@@ -118,6 +132,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen pb-24">
+      {/* User Status Header */}
+      <UserStatus />
+      
       {renderScreen()}
 
       {/* Navigation en bas */}

@@ -1,6 +1,8 @@
 import React from 'react';
-import { Lock, Crown, Sparkles } from 'lucide-react';
+import { Lock, Crown, Sparkles, UserPlus } from 'lucide-react';
 import { usePremium } from '@/hooks/usePremium';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 interface PremiumLockProps {
   children: React.ReactNode;
@@ -14,6 +16,8 @@ export const PremiumLock: React.FC<PremiumLockProps> = ({
   className = "" 
 }) => {
   const { isPremium, showUpgradeModal } = usePremium();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   if (isPremium) {
     return <>{children}</>;
@@ -28,13 +32,10 @@ export const PremiumLock: React.FC<PremiumLockProps> = ({
 
       {/* Premium Overlay */}
       <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-background/80 to-background/60 backdrop-blur-sm">
-        <button
-          onClick={() => showUpgradeModal()}
-          className="journey-card-premium text-center hover:scale-105 transition-all duration-300 p-6 max-w-xs mx-4 group"
-        >
+        <div className="text-center p-6 max-w-sm mx-4">
           {/* Premium Icon */}
           <div className="relative mb-4">
-            <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center group-hover:shadow-lg group-hover:shadow-primary/30 transition-all duration-300">
+            <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center shadow-lg shadow-primary/30 transition-all duration-300">
               <Crown className="w-8 h-8 text-primary-foreground" />
             </div>
             <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-gradient-to-br from-primary-glow to-primary flex items-center justify-center animate-pulse">
@@ -47,16 +48,40 @@ export const PremiumLock: React.FC<PremiumLockProps> = ({
             Fonctionnalité Premium
           </h3>
           
-          <p className="text-sm text-muted-foreground mb-4">
+          <p className="text-sm text-muted-foreground mb-6">
             {feature} est disponible avec Journeys Premium
           </p>
 
-          {/* CTA */}
-          <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-primary/10 text-primary font-medium text-sm group-hover:bg-primary/20 transition-colors">
-            <Sparkles className="w-4 h-4" />
-            <span>Débloquer</span>
+          {/* Action Buttons */}
+          <div className="space-y-3">
+            {!user ? (
+              <>
+                <button
+                  onClick={() => navigate('/auth')}
+                  className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-xl bg-secondary text-secondary-foreground font-medium text-sm hover:bg-secondary/80 transition-colors"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  <span>Créer un compte</span>
+                </button>
+                <button
+                  onClick={() => showUpgradeModal()}
+                  className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>Acheter Premium</span>
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => showUpgradeModal()}
+                className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>Débloquer Premium</span>
+              </button>
+            )}
           </div>
-        </button>
+        </div>
       </div>
     </div>
   );

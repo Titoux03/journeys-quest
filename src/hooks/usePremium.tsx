@@ -31,6 +31,16 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
   const checkPremiumStatus = async () => {
     setIsLoading(true);
     try {
+      // Si pas d'utilisateur connecté, pas de premium
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        setIsPremium(false);
+        setProductId(null);
+        setSubscriptionEnd(null);
+        setIsLoading(false);
+        return;
+      }
+
       const { data } = await supabase.functions.invoke('check-premium');
       if (data?.isPremium) {
         setIsPremium(true);
@@ -43,6 +53,9 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
       }
     } catch (error) {
       console.error('Error checking premium status:', error);
+      setIsPremium(false);
+      setProductId(null);
+      setSubscriptionEnd(null);
     } finally {
       setIsLoading(false);
     }
@@ -51,6 +64,15 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
   const purchasePremium = async () => {
     try {
       setLoading(true);
+      
+      // Vérifier si l'utilisateur est connecté
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        console.error('User must be logged in to purchase premium');
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase.functions.invoke('create-payment');
       
       if (error) {
@@ -74,9 +96,21 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
 
   useEffect(() => {
     checkPremiumStatus();
+    
+    // Écouter les changements d'authentification
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+        checkPremiumStatus();
+      }
+    });
+
     // Check every minute for real-time updates
     const interval = setInterval(checkPremiumStatus, 60000);
-    return () => clearInterval(interval);
+    
+    return () => {
+      subscription.unsubscribe();
+      clearInterval(interval);
+    };
   }, []);
 
   return (

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { DailyQuote } from '@/components/DailyQuote';
 import { Sparkles, TrendingUp, Target, Brain, Shield, Dumbbell, Crown } from 'lucide-react';
 import { usePremium } from '@/hooks/usePremium';
+import { useAuth } from '@/hooks/useAuth';
 
 interface JournalEntry {
   date: string;
@@ -19,6 +20,7 @@ interface HomePageProps {
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
   const [currentQuote, setCurrentQuote] = useState<string>('');
   const { isPremium, showUpgradeModal } = usePremium();
+  const { user } = useAuth();
 
   const today = new Date();
   const todayStr = today.toISOString().split('T')[0];
@@ -35,8 +37,19 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
           Bonsoir ! 🌙
         </h1>
         <p className="text-lg text-muted-foreground max-w-md mx-auto">
-          Bienvenue dans votre sanctuaire premium de bien-être
+          {user 
+            ? 'Bienvenue dans votre espace de bien-être quotidien' 
+            : 'Commencez votre parcours de bien-être dès aujourd\'hui'
+          }
         </p>
+        
+        {!user && (
+          <div className="mt-4 p-3 bg-primary/5 rounded-xl border border-primary/20">
+            <p className="text-sm text-muted-foreground">
+              💡 Créez un compte pour sauvegarder vos progrès et débloquer les fonctionnalités premium
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Premium Status Banner */}

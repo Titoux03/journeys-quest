@@ -1,7 +1,9 @@
 import React from 'react';
-import { X, Crown, Sparkles, TrendingUp, Shield, Dumbbell, Brain, Heart, Calendar, Loader2 } from 'lucide-react';
+import { X, Crown, Sparkles, TrendingUp, Shield, Dumbbell, Brain, Heart, Calendar, Loader2, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePremium } from '@/hooks/usePremium';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 interface PremiumUpgradeProps {
   isVisible: boolean;
@@ -15,10 +17,19 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
   feature 
 }) => {
   const { isPremium, purchasePremium, loading } = usePremium();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   if (!isVisible || isPremium) return null;
 
   const handleUpgrade = async () => {
+    if (!user) {
+      // Rediriger vers la page d'authentification
+      navigate('/auth');
+      onClose();
+      return;
+    }
+    
     await purchasePremium();
     onClose();
   };
@@ -74,7 +85,7 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           </div>
           
           <h1 className="text-3xl font-bold text-gradient-primary mb-3">
-            Débloque ton potentiel complet
+            {!user ? 'Créez votre compte Premium' : 'Débloque ton potentiel complet'}
           </h1>
           
           {feature && (
@@ -84,7 +95,10 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           )}
           
           <p className="text-muted-foreground">
-            Transformez votre routine quotidienne en véritable parcours de développement personnel
+            {!user 
+              ? 'Créez un compte pour sauvegarder vos progrès et débloquer toutes les fonctionnalités premium'
+              : 'Transformez votre routine quotidienne en véritable parcours de développement personnel'
+            }
           </p>
         </div>
 
@@ -147,24 +161,46 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
 
         {/* CTA */}
         <div className="space-y-4">
-          <Button
-            onClick={handleUpgrade}
-            disabled={loading}
-            className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-            {loading ? (
-              <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Redirection...
-              </>
-            ) : (
-              <>
+          {!user ? (
+            <div className="space-y-3">
+              <Button
+                onClick={() => { navigate('/auth'); onClose(); }}
+                className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                <UserPlus className="w-5 h-5 mr-2" />
+                Créer un compte
+              </Button>
+              
+              <Button
+                onClick={handleUpgrade}
+                variant="outline"
+                className="w-full text-lg py-6 border-primary/20 hover:bg-primary/5"
+              >
                 <Crown className="w-5 h-5 mr-2" />
-                Acheter Journeys Premium
-              </>
-            )}
-          </Button>
+                Acheter sans compte
+              </Button>
+            </div>
+          ) : (
+            <Button
+              onClick={handleUpgrade}
+              disabled={loading}
+              className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Redirection...
+                </>
+              ) : (
+                <>
+                  <Crown className="w-5 h-5 mr-2" />
+                  Acheter Journeys Premium
+                </>
+              )}
+            </Button>
+          )}
           
           <div className="text-center">
             <button

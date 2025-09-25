@@ -126,6 +126,9 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
         toast.error('Erreur lors de la sauvegarde');
       }
       setSaving(false);
+    } else {
+      // Indiquer que les données sont sauvegardées localement
+      toast.success('Journal sauvegardé ! Créez un compte pour synchroniser vos données.');
     }
     
     onComplete(scores, totalScore);
