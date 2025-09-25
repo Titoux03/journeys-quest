@@ -50,3 +50,6 @@ policy = "oneshot"
 
 [functions.verify-payment]
 verify_jwt = false
+
+[functions.generate-daily-quote]
+verify_jwt = false
