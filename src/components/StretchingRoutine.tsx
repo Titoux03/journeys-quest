@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Check, Clock, Play, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { PremiumLock } from '@/components/PremiumLock';
 
 interface Exercise {
   id: string;
@@ -15,6 +16,14 @@ interface StretchingRoutineProps {
 }
 
 export const StretchingRoutine: React.FC<StretchingRoutineProps> = ({ onNavigate }) => {
+  return (
+    <PremiumLock feature="Routine Stretching" className="min-h-screen">
+      <StretchingRoutineContent onNavigate={onNavigate} />
+    </PremiumLock>
+  );
+};
+
+const StretchingRoutineContent: React.FC<StretchingRoutineProps> = ({ onNavigate }) => {
   const [exercises, setExercises] = useState<Exercise[]>([
     {
       id: '1',

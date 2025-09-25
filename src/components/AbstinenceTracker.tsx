@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, RotateCcw, Trophy, Target } from 'lucide-react';
+import { Shield, RotateCcw, Trophy, Target, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { PremiumLock } from '@/components/PremiumLock';
 
 interface AbstinenceTrackerProps {
   onNavigate: (screen: string) => void;
 }
 
 export const AbstinenceTracker: React.FC<AbstinenceTrackerProps> = ({ onNavigate }) => {
+  return (
+    <PremiumLock feature="Compteur d'abstinence" className="min-h-screen">
+      <AbstinenceTrackerContent onNavigate={onNavigate} />
+    </PremiumLock>
+  );
+};
+
+const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate }) => {
   const [days, setDays] = useState(0);
   const [startDate, setStartDate] = useState<string | null>(null);
 

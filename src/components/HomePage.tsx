@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Sparkles, Target, Calendar, Award, ArrowRight } from 'lucide-react';
-import { DailyQuote } from './DailyQuote';
+import { DailyQuote } from '@/components/DailyQuote';
+import { Sparkles, TrendingUp, Target, Brain, Shield, Dumbbell, Crown } from 'lucide-react';
+import { usePremium } from '@/hooks/usePremium';
 
 interface JournalEntry {
   date: string;
@@ -11,40 +12,17 @@ interface JournalEntry {
 }
 
 interface HomePageProps {
-  onNavigate: (screen: 'home' | 'journal' | 'reflection' | 'progress') => void;
+  onNavigate: (screen: string) => void;
   entries: JournalEntry[];
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
-  const [perplexityApiKey, setPerplexityApiKey] = useState<string>(() => {
-    return localStorage.getItem('perplexity-api-key') || '';
-  });
+  const [currentQuote, setCurrentQuote] = useState<string>('');
+  const { isPremium, showUpgradeModal } = usePremium();
 
-  const handleApiKeyChange = (newKey: string) => {
-    setPerplexityApiKey(newKey);
-    localStorage.setItem('perplexity-api-key', newKey);
-  };
   const today = new Date();
   const todayStr = today.toISOString().split('T')[0];
   const todayEntry = entries.find(entry => entry.date === todayStr);
-  
-  const weekData = entries.slice(-7);
-  const averageScore = weekData.length > 0 
-    ? (weekData.reduce((sum, entry) => sum + entry.totalScore, 0) / weekData.length).toFixed(1)
-    : '0';
-  
-  const streak = calculateStreak(entries);
-  const totalPoints = entries.reduce((sum, entry) => sum + Math.round(entry.totalScore * 10), 0);
-
-  const inspirationalQuotes = [
-    "Chaque jour est une nouvelle page à écrire ✨",
-    "Votre croissance personnelle commence par un simple pas 🌱",
-    "Aujourd'hui est rempli de possibilités infinies 🌟",
-    "Votre bien-être mérite toute votre attention 💫",
-    "Transformez vos habitudes, transformez votre vie 🦋"
-  ];
-
-  const todayQuote = inspirationalQuotes[today.getDate() % inspirationalQuotes.length];
 
   return (
     <div className="min-h-screen p-6 pb-24 flex flex-col">
@@ -61,130 +39,172 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
         </p>
       </div>
 
-      {/* Citation du jour */}
-      <div className="mb-8">
-        <DailyQuote 
-          apiKey={perplexityApiKey}
-          onApiKeyChange={handleApiKeyChange}
-        />
-      </div>
-
-      {/* Statut du jour */}
-      <div className="journey-card-premium mb-6 animate-scale-in">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-card-foreground">Aujourd'hui</h2>
-          <Calendar className="w-6 h-6 text-primary" />
-        </div>
-        
-        {todayEntry ? (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Score du jour</span>
-              <div className={`score-indicator ${
-                todayEntry.mood === 'high' ? 'score-high' : 
-                todayEntry.mood === 'medium' ? 'score-medium' : 'score-low'
-              }`}>
-                {todayEntry.totalScore.toFixed(1)}
-              </div>
-            </div>
-            <div className="text-center">
-              <p className="text-success font-medium">✅ Journal complété !</p>
-              <button
-                onClick={() => onNavigate('reflection')}
-                className="journey-button-accent mt-2 text-sm px-4 py-2"
-              >
-                Voir la réflexion
-              </button>
-            </div>
+      {/* Premium Status Banner */}
+      {isPremium && (
+        <div className="journey-card-glow mb-6">
+          <div className="flex items-center justify-center space-x-3">
+            <Crown className="w-6 h-6 text-primary" />
+            <span className="text-lg font-semibold text-gradient-primary">
+              Journeys Premium
+            </span>
+            <Crown className="w-6 h-6 text-primary" />
           </div>
-        ) : (
-          <div className="text-center">
-            <p className="text-muted-foreground mb-4">
-              Commencez votre journée par une note de bien-être
-            </p>
-            <button
-              onClick={() => onNavigate('journal')}
-              className="journey-button-primary flex items-center gap-2 mx-auto pulse-glow"
-            >
-              <Target className="w-5 h-5" />
-              Évaluer ma journée
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* Statistiques */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="journey-card-premium text-center animate-slide-up" style={{ animationDelay: '0.1s' }}>
-          <Award className="w-8 h-8 text-primary mx-auto mb-2" />
-          <div className="text-2xl font-bold text-foreground">{totalPoints}</div>
-          <div className="text-xs text-muted-foreground">Points totaux</div>
-        </div>
-        
-        <div className="journey-card-premium text-center animate-slide-up" style={{ animationDelay: '0.2s' }}>
-          <div className="text-2xl font-bold text-primary">{streak}</div>
-          <div className="text-xs text-muted-foreground">Jours consécutifs</div>
-        </div>
-        
-        <div className="journey-card-premium text-center animate-slide-up" style={{ animationDelay: '0.3s' }}>
-          <div className="text-2xl font-bold text-accent-light">{averageScore}</div>
-          <div className="text-xs text-muted-foreground">Moyenne 7j</div>
-        </div>
-      </div>
+      {/* Daily Quote */}
+      <DailyQuote />
 
-      {/* Actions rapides */}
-      <div className="space-y-4 mt-auto">
-        <h3 className="text-lg font-semibold text-card-foreground mb-3">Actions rapides</h3>
-        
-        <button
-          onClick={() => onNavigate('progress')}
-          className="w-full journey-card-premium hover:journey-card-glow transition-all duration-300 p-4 text-left"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <h4 className="font-medium text-card-foreground">Voir mes progrès</h4>
-              <p className="text-sm text-muted-foreground">Analysez votre évolution</p>
-            </div>
-            <ArrowRight className="w-5 h-5 text-primary" />
-          </div>
-        </button>
-        
+      {/* Quick Actions Grid */}
+      <div className="grid grid-cols-2 gap-4 mb-8">
+        {/* Journal - Always Free */}
         <button
           onClick={() => onNavigate('journal')}
-          className="w-full journey-card-premium hover:journey-card-glow transition-all duration-300 p-4 text-left"
+          className="journey-card hover:journey-card-glow transition-all duration-300 p-6 text-left group"
         >
-          <div className="flex items-center justify-between">
-            <div>
-              <h4 className="font-medium text-card-foreground">Nouvelle évaluation</h4>
-              <p className="text-sm text-muted-foreground">Noter votre journée actuelle</p>
+          <div className="flex items-center justify-between mb-4">
+            <div className="p-3 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+              <Target className="w-6 h-6" />
             </div>
-            <Target className="w-5 h-5 text-primary" />
           </div>
+          <h3 className="font-semibold text-lg mb-2">Journal Quotidien</h3>
+          <p className="text-sm text-muted-foreground">
+            Notez votre journée et suivez votre bien-être
+          </p>
+        </button>
+
+        {/* Meditation - Always Free */}
+        <button
+          onClick={() => onNavigate('meditation')}
+          className="journey-card hover:journey-card-glow transition-all duration-300 p-6 text-left group"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className="p-3 rounded-xl bg-accent/10 text-accent group-hover:bg-accent group-hover:text-accent-foreground transition-colors">
+              <Brain className="w-6 h-6" />
+            </div>
+          </div>
+          <h3 className="font-semibold text-lg mb-2">Méditation</h3>
+          <p className="text-sm text-muted-foreground">
+            Minuteur pour méditation et deep work
+          </p>
+        </button>
+
+        {/* Premium Features */}
+        <button
+          onClick={() => isPremium ? onNavigate('abstinence') : showUpgradeModal()}
+          className={`journey-card transition-all duration-300 p-6 text-left group relative ${
+            isPremium ? 'hover:journey-card-glow' : 'opacity-80'
+          }`}
+        >
+          {!isPremium && (
+            <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+              <Crown className="w-3 h-3 text-primary-foreground" />
+            </div>
+          )}
+          <div className="flex items-center justify-between mb-4">
+            <div className={`p-3 rounded-xl transition-colors ${
+              isPremium 
+                ? 'bg-destructive/10 text-destructive group-hover:bg-destructive group-hover:text-destructive-foreground'
+                : 'bg-muted/20 text-muted-foreground'
+            }`}>
+              <Shield className="w-6 h-6" />
+            </div>
+          </div>
+          <h3 className={`font-semibold text-lg mb-2 ${!isPremium && 'text-muted-foreground'}`}>
+            Compteur d'abstinence
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            Suivez vos progrès jour par jour
+          </p>
+        </button>
+
+        <button
+          onClick={() => isPremium ? onNavigate('stretching') : showUpgradeModal()}
+          className={`journey-card transition-all duration-300 p-6 text-left group relative ${
+            isPremium ? 'hover:journey-card-glow' : 'opacity-80'
+          }`}
+        >
+          {!isPremium && (
+            <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+              <Crown className="w-3 h-3 text-primary-foreground" />
+            </div>
+          )}
+          <div className="flex items-center justify-between mb-4">
+            <div className={`p-3 rounded-xl transition-colors ${
+              isPremium 
+                ? 'bg-success/10 text-success group-hover:bg-success group-hover:text-success-foreground'
+                : 'bg-muted/20 text-muted-foreground'
+            }`}>
+              <Dumbbell className="w-6 h-6" />
+            </div>
+          </div>
+          <h3 className={`font-semibold text-lg mb-2 ${!isPremium && 'text-muted-foreground'}`}>
+            Routine Stretching
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            5 exercices guidés pour votre bien-être
+          </p>
         </button>
       </div>
+
+      {/* Progress Overview */}
+      <button
+        onClick={() => isPremium ? onNavigate('progress') : showUpgradeModal()}
+        className={`journey-card w-full text-left mb-6 transition-all duration-300 group relative ${
+          isPremium ? 'hover:journey-card-glow' : 'opacity-80'
+        }`}
+      >
+        {!isPremium && (
+          <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+            <Crown className="w-4 h-4 text-primary-foreground" />
+          </div>
+        )}
+        <div className="flex items-center space-x-4 p-6">
+          <div className={`p-4 rounded-xl transition-colors ${
+            isPremium 
+              ? 'bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground'
+              : 'bg-muted/20 text-muted-foreground'
+          }`}>
+            <TrendingUp className="w-8 h-8" />
+          </div>
+          <div className="flex-1">
+            <h3 className={`font-semibold text-xl mb-2 ${!isPremium && 'text-muted-foreground'}`}>
+              Progression & Statistiques
+            </h3>
+            <p className="text-muted-foreground">
+              {isPremium 
+                ? `Vous avez complété ${entries.length} jours de journal`
+                : 'Débloquez l\'historique complet et les statistiques avancées'
+              }
+            </p>
+          </div>
+        </div>
+      </button>
+
+      {/* Premium Upgrade CTA (for free users) */}
+      {!isPremium && (
+        <button
+          onClick={showUpgradeModal}
+          className="journey-card-premium w-full text-center p-8 relative overflow-hidden group"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+          <div className="relative z-10">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
+              <Crown className="w-8 h-8 text-primary-foreground" />
+            </div>
+            <h3 className="text-xl font-bold text-gradient-primary mb-2">
+              Passez à Journeys Premium
+            </h3>
+            <p className="text-muted-foreground mb-4">
+              Débloque toutes les fonctionnalités pour optimiser ton parcours
+            </p>
+            <div className="inline-flex items-center space-x-2 px-6 py-3 rounded-xl bg-primary/10 text-primary font-medium group-hover:bg-primary/20 transition-colors">
+              <Sparkles className="w-5 h-5" />
+              <span>7 jours gratuits</span>
+            </div>
+          </div>
+        </button>
+      )}
     </div>
   );
 };
-
-function calculateStreak(entries: JournalEntry[]): number {
-  if (entries.length === 0) return 0;
-  
-  const sortedEntries = [...entries].sort((a, b) => b.date.localeCompare(a.date));
-  let streak = 0;
-  let currentDate = new Date();
-  
-  for (const entry of sortedEntries) {
-    const entryDate = new Date(entry.date);
-    const diffDays = Math.floor((currentDate.getTime() - entryDate.getTime()) / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === streak) {
-      streak++;
-      currentDate = entryDate;
-    } else {
-      break;
-    }
-  }
-  
-  return streak;
-}

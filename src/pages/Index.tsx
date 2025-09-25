@@ -7,6 +7,8 @@ import { ProgressScreen } from '@/components/ProgressScreen';
 import { AbstinenceTracker } from '@/components/AbstinenceTracker';
 import { StretchingRoutine } from '@/components/StretchingRoutine';
 import { MeditationTimer } from '@/components/MeditationTimer';
+import { PremiumUpgrade } from '@/components/PremiumUpgrade';
+import { PremiumProvider, usePremium } from '@/hooks/usePremium';
 
 type Screen = 'home' | 'journal' | 'reflection' | 'progress' | 'abstinence' | 'stretching' | 'meditation';
 
@@ -18,10 +20,11 @@ interface JournalEntry {
   mood: 'low' | 'medium' | 'high';
 }
 
-const Index = () => {
+const IndexContent = () => {
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [todayScores, setTodayScores] = useState<Record<string, number>>({});
+  const { upgradeModalVisible, hideUpgradeModal } = usePremium();
 
   const navigateToScreen = (screen: Screen) => {
     setCurrentScreen(screen);
@@ -92,6 +95,12 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {renderScreen()}
+      
+      {/* Premium Upgrade Modal */}
+      <PremiumUpgrade 
+        isVisible={upgradeModalVisible}
+        onClose={hideUpgradeModal}
+      />
       
       {/* Navigation Bar */}
       <nav className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
@@ -175,6 +184,14 @@ const Index = () => {
         </div>
       </nav>
     </div>
+  );
+};
+
+const Index = () => {
+  return (
+    <PremiumProvider>
+      <IndexContent />
+    </PremiumProvider>
   );
 };
 

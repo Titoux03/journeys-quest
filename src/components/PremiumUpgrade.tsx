@@ -1,0 +1,194 @@
+import React from 'react';
+import { X, Crown, Sparkles, TrendingUp, Shield, Dumbbell, Brain, Heart, Calendar } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { usePremium } from '@/hooks/usePremium';
+
+interface PremiumUpgradeProps {
+  isVisible: boolean;
+  onClose: () => void;
+  feature?: string;
+}
+
+export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({ 
+  isVisible, 
+  onClose, 
+  feature 
+}) => {
+  const { isPremium } = usePremium();
+
+  if (!isVisible || isPremium) return null;
+
+  const handleUpgrade = async () => {
+    // For demo - in real app, this would create Stripe checkout session
+    try {
+      localStorage.setItem('journeys-premium', 'true');
+      window.location.reload();
+    } catch (error) {
+      console.error('Upgrade error:', error);
+    }
+  };
+
+  const premiumFeatures = [
+    {
+      icon: <Shield className="w-6 h-6" />,
+      title: "Compteur d'abstinence",
+      description: "Suivez vos progrès avec des statistiques détaillées"
+    },
+    {
+      icon: <Dumbbell className="w-6 h-6" />,
+      title: "Routine stretching",
+      description: "5 exercices guidés pour votre bien-être physique"
+    },
+    {
+      icon: <TrendingUp className="w-6 h-6" />,
+      title: "Historique complet",
+      description: "Visualisez votre évolution sur plusieurs mois"
+    },
+    {
+      icon: <Crown className="w-6 h-6" />,
+      title: "Gamification avancée",
+      description: "Badges exclusifs et statistiques premium"
+    },
+    {
+      icon: <Sparkles className="w-6 h-6" />,
+      title: "Citations personnalisées",
+      description: "Messages inspirants générés par IA chaque jour"
+    },
+    {
+      icon: <Heart className="w-6 h-6" />,
+      title: "Support prioritaire",
+      description: "Assistance dédiée pour optimiser votre parcours"
+    }
+  ];
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-lg">
+      <div className="journey-card-premium max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-6 right-6 p-2 rounded-full bg-secondary/50 hover:bg-secondary transition-colors z-10"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Header */}
+        <div className="text-center mb-8 pt-4">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
+            <Crown className="w-10 h-10 text-primary-foreground" />
+          </div>
+          
+          <h1 className="text-3xl font-bold text-gradient-primary mb-3">
+            Débloque ton potentiel complet
+          </h1>
+          
+          {feature && (
+            <p className="text-lg text-muted-foreground mb-4">
+              Accédez à <span className="text-primary font-semibold">{feature}</span> et bien plus
+            </p>
+          )}
+          
+          <p className="text-muted-foreground">
+            Transformez votre routine quotidienne en véritable parcours de développement personnel
+          </p>
+        </div>
+
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          {premiumFeatures.map((feature, index) => (
+            <div
+              key={index}
+              className="p-4 rounded-xl bg-gradient-to-br from-secondary/30 to-secondary/10 border border-border/30 hover:border-primary/20 transition-all duration-300 hover:scale-[1.02]"
+            >
+              <div className="flex items-start space-x-3">
+                <div className="flex-shrink-0 p-2 rounded-lg bg-primary/10 text-primary">
+                  {feature.icon}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-foreground mb-1">
+                    {feature.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {feature.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Pricing */}
+        <div className="text-center mb-8">
+          <div className="journey-card bg-gradient-to-br from-primary/5 to-primary-glow/5 border-2 border-primary/20 mb-6">
+            <div className="flex items-center justify-center space-x-4">
+              <div>
+                <div className="text-3xl font-bold text-gradient-primary">9,90€</div>
+                <div className="text-sm text-muted-foreground">par mois</div>
+              </div>
+              <div className="h-12 w-px bg-border"></div>
+              <div className="text-left">
+                <div className="text-sm text-success font-medium">7 jours gratuits</div>
+                <div className="text-xs text-muted-foreground">Résiliable à tout moment</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Benefits */}
+          <div className="flex items-center justify-center space-x-6 text-sm text-muted-foreground mb-6">
+            <div className="flex items-center space-x-1">
+              <Calendar className="w-4 h-4 text-success" />
+              <span>Essai gratuit</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <Shield className="w-4 h-4 text-success" />
+              <span>Sans engagement</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <Sparkles className="w-4 h-4 text-success" />
+              <span>Accès immédiat</span>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="space-y-4">
+          <Button
+            onClick={handleUpgrade}
+            className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+            <Crown className="w-5 h-5 mr-2" />
+            Commencer l'essai gratuit
+          </Button>
+          
+          <div className="text-center">
+            <button
+              onClick={onClose}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Continuer avec la version gratuite
+            </button>
+          </div>
+        </div>
+
+        {/* Trust Indicators */}
+        <div className="mt-8 pt-6 border-t border-border/30">
+          <div className="flex items-center justify-center space-x-8 text-xs text-muted-foreground">
+            <div className="flex items-center space-x-1">
+              <Shield className="w-3 h-3" />
+              <span>Paiement sécurisé</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <Heart className="w-3 h-3" />
+              <span>Satisfaction garantie</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <Calendar className="w-3 h-3" />
+              <span>Annulation facile</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -1,5 +1,6 @@
 import React from 'react';
-import { TrendingUp, Award, Calendar, ArrowLeft, Star } from 'lucide-react';
+import { TrendingUp, Calendar, Award, Target } from 'lucide-react';
+import { PremiumLock } from '@/components/PremiumLock';
 
 interface JournalEntry {
   date: string;
@@ -15,193 +16,127 @@ interface ProgressScreenProps {
 }
 
 export const ProgressScreen: React.FC<ProgressScreenProps> = ({ entries, onNavigate }) => {
-  const last7Days = entries.slice(-7);
-  const last30Days = entries.slice(-30);
-  
-  const calculateAverage = (data: JournalEntry[]) => 
-    data.length > 0 ? (data.reduce((sum, entry) => sum + entry.totalScore, 0) / data.length) : 0;
+  return (
+    <PremiumLock feature="Historique et statistiques avancées" className="min-h-screen">
+      <ProgressScreenContent entries={entries} onNavigate={onNavigate} />
+    </PremiumLock>
+  );
+};
 
-  const weekAverage = calculateAverage(last7Days);
-  const monthAverage = calculateAverage(last30Days);
-  
-  const bestDay = entries.length > 0 
-    ? entries.reduce((best, entry) => entry.totalScore > best.totalScore ? entry : best)
-    : null;
+const ProgressScreenContent: React.FC<ProgressScreenProps> = ({ entries, onNavigate }) => {
+  const getScoreClass = (score: number) => {
+    if (score >= 7) return 'score-high';
+    if (score >= 4) return 'score-medium';
+    return 'score-low';
+  };
 
-  const totalPoints = entries.reduce((sum, entry) => sum + Math.round(entry.totalScore * 10), 0);
-  
-  const getMoodEmoji = (mood: 'low' | 'medium' | 'high') => {
-    switch (mood) {
-      case 'high': return '🌟';
-      case 'medium': return '😊';
-      case 'low': return '💙';
+  const getAverageScore = () => {
+    if (entries.length === 0) return 0;
+    return entries.reduce((acc, entry) => acc + entry.totalScore, 0) / entries.length;
+  };
+
+  const getStreakCount = () => {
+    let streak = 0;
+    const sortedEntries = [...entries].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    
+    for (const entry of sortedEntries) {
+      if (entry.totalScore >= 7) {
+        streak++;
+      } else {
+        break;
+      }
     }
+    return streak;
   };
 
   return (
-    <div className="min-h-screen p-6 pb-24">
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center mb-8 animate-slide-up">
-          <button 
-            onClick={() => onNavigate('home')}
-            className="p-2 rounded-xl hover:bg-secondary/50 transition-colors mr-4"
-          >
-            <ArrowLeft className="w-6 h-6 text-foreground" />
-          </button>
-          <div>
-            <h1 className="text-3xl font-bold text-gradient-primary">Vos Progrès</h1>
-            <p className="text-muted-foreground">Suivez votre évolution personnelle</p>
+    <div className="min-h-screen p-6 pb-24 bg-background">
+      {/* Header */}
+      <div className="mb-8">
+        <button
+          onClick={() => onNavigate('home')}
+          className="mb-4 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          ← Retour
+        </button>
+        <h1 className="text-3xl font-bold text-gradient-primary mb-2">
+          Votre Progression
+        </h1>
+        <p className="text-muted-foreground">
+          Analysez votre parcours de bien-être
+        </p>
+      </div>
+
+      {/* Overview Cards */}
+      <div className="grid grid-cols-2 gap-4 mb-8">
+        <div className="journey-card text-center">
+          <div className="p-4 rounded-full bg-primary/10 text-primary w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <Calendar className="w-8 h-8" />
+          </div>
+          <div className="text-2xl font-bold text-gradient-primary mb-1">
+            {entries.length}
+          </div>
+          <div className="text-sm text-muted-foreground">
+            Jours complétés
           </div>
         </div>
 
-        {/* Statistiques générales */}
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          <div className="journey-card text-center animate-scale-in">
-            <Award className="w-8 h-8 text-accent mx-auto mb-3" />
-            <div className="text-3xl font-bold text-accent">{totalPoints}</div>
-            <div className="text-sm text-muted-foreground">Points totaux</div>
+        <div className="journey-card text-center">
+          <div className="p-4 rounded-full bg-accent/10 text-accent w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <TrendingUp className="w-8 h-8" />
           </div>
-          
-          <div className="journey-card text-center animate-scale-in" style={{ animationDelay: '0.1s' }}>
-            <Calendar className="w-8 h-8 text-primary mx-auto mb-3" />
-            <div className="text-3xl font-bold text-primary">{entries.length}</div>
-            <div className="text-sm text-muted-foreground">Jours enregistrés</div>
+          <div className="text-2xl font-bold text-gradient-accent mb-1">
+            {getAverageScore().toFixed(1)}
+          </div>
+          <div className="text-sm text-muted-foreground">
+            Score moyen
           </div>
         </div>
+      </div>
 
-        {/* Moyennes */}
-        <div className="journey-card mb-8 animate-slide-up">
-          <h3 className="text-xl font-semibold mb-6 flex items-center gap-2">
-            <TrendingUp className="w-6 h-6 text-accent" />
-            Moyennes des scores
-          </h3>
-          
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">7 derniers jours</span>
-              <div className={`score-indicator ${
-                weekAverage >= 7 ? 'score-high' : 
-                weekAverage >= 4 ? 'score-medium' : 'score-low'
-              }`}>
-                {weekAverage.toFixed(1)}
-              </div>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">30 derniers jours</span>
-              <div className={`score-indicator ${
-                monthAverage >= 7 ? 'score-high' : 
-                monthAverage >= 4 ? 'score-medium' : 'score-low'
-              }`}>
-                {monthAverage.toFixed(1)}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Meilleur jour */}
-        {bestDay && (
-          <div className="journey-card-glow mb-8 animate-scale-in">
-            <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              <Star className="w-6 h-6 text-accent" />
-              Votre meilleur jour
+      {/* Recent Entries */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-foreground mb-4">
+          Historique récent
+        </h3>
+        
+        {entries.length === 0 ? (
+          <div className="journey-card text-center py-12">
+            <Target className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-muted-foreground mb-2">
+              Aucune donnée disponible
             </h3>
-            
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <div className="font-medium text-card-foreground">
-                  {new Date(bestDay.date).toLocaleDateString('fr-FR', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric'
-                  })}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Score parfait de {bestDay.totalScore.toFixed(1)}/10
-                </div>
-              </div>
-              <div className="text-4xl">
-                {getMoodEmoji(bestDay.mood)}
-              </div>
-            </div>
-            
-            {bestDay.reflection && (
-              <div className="bg-secondary/30 rounded-xl p-4">
-                <p className="text-sm text-card-foreground italic">
-                  "{bestDay.reflection.substring(0, 100)}..."
-                </p>
-              </div>
-            )}
+            <p className="text-sm text-muted-foreground">
+              Commencez votre journal pour voir vos progrès
+            </p>
           </div>
-        )}
-
-        {/* Historique récent */}
-        <div className="journey-card animate-slide-up">
-          <h3 className="text-xl font-semibold mb-6">Historique récent</h3>
-          
-          {entries.length === 0 ? (
-            <div className="text-center py-8">
-              <Calendar className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">Aucune entrée pour le moment</p>
-              <button
-                onClick={() => onNavigate('journal')}
-                className="journey-button-primary mt-4"
-              >
-                Créer votre première entrée
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-4 max-h-96 overflow-y-auto">
-              {entries.slice().reverse().map((entry, index) => (
-                <div 
-                  key={entry.date}
-                  className="flex items-center justify-between p-4 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors"
-                  style={{ animationDelay: `${index * 0.05}s` }}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="text-2xl">
-                      {getMoodEmoji(entry.mood)}
+        ) : (
+          entries
+            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+            .slice(0, 10)
+            .map(entry => (
+              <div key={entry.date} className="journey-card">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-medium text-foreground">
+                      {new Date(entry.date).toLocaleDateString('fr-FR', {
+                        weekday: 'long',
+                        day: 'numeric',
+                        month: 'long'
+                      })}
                     </div>
-                    <div>
-                      <div className="font-medium text-card-foreground">
-                        {new Date(entry.date).toLocaleDateString('fr-FR', {
-                          day: 'numeric',
-                          month: 'short'
-                        })}
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        {entry.reflection ? 'Avec réflexion' : 'Évaluation seule'}
-                      </div>
-                    </div>
+                    {entry.reflection && (
+                      <p className="text-xs text-muted-foreground mt-1 truncate max-w-xs">
+                        {entry.reflection}
+                      </p>
+                    )}
                   </div>
-                  
-                  <div className={`score-indicator ${
-                    entry.mood === 'high' ? 'score-high' : 
-                    entry.mood === 'medium' ? 'score-medium' : 'score-low'
-                  }`}>
-                    {entry.totalScore.toFixed(1)}
+                  <div className={`score-indicator ${getScoreClass(entry.totalScore)} !w-12 !h-12 !text-sm`}>
+                    {entry.totalScore}
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Encouragement */}
-        {entries.length > 0 && (
-          <div className="journey-card bg-accent/10 border-accent/20 mt-6 animate-slide-up">
-            <div className="text-center">
-              <Star className="w-8 h-8 text-accent mx-auto mb-3" />
-              <h4 className="font-semibold text-card-foreground mb-2">
-                Félicitations ! 🎉
-              </h4>
-              <p className="text-muted-foreground">
-                Vous avez déjà parcouru {entries.length} jour{entries.length > 1 ? 's' : ''} de votre voyage personnel.
-                Continuez ainsi !
-              </p>
-            </div>
-          </div>
+              </div>
+            ))
         )}
       </div>
     </div>
