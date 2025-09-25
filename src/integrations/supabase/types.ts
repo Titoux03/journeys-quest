@@ -107,6 +107,42 @@ export type Database = {
         }
         Relationships: []
       }
+      premium_purchases: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          id: string
+          purchased_at: string
+          status: string
+          stripe_payment_intent_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          id?: string
+          purchased_at?: string
+          status?: string
+          stripe_payment_intent_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          purchased_at?: string
+          status?: string
+          stripe_payment_intent_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
