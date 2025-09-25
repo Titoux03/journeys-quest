@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { Calendar, Target, BookOpen, Star, TrendingUp } from 'lucide-react';
+import { Calendar, Target, BookOpen, Star, TrendingUp, Shield, Dumbbell, Brain } from 'lucide-react';
 import { HomePage } from '@/components/HomePage';
 import { DailyJournal } from '@/components/DailyJournal';
 import { ReflectionScreen } from '@/components/ReflectionScreen';
 import { ProgressScreen } from '@/components/ProgressScreen';
+import { AbstinenceTracker } from '@/components/AbstinenceTracker';
+import { StretchingRoutine } from '@/components/StretchingRoutine';
+import { MeditationTimer } from '@/components/MeditationTimer';
 
-type Screen = 'home' | 'journal' | 'reflection' | 'progress';
+type Screen = 'home' | 'journal' | 'reflection' | 'progress' | 'abstinence' | 'stretching' | 'meditation';
 
 interface JournalEntry {
   date: string;
@@ -75,6 +78,12 @@ const Index = () => {
         );
       case 'progress':
         return <ProgressScreen entries={entries} onNavigate={navigateToScreen} />;
+      case 'abstinence':
+        return <AbstinenceTracker onNavigate={navigateToScreen} />;
+      case 'stretching':
+        return <StretchingRoutine onNavigate={navigateToScreen} />;
+      case 'meditation':
+        return <MeditationTimer onNavigate={navigateToScreen} />;
       default:
         return <HomePage onNavigate={navigateToScreen} entries={entries} />;
     }
@@ -86,49 +95,82 @@ const Index = () => {
       
       {/* Navigation Bar */}
       <nav className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
-        <div className="journey-card-premium px-6 py-3 flex items-center space-x-6 backdrop-filter backdrop-blur-xl">
+        <div className="journey-card-premium px-4 py-3 flex items-center space-x-3 backdrop-filter backdrop-blur-xl">
           <button
             onClick={() => navigateToScreen('home')}
-            className={`p-3 rounded-xl transition-all duration-500 ${
+            className={`p-2.5 rounded-xl transition-all duration-500 ${
               currentScreen === 'home' 
                 ? 'bg-primary text-primary-foreground shadow-lg scale-110 shadow-primary' 
                 : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
             }`}
           >
-            <Calendar className="w-5 h-5" />
+            <Calendar className="w-4 h-4" />
           </button>
           
           <button
             onClick={() => navigateToScreen('journal')}
-            className={`p-3 rounded-xl transition-all duration-500 ${
+            className={`p-2.5 rounded-xl transition-all duration-500 ${
               currentScreen === 'journal' 
                 ? 'bg-primary text-primary-foreground shadow-lg scale-110 shadow-primary' 
                 : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
             }`}
           >
-            <Target className="w-5 h-5" />
+            <Target className="w-4 h-4" />
+          </button>
+
+          <button
+            onClick={() => navigateToScreen('abstinence')}
+            className={`p-2.5 rounded-xl transition-all duration-500 ${
+              currentScreen === 'abstinence' 
+                ? 'bg-primary text-primary-foreground shadow-lg scale-110 shadow-primary' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+            }`}
+          >
+            <Shield className="w-4 h-4" />
+          </button>
+
+          <button
+            onClick={() => navigateToScreen('stretching')}
+            className={`p-2.5 rounded-xl transition-all duration-500 ${
+              currentScreen === 'stretching' 
+                ? 'bg-primary text-primary-foreground shadow-lg scale-110 shadow-primary' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+            }`}
+          >
+            <Dumbbell className="w-4 h-4" />
+          </button>
+
+          <button
+            onClick={() => navigateToScreen('meditation')}
+            className={`p-2.5 rounded-xl transition-all duration-500 ${
+              currentScreen === 'meditation' 
+                ? 'bg-primary text-primary-foreground shadow-lg scale-110 shadow-primary' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+            }`}
+          >
+            <Brain className="w-4 h-4" />
           </button>
           
           <button
             onClick={() => navigateToScreen('reflection')}
-            className={`p-3 rounded-xl transition-all duration-500 ${
+            className={`p-2.5 rounded-xl transition-all duration-500 ${
               currentScreen === 'reflection' 
                 ? 'bg-primary text-primary-foreground shadow-lg scale-110 shadow-primary' 
                 : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
             }`}
           >
-            <BookOpen className="w-5 h-5" />
+            <BookOpen className="w-4 h-4" />
           </button>
           
           <button
             onClick={() => navigateToScreen('progress')}
-            className={`p-3 rounded-xl transition-all duration-500 ${
+            className={`p-2.5 rounded-xl transition-all duration-500 ${
               currentScreen === 'progress' 
                 ? 'bg-primary text-primary-foreground shadow-lg scale-110 shadow-primary' 
                 : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
             }`}
           >
-            <TrendingUp className="w-5 h-5" />
+            <TrendingUp className="w-4 h-4" />
           </button>
         </div>
       </nav>
