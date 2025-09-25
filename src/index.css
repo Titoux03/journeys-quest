@@ -2,95 +2,112 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Journeys Design System - Bleu profond + Or chaleureux
+All colors MUST be HSL. */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Core Identity Colors */
+    --background: 220 30% 97%;
+    --foreground: 220 50% 15%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Journeys Brand Colors */
+    --primary: 220 50% 20%;           /* Bleu nuit profond */
+    --primary-foreground: 45 90% 95%;
+    --primary-light: 220 40% 35%;
+    --primary-glow: 220 60% 25%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --accent: 45 85% 55%;             /* Or chaleureux */
+    --accent-foreground: 220 50% 15%;
+    --accent-light: 45 75% 70%;
+    --accent-glow: 45 95% 45%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Interface Colors */
+    --card: 220 25% 98%;
+    --card-foreground: 220 45% 20%;
+    --card-shadow: 220 30% 85%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --popover: 220 25% 98%;
+    --popover-foreground: 220 45% 20%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --secondary: 220 20% 92%;
+    --secondary-foreground: 220 45% 25%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --muted: 220 15% 88%;
+    --muted-foreground: 220 25% 50%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --success: 140 50% 45%;
+    --success-foreground: 140 30% 95%;
+    --warning: 35 85% 60%;
+    --warning-foreground: 35 20% 15%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 20% 95%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 220 20% 88%;
+    --input: 220 20% 90%;
+    --ring: 45 85% 55%;
 
-    --radius: 0.5rem;
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(220, 50%, 20%) 0%, hsl(220, 60%, 25%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(45, 85%, 55%) 0%, hsl(45, 95%, 45%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(220, 25%, 98%) 0%, hsl(220, 20%, 95%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(220, 50%, 20%) 0%, hsl(45, 85%, 55%) 100%);
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 20px hsl(220 30% 85% / 0.3);
+    --shadow-card: 0 8px 32px hsl(220 40% 70% / 0.15);
+    --shadow-glow: 0 0 30px hsl(45 85% 55% / 0.3);
+    --shadow-primary: 0 8px 32px hsl(220 50% 20% / 0.2);
 
-    --sidebar-background: 0 0% 98%;
+    /* Animation Variables */
+    --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    --radius: 16px;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 220 50% 8%;
+    --foreground: 220 25% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 220 45% 10%;
+    --card-foreground: 220 25% 95%;
+    --card-shadow: 220 60% 5%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220 45% 10%;
+    --popover-foreground: 220 25% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 45 85% 55%;
+    --primary-foreground: 220 50% 15%;
+    --primary-light: 45 75% 70%;
+    --primary-glow: 45 95% 50%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --accent: 220 50% 25%;
+    --accent-foreground: 45 85% 95%;
+    --accent-light: 220 40% 40%;
+    --accent-glow: 220 60% 30%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --secondary: 220 35% 15%;
+    --secondary-foreground: 220 25% 85%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --muted: 220 30% 18%;
+    --muted-foreground: 220 20% 65%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --border: 220 35% 18%;
+    --input: 220 35% 15%;
+    --ring: 45 85% 55%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Dark Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(45, 85%, 55%) 0%, hsl(45, 95%, 50%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(220, 50%, 25%) 0%, hsl(220, 60%, 30%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(220, 45%, 10%) 0%, hsl(220, 35%, 12%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(45, 85%, 55%) 0%, hsl(220, 50%, 25%) 100%);
+    
+    --shadow-soft: 0 4px 20px hsl(220 60% 5% / 0.6);
+    --shadow-card: 0 8px 32px hsl(220 70% 3% / 0.4);
+    --shadow-glow: 0 0 30px hsl(45 85% 55% / 0.4);
+    --shadow-primary: 0 8px 32px hsl(45 85% 55% / 0.3);
   }
 }
 
@@ -100,6 +117,132 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-nunito;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Journey Card Components */
+  .journey-card {
+    @apply bg-card rounded-3xl p-6 shadow-[var(--shadow-card)] border border-border/50;
+    background: var(--gradient-card);
+  }
+
+  .journey-card-glow {
+    @apply journey-card;
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* Interactive Elements */
+  .journey-button {
+    @apply px-6 py-3 rounded-2xl font-medium transition-all duration-300;
+    transition: var(--transition-smooth);
+  }
+
+  .journey-button:hover {
+    @apply scale-105;
+    box-shadow: var(--shadow-primary);
+  }
+
+  .journey-button-primary {
+    @apply journey-button bg-primary text-primary-foreground;
+    background: var(--gradient-primary);
+  }
+
+  .journey-button-accent {
+    @apply journey-button bg-accent text-accent-foreground;
+    background: var(--gradient-accent);
+  }
+
+  /* Score Indicators */
+  .score-indicator {
+    @apply w-16 h-16 rounded-full flex items-center justify-center font-bold text-lg;
+    transition: var(--transition-bounce);
+  }
+
+  .score-low {
+    @apply bg-destructive/20 text-destructive border-2 border-destructive/40;
+  }
+
+  .score-medium {
+    @apply bg-warning/20 text-warning border-2 border-warning/40;
+  }
+
+  .score-high {
+    @apply bg-success/20 text-success border-2 border-success/40;
+  }
+
+  /* Floating Elements */
+  .floating-element {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+}
+
+@layer utilities {
+  .text-gradient-primary {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-accent {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .blur-backdrop {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}
+
+/* Custom Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    opacity: 1;
+    box-shadow: 0 0 20px hsl(var(--accent) / 0.3);
+  }
+  50% { 
+    opacity: 0.8;
+    box-shadow: 0 0 40px hsl(var(--accent) / 0.6);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
