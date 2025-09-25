@@ -105,7 +105,7 @@ const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) 
   };
 
   return (
-    <div className="min-h-screen p-6 bg-background">
+    <div className="min-h-screen p-6 bg-background pb-32">
       {/* Header */}
       <div className="mb-8">
         <button

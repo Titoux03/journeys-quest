@@ -93,7 +93,7 @@ const IndexContent = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-28">
       {renderScreen()}
       
       {/* Premium Upgrade Modal */}
