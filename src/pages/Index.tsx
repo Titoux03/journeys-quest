@@ -8,10 +8,9 @@ import { AbstinenceTracker } from '@/components/AbstinenceTracker';
 import { StretchingRoutine } from '@/components/StretchingRoutine';
 import { DailyQuote } from '@/components/DailyQuote';
 import { PremiumUpgrade } from '@/components/PremiumUpgrade';
+import { BottomNavigation } from '@/components/BottomNavigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { LogOut, User } from 'lucide-react';
 import { usePremium } from '@/hooks/usePremium';
 
 interface JournalEntry {
@@ -74,11 +73,6 @@ const Index = () => {
     setCurrentScreen('home');
   };
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate('/auth');
-  };
-
   // Afficher un loader pendant le chargement de l'authentification
   if (loading) {
     return (
@@ -123,24 +117,14 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen pb-20">
-      {/* Barre d'utilisateur */}
-      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
-        <div className="flex items-center gap-2 px-4 py-2 bg-card/80 backdrop-blur-sm rounded-full border border-border/30">
-          <User size={16} className="text-primary" />
-          <span className="text-sm text-foreground">{user.email}</span>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleSignOut}
-            className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
-          >
-            <LogOut size={14} />
-          </Button>
-        </div>
-      </div>
-
+    <div className="min-h-screen pb-24">
       {renderScreen()}
+
+      {/* Navigation en bas */}
+      <BottomNavigation 
+        currentScreen={currentScreen}
+        onNavigate={setCurrentScreen}
+      />
 
       {/* Premium Upgrade Modal */}
       <PremiumUpgrade 
