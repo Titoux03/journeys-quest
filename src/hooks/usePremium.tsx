@@ -81,8 +81,8 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
       }
 
       if (data?.url) {
-        // Ouvrir Stripe Checkout dans un nouvel onglet
-        window.open(data.url, '_blank');
+        // Redirection vers Stripe Checkout (compatible mobile)
+        window.location.href = data.url;
       }
     } catch (error) {
       console.error('Error purchasing premium:', error);
