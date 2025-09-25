@@ -86,12 +86,12 @@ const Index = () => {
       
       {/* Navigation Bar */}
       <nav className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
-        <div className="journey-card px-6 py-3 flex items-center space-x-6">
+        <div className="journey-card-premium px-6 py-3 flex items-center space-x-6 backdrop-filter backdrop-blur-xl">
           <button
             onClick={() => navigateToScreen('home')}
-            className={`p-3 rounded-xl transition-all duration-300 ${
+            className={`p-3 rounded-xl transition-all duration-500 ${
               currentScreen === 'home' 
-                ? 'bg-primary text-primary-foreground shadow-lg scale-110' 
+                ? 'bg-primary text-primary-foreground shadow-lg scale-110 shadow-primary' 
                 : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
             }`}
           >
@@ -100,9 +100,9 @@ const Index = () => {
           
           <button
             onClick={() => navigateToScreen('journal')}
-            className={`p-3 rounded-xl transition-all duration-300 ${
+            className={`p-3 rounded-xl transition-all duration-500 ${
               currentScreen === 'journal' 
-                ? 'bg-accent text-accent-foreground shadow-lg scale-110' 
+                ? 'bg-primary text-primary-foreground shadow-lg scale-110 shadow-primary' 
                 : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
             }`}
           >
@@ -111,9 +111,9 @@ const Index = () => {
           
           <button
             onClick={() => navigateToScreen('reflection')}
-            className={`p-3 rounded-xl transition-all duration-300 ${
+            className={`p-3 rounded-xl transition-all duration-500 ${
               currentScreen === 'reflection' 
-                ? 'bg-accent text-accent-foreground shadow-lg scale-110' 
+                ? 'bg-primary text-primary-foreground shadow-lg scale-110 shadow-primary' 
                 : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
             }`}
           >
@@ -122,9 +122,9 @@ const Index = () => {
           
           <button
             onClick={() => navigateToScreen('progress')}
-            className={`p-3 rounded-xl transition-all duration-300 ${
+            className={`p-3 rounded-xl transition-all duration-500 ${
               currentScreen === 'progress' 
-                ? 'bg-accent text-accent-foreground shadow-lg scale-110' 
+                ? 'bg-primary text-primary-foreground shadow-lg scale-110 shadow-primary' 
                 : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
             }`}
           >

@@ -125,7 +125,7 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
         </div>
 
         {/* Score global */}
-        <div className="journey-card mb-8 text-center animate-scale-in">
+        <div className="journey-card-premium mb-8 text-center animate-scale-in">
           <h3 className="text-lg font-medium mb-4">Score global</h3>
           <div className={`score-indicator mx-auto ${
             mood === 'high' ? 'score-high' : 
@@ -147,7 +147,7 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
             return (
               <div 
                 key={criterion.key}
-                className="journey-card animate-slide-up"
+                className="journey-card-premium animate-slide-up"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="flex items-center gap-4 mb-4">
@@ -185,7 +185,7 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
 
         {/* Ajouter un critère personnalisé */}
         {showAddCustom ? (
-          <div className="journey-card mb-6 animate-scale-in">
+          <div className="journey-card-premium mb-6 animate-scale-in">
             <h3 className="font-medium mb-4">Ajouter un critère personnalisé</h3>
             <div className="flex gap-3">
               <input
@@ -193,7 +193,7 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
                 placeholder="Ex: Créativité, Travail..."
                 value={customCriterion}
                 onChange={(e) => setCustomCriterion(e.target.value)}
-                className="flex-1 px-4 py-2 rounded-xl border border-input bg-background text-foreground"
+                className="flex-1 px-4 py-2 rounded-xl border border-input bg-input text-foreground placeholder-muted-foreground"
                 onKeyPress={(e) => e.key === 'Enter' && addCustomCriterion()}
               />
               <button
@@ -207,9 +207,9 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
         ) : (
           <button
             onClick={() => setShowAddCustom(true)}
-            className="w-full journey-card hover:journey-card-glow transition-all duration-300 p-4 text-center mb-6"
+            className="w-full journey-card-premium hover:journey-card-glow transition-all duration-300 p-4 text-center mb-6"
           >
-            <Plus className="w-6 h-6 text-accent mx-auto mb-2" />
+            <Plus className="w-6 h-6 text-primary mx-auto mb-2" />
             <p className="text-sm text-muted-foreground">Ajouter un critère personnalisé</p>
           </button>
         )}

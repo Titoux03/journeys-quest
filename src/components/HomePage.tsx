@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Sparkles, Target, Calendar, Award, ArrowRight } from 'lucide-react';
+import { DailyQuote } from './DailyQuote';
 
 interface JournalEntry {
   date: string;
@@ -15,6 +16,14 @@ interface HomePageProps {
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
+  const [perplexityApiKey, setPerplexityApiKey] = useState<string>(() => {
+    return localStorage.getItem('perplexity-api-key') || '';
+  });
+
+  const handleApiKeyChange = (newKey: string) => {
+    setPerplexityApiKey(newKey);
+    localStorage.setItem('perplexity-api-key', newKey);
+  };
   const today = new Date();
   const todayStr = today.toISOString().split('T')[0];
   const todayEntry = entries.find(entry => entry.date === todayStr);
@@ -42,21 +51,29 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
       {/* Header avec salutation */}
       <div className="text-center mb-8 animate-slide-up">
         <div className="floating-element inline-block">
-          <Sparkles className="w-8 h-8 text-accent mx-auto mb-4" />
+          <Sparkles className="w-8 h-8 text-primary mx-auto mb-4" />
         </div>
         <h1 className="text-4xl font-bold text-gradient-primary mb-2">
-          Bonjour ! 🌅
+          Bonsoir ! 🌙
         </h1>
         <p className="text-lg text-muted-foreground max-w-md mx-auto">
-          {todayQuote}
+          Bienvenue dans votre sanctuaire premium de bien-être
         </p>
       </div>
 
+      {/* Citation du jour */}
+      <div className="mb-8">
+        <DailyQuote 
+          apiKey={perplexityApiKey}
+          onApiKeyChange={handleApiKeyChange}
+        />
+      </div>
+
       {/* Statut du jour */}
-      <div className="journey-card mb-6 animate-scale-in">
+      <div className="journey-card-premium mb-6 animate-scale-in">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-card-foreground">Aujourd'hui</h2>
-          <Calendar className="w-6 h-6 text-accent" />
+          <Calendar className="w-6 h-6 text-primary" />
         </div>
         
         {todayEntry ? (
@@ -74,7 +91,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
               <p className="text-success font-medium">✅ Journal complété !</p>
               <button
                 onClick={() => onNavigate('reflection')}
-                className="journey-button-accent mt-2 text-sm"
+                className="journey-button-accent mt-2 text-sm px-4 py-2"
               >
                 Voir la réflexion
               </button>
@@ -99,19 +116,19 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
 
       {/* Statistiques */}
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="journey-card text-center animate-slide-up" style={{ animationDelay: '0.1s' }}>
-          <Award className="w-8 h-8 text-accent mx-auto mb-2" />
+        <div className="journey-card-premium text-center animate-slide-up" style={{ animationDelay: '0.1s' }}>
+          <Award className="w-8 h-8 text-primary mx-auto mb-2" />
           <div className="text-2xl font-bold text-foreground">{totalPoints}</div>
           <div className="text-xs text-muted-foreground">Points totaux</div>
         </div>
         
-        <div className="journey-card text-center animate-slide-up" style={{ animationDelay: '0.2s' }}>
-          <div className="text-2xl font-bold text-accent">{streak}</div>
+        <div className="journey-card-premium text-center animate-slide-up" style={{ animationDelay: '0.2s' }}>
+          <div className="text-2xl font-bold text-primary">{streak}</div>
           <div className="text-xs text-muted-foreground">Jours consécutifs</div>
         </div>
         
-        <div className="journey-card text-center animate-slide-up" style={{ animationDelay: '0.3s' }}>
-          <div className="text-2xl font-bold text-primary">{averageScore}</div>
+        <div className="journey-card-premium text-center animate-slide-up" style={{ animationDelay: '0.3s' }}>
+          <div className="text-2xl font-bold text-accent-light">{averageScore}</div>
           <div className="text-xs text-muted-foreground">Moyenne 7j</div>
         </div>
       </div>
@@ -122,27 +139,27 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
         
         <button
           onClick={() => onNavigate('progress')}
-          className="w-full journey-card hover:journey-card-glow transition-all duration-300 p-4 text-left"
+          className="w-full journey-card-premium hover:journey-card-glow transition-all duration-300 p-4 text-left"
         >
           <div className="flex items-center justify-between">
             <div>
               <h4 className="font-medium text-card-foreground">Voir mes progrès</h4>
               <p className="text-sm text-muted-foreground">Analysez votre évolution</p>
             </div>
-            <ArrowRight className="w-5 h-5 text-accent" />
+            <ArrowRight className="w-5 h-5 text-primary" />
           </div>
         </button>
         
         <button
           onClick={() => onNavigate('journal')}
-          className="w-full journey-card hover:journey-card-glow transition-all duration-300 p-4 text-left"
+          className="w-full journey-card-premium hover:journey-card-glow transition-all duration-300 p-4 text-left"
         >
           <div className="flex items-center justify-between">
             <div>
               <h4 className="font-medium text-card-foreground">Nouvelle évaluation</h4>
               <p className="text-sm text-muted-foreground">Noter votre journée actuelle</p>
             </div>
-            <Target className="w-5 h-5 text-accent" />
+            <Target className="w-5 h-5 text-primary" />
           </div>
         </button>
       </div>
