@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
-import { Check, Users, Heart, Dumbbell, BookOpen, Brain, Plus } from 'lucide-react';
-import { Slider } from '@/components/ui/slider';
+import { Button } from './ui/button';
+import { Slider } from './ui/slider';
+import { Input } from './ui/input';
+import { Plus, Heart, Users, Dumbbell, BookOpen, Brain, Check } from 'lucide-react';
+import { useProgress } from '@/hooks/useProgress';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
 
 interface DailyJournalProps {
   onComplete: (scores: Record<string, number>, totalScore: number) => void;
@@ -60,6 +65,8 @@ const defaultCriteria: LifeCriterion[] = [
 ];
 
 export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
+  const { user } = useAuth();
+  const { saveJournalEntry } = useProgress();
   const [scores, setScores] = useState<Record<string, number>>(
     defaultCriteria.reduce((acc, criterion) => ({
       ...acc,
@@ -70,6 +77,7 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
   const [criteria, setCriteria] = useState(defaultCriteria);
   const [showAddCustom, setShowAddCustom] = useState(false);
   const [customCriterion, setCustomCriterion] = useState('');
+  const [saving, setSaving] = useState(false);
 
   const handleScoreChange = (key: string, value: number[]) => {
     setScores(prev => ({
@@ -103,8 +111,23 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
     return totalPoints / criteria.length;
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     const totalScore = calculateTotalScore();
+    
+    // Sauvegarder en base si l'utilisateur est connecté
+    if (user) {
+      setSaving(true);
+      const mood = totalScore <= 4 ? 'low' : totalScore <= 7 ? 'medium' : 'high';
+      const result = await saveJournalEntry(scores, totalScore, mood);
+      
+      if (result?.success) {
+        toast.success('Votre journal a été sauvegardé !');
+      } else {
+        toast.error('Erreur lors de la sauvegarde');
+      }
+      setSaving(false);
+    }
+    
     onComplete(scores, totalScore);
   };
 
@@ -217,10 +240,11 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
         {/* Bouton de validation */}
         <button
           onClick={handleComplete}
-          className="w-full journey-button-primary text-lg py-4 flex items-center justify-center gap-3 pulse-glow"
+          className={`w-full journey-button-primary text-lg py-4 flex items-center justify-center gap-3 pulse-glow ${saving ? 'opacity-50' : ''}`}
+          disabled={saving}
         >
-          <Check className="w-6 h-6" />
-          Terminer l'évaluation
+          <Plus className="w-6 h-6" />
+          {saving ? 'Sauvegarde...' : 'Terminer l\'évaluation'}
         </button>
       </div>
     </div>
