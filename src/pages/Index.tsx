@@ -59,7 +59,6 @@ const Index = () => {
     });
 
     setCurrentJournalData({ scores, totalScore });
-    const mood = totalScore <= 4 ? 'low' : totalScore <= 7 ? 'medium' : 'high';
     setCurrentScreen('reflection');
   };
 
@@ -102,10 +101,10 @@ const Index = () => {
         return <DailyJournal onComplete={handleJournalComplete} />;
       case 'reflection':
         if (!currentJournalData) return <HomePage onNavigate={setCurrentScreen} entries={journalEntries} />;
-        const mood = currentJournalData.totalScore <= 4 ? 'low' : currentJournalData.totalScore <= 7 ? 'medium' : 'high';
+        const reflectionMood = currentJournalData.totalScore <= 4 ? 'low' : currentJournalData.totalScore <= 7 ? 'medium' : 'high';
         return (
           <ReflectionScreen 
-            mood={mood} 
+            mood={reflectionMood} 
             totalScore={currentJournalData.totalScore}
             onComplete={handleReflectionComplete}
           />
