@@ -39,9 +39,9 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50">
-      <div className="mx-4 mb-4 bg-card/95 backdrop-blur-md border border-border/50 rounded-2xl shadow-lg">
-        <div className="flex items-center justify-between px-2 py-3">
+    <div className="fixed bottom-0 left-0 right-0 z-50 px-2 pb-2 safe-area-inset-bottom">
+      <div className="bg-card/95 backdrop-blur-md border border-border/50 rounded-2xl shadow-lg overflow-hidden">
+        <div className="grid grid-cols-7 gap-0">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentScreen === item.id;
@@ -49,29 +49,27 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
             return (
               <Button
                 key={item.id}
-                variant={isActive ? "default" : "ghost"}
-                size="sm"
+                variant="ghost"
                 onClick={() => onNavigate(item.id)}
-                className={`flex flex-col items-center gap-1 h-auto py-2 px-3 min-w-[60px] ${
+                className={`flex flex-col items-center justify-center gap-1 h-auto py-3 px-1 rounded-none border-0 transition-all duration-200 min-h-[72px] ${
                   isActive 
-                    ? 'bg-primary text-primary-foreground shadow-sm' 
+                    ? 'bg-primary text-primary-foreground' 
                     : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
                 }`}
               >
-                <Icon size={18} />
-                <span className="text-xs font-medium">{item.label}</span>
+                <Icon size={20} className="shrink-0" />
+                <span className="text-[10px] font-medium leading-tight text-center">{item.label}</span>
               </Button>
             );
           })}
           
           <Button
             variant="ghost"
-            size="sm"
             onClick={handleSignOut}
-            className="flex flex-col items-center gap-1 h-auto py-2 px-3 min-w-[60px] text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+            className="flex flex-col items-center justify-center gap-1 h-auto py-3 px-1 rounded-none border-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200 min-h-[72px]"
           >
-            <LogOut size={18} />
-            <span className="text-xs font-medium">Sortir</span>
+            <LogOut size={20} className="shrink-0" />
+            <span className="text-[10px] font-medium leading-tight text-center">Sortir</span>
           </Button>
         </div>
       </div>
