@@ -13,6 +13,7 @@ import { UserStatus } from '@/components/UserStatus';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { usePremium } from '@/hooks/usePremium';
+import { useProgress } from '@/hooks/useProgress';
 
 interface JournalEntry {
   date: string;
@@ -25,27 +26,40 @@ interface JournalEntry {
 const Index = () => {
   const { user, signOut, loading } = useAuth();
   const { upgradeModalVisible, hideUpgradeModal } = usePremium();
+  const { journalEntries, saveJournalEntry } = useProgress();
   const navigate = useNavigate();
   const [currentScreen, setCurrentScreen] = useState('home');
-  const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([]);
+  const [localJournalEntries, setLocalJournalEntries] = useState<JournalEntry[]>([]);
   const [currentJournalData, setCurrentJournalData] = useState<{
     scores: Record<string, number>;
     totalScore: number;
   } | null>(null);
 
-  // Stocker les données localement si l'utilisateur n'est pas connecté
+  // Charger les données locales si l'utilisateur n'est pas connecté
   useEffect(() => {
     if (!user) {
       const savedEntries = localStorage.getItem('journalEntries');
       if (savedEntries) {
         try {
-          setJournalEntries(JSON.parse(savedEntries));
+          setLocalJournalEntries(JSON.parse(savedEntries));
         } catch (error) {
           console.error('Erreur lors du chargement des données locales:', error);
         }
       }
+    } else {
+      // Effacer les données locales si l'utilisateur se connecte
+      setLocalJournalEntries([]);
     }
   }, [user]);
+
+  // Utiliser les données de la base si connecté, sinon les données locales
+  const entries = user ? journalEntries.map(entry => ({
+    date: entry.date,
+    scores: entry.scores,
+    totalScore: entry.total_score,
+    reflection: entry.reflection,
+    mood: entry.mood
+  })) : localJournalEntries;
 
   const handleJournalComplete = (scores: Record<string, number>, totalScore: number) => {
     const today = new Date().toISOString().split('T')[0];
@@ -58,34 +72,41 @@ const Index = () => {
       mood
     };
 
-    const newEntries = journalEntries.filter(e => e.date !== today);
-    const updatedEntries = [entry, ...newEntries].sort((a, b) => 
-      new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
-
-    setJournalEntries(updatedEntries);
-    
-    // Sauvegarder en localStorage si pas d'utilisateur connecté
+    // Si l'utilisateur n'est pas connecté, sauvegarder en local
     if (!user) {
+      const newEntries = localJournalEntries.filter(e => e.date !== today);
+      const updatedEntries = [entry, ...newEntries].sort((a, b) => 
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+      setLocalJournalEntries(updatedEntries);
       localStorage.setItem('journalEntries', JSON.stringify(updatedEntries));
     }
+    // Si connecté, la sauvegarde se fait automatiquement dans DailyJournal via useProgress
 
     setCurrentJournalData({ scores, totalScore });
     setCurrentScreen('reflection');
   };
 
-  const handleReflectionComplete = (reflection: string) => {
+  const handleReflectionComplete = async (reflection: string) => {
     const today = new Date().toISOString().split('T')[0];
-    const updatedEntries = journalEntries.map(entry => 
-      entry.date === today 
-        ? { ...entry, reflection }
-        : entry
-    );
     
-    setJournalEntries(updatedEntries);
-    
-    // Sauvegarder en localStorage si pas d'utilisateur connecté
-    if (!user) {
+    if (user && currentJournalData) {
+      // Sauvegarder avec la réflection en base de données
+      const mood = currentJournalData.totalScore <= 4 ? 'low' : currentJournalData.totalScore <= 7 ? 'medium' : 'high';
+      await saveJournalEntry(
+        currentJournalData.scores, 
+        currentJournalData.totalScore, 
+        mood, 
+        reflection
+      );
+    } else {
+      // Mettre à jour les données locales
+      const updatedEntries = localJournalEntries.map(entry => 
+        entry.date === today 
+          ? { ...entry, reflection }
+          : entry
+      );
+      setLocalJournalEntries(updatedEntries);
       localStorage.setItem('journalEntries', JSON.stringify(updatedEntries));
     }
     
@@ -104,11 +125,11 @@ const Index = () => {
   const renderScreen = () => {
     switch (currentScreen) {
       case 'home':
-        return <HomePage onNavigate={setCurrentScreen} entries={journalEntries} />;
+        return <HomePage onNavigate={setCurrentScreen} entries={entries} />;
       case 'journal':
         return <DailyJournal onComplete={handleJournalComplete} />;
       case 'reflection':
-        if (!currentJournalData) return <HomePage onNavigate={setCurrentScreen} entries={journalEntries} />;
+        if (!currentJournalData) return <HomePage onNavigate={setCurrentScreen} entries={entries} />;
         const reflectionMood = currentJournalData.totalScore <= 4 ? 'low' : currentJournalData.totalScore <= 7 ? 'medium' : 'high';
         return (
           <ReflectionScreen 
@@ -118,7 +139,7 @@ const Index = () => {
           />
         );
       case 'progress':
-        return <ProgressScreen entries={journalEntries} onNavigate={setCurrentScreen} />;
+        return <ProgressScreen entries={entries} onNavigate={setCurrentScreen} />;
       case 'abstinence':
         return <AbstinenceTracker onNavigate={setCurrentScreen} />;
       case 'stretching':
@@ -126,7 +147,7 @@ const Index = () => {
       case 'meditation':
         return <MeditationTimer onNavigate={setCurrentScreen} />;
       default:
-        return <HomePage onNavigate={setCurrentScreen} entries={journalEntries} />;
+        return <HomePage onNavigate={setCurrentScreen} entries={entries} />;
     }
   };
 
