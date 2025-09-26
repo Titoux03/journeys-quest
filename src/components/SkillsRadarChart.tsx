@@ -2,6 +2,7 @@ import React from 'react';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts';
 import { useAddictions } from '@/hooks/useAddictions';
 import { usePremium } from '@/hooks/usePremium';
+import { usePremiumPreview } from '@/contexts/PremiumPreviewContext';
 import vitruvianMan from '@/assets/vitruvian-man.png';
 
 interface JournalEntry {
@@ -18,6 +19,7 @@ interface SkillsRadarChartProps {
 export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) => {
   const { userAddictions } = useAddictions();
   const { isPremium } = usePremium();
+  const { isPreviewMode } = usePremiumPreview();
 
   const calculateSkillScores = () => {
     if (entries.length === 0) {
@@ -172,46 +174,48 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
       </div>
 
       {/* Score moyen */}
-      <div className="text-center mt-4">
-        <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full text-2xl font-bold ${
-          averageScore >= 7 ? 'bg-gradient-to-br from-green-400 to-emerald-600 text-white' :
-          averageScore >= 4 ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-white' :
-          'bg-gradient-to-br from-red-400 to-rose-600 text-white'
-        } shadow-lg`}>
-          {averageScore.toFixed(1)}
-        </div>
-        <p className="text-sm text-muted-foreground mt-2">
-          Score global de développement
-        </p>
-        
-        {/* Légende motivante */}
-        <div className="mt-4 p-4 bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl border border-primary/10">
-          <p className="text-sm font-medium text-primary">
-            {averageScore >= 8 && "🌟 Équilibre exceptionnel ! Vous maîtrisez votre développement personnel."}
-            {averageScore >= 6 && averageScore < 8 && "💪 Belle progression ! Continuez sur cette voie."}
-            {averageScore >= 4 && averageScore < 6 && "🌱 En développement. Chaque jour compte."}
-            {averageScore < 4 && "🌅 Un nouveau départ. Chaque petit pas vous rapproche de vos objectifs."}
+      {!isPreviewMode && (
+        <div className="text-center mt-4">
+          <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full text-2xl font-bold ${
+            averageScore >= 7 ? 'bg-gradient-to-br from-green-400 to-emerald-600 text-white' :
+            averageScore >= 4 ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-white' :
+            'bg-gradient-to-br from-red-400 to-rose-600 text-white'
+          } shadow-lg`}>
+            {averageScore.toFixed(1)}
+          </div>
+          <p className="text-sm text-muted-foreground mt-2">
+            Score global de développement
           </p>
-        </div>
+          
+          {/* Légende motivante */}
+          <div className="mt-4 p-4 bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl border border-primary/10">
+            <p className="text-sm font-medium text-primary">
+              {averageScore >= 8 && "🌟 Équilibre exceptionnel ! Vous maîtrisez votre développement personnel."}
+              {averageScore >= 6 && averageScore < 8 && "💪 Belle progression ! Continuez sur cette voie."}
+              {averageScore >= 4 && averageScore < 6 && "🌱 En développement. Chaque jour compte."}
+              {averageScore < 4 && "🌅 Un nouveau départ. Chaque petit pas vous rapproche de vos objectifs."}
+            </p>
+          </div>
 
-        {/* Légende des couleurs */}
-        <div className="mt-6 grid grid-cols-5 gap-2 text-xs">
-          {skillData.map((skill, index) => (
-            <div key={index} className="flex flex-col items-center">
-              <div 
-                className="w-4 h-4 rounded-full mb-1" 
-                style={{ backgroundColor: skill.color }}
-              ></div>
-              <span className="text-muted-foreground text-center leading-tight">
-                {skill.skill}
-              </span>
-              <span className="text-primary font-semibold">
-                {skill.score}
-              </span>
-            </div>
-          ))}
+          {/* Légende des couleurs */}
+          <div className="mt-6 grid grid-cols-5 gap-2 text-xs">
+            {skillData.map((skill, index) => (
+              <div key={index} className="flex flex-col items-center">
+                <div 
+                  className="w-4 h-4 rounded-full mb-1" 
+                  style={{ backgroundColor: skill.color }}
+                ></div>
+                <span className="text-muted-foreground text-center leading-tight">
+                  {skill.skill}
+                </span>
+                <span className="text-primary font-semibold">
+                  {skill.score}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

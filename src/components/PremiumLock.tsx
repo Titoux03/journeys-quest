@@ -4,6 +4,7 @@ import { usePremium } from '@/hooks/usePremium';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useGongSounds } from '@/hooks/useGongSounds';
+import { PremiumPreviewProvider } from '@/contexts/PremiumPreviewContext';
 
 interface PremiumLockProps {
   children: React.ReactNode;
@@ -27,14 +28,20 @@ export const PremiumLock: React.FC<PremiumLockProps> = ({
   };
 
   if (isPremium) {
-    return <>{children}</>;
+    return (
+      <PremiumPreviewProvider isPreviewMode={false}>
+        {children}
+      </PremiumPreviewProvider>
+    );
   }
 
   return (
     <div className={`relative ${className}`}>
       {/* Blurred/Dimmed Content */}
       <div className="opacity-50 pointer-events-none filter blur-[2px] scale-95 transform-gpu">
-        {children}
+        <PremiumPreviewProvider isPreviewMode={true}>
+          {children}
+        </PremiumPreviewProvider>
       </div>
 
       {/* Premium Overlay */}
