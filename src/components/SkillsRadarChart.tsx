@@ -98,7 +98,16 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
 
   return (
     <div className="relative">
-      {/* Graphique radar avec fond Vitruve */}
+      {/* Logo Vitruve en arrière-plan */}
+      <div className="absolute inset-0 flex items-center justify-center z-0">
+        <img 
+          src={vitruvianMan} 
+          alt="Homme de Vitruve" 
+          className="w-80 h-80 object-contain opacity-20 select-none pointer-events-none"
+        />
+      </div>
+      
+      {/* Graphique radar */}
       <div className="relative z-10 h-[600px]">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={skillData} margin={{ top: 80, right: 100, bottom: 80, left: 100 }}>
@@ -110,18 +119,6 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
                   <feMergeNode in="SourceGraphic"/>
                 </feMerge>
               </filter>
-              {/* Image de l'homme de Vitruve centrée dans le diagramme */}
-              <pattern id="vitruvianPattern" patternUnits="objectBoundingBox" width="1" height="1">
-                <image 
-                  href={vitruvianMan} 
-                  x="0.1" 
-                  y="0.1" 
-                  width="0.8" 
-                  height="0.8" 
-                  opacity="0.3"
-                  preserveAspectRatio="xMidYMid meet"
-                />
-              </pattern>
             </defs>
             
             <PolarGrid 
@@ -145,16 +142,6 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
               tick={false}
               axisLine={false}
               tickCount={11}
-            />
-            
-            {/* Fond avec l'homme de Vitruve intégré */}
-            <Radar
-              name="Fond Vitruve"
-              dataKey={() => 10}
-              stroke="transparent"
-              strokeWidth={0}
-              fill="url(#vitruvianPattern)"
-              fillOpacity={1}
             />
             
             {/* Zones remplies avec effet de superposition - couleurs plus vives */}
