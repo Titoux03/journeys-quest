@@ -27,37 +27,44 @@ const StretchingRoutineContent: React.FC<StretchingRoutineProps> = ({ onNavigate
   const [exercises, setExercises] = useState<Exercise[]>([
     {
       id: '1',
-      name: 'Étirement du cou',
-      description: 'Inclinez doucement la tête de chaque côté',
-      duration: '30 sec',
+      name: 'Étirement des trapèzes supérieurs',
+      description: 'Inclinez la tête sur le côté en plaçant la main opposée derrière le dos. Réduit les tensions cervicales et améliore la mobilité du cou.',
+      duration: '45 sec',
       completed: false
     },
     {
       id: '2',
-      name: 'Rotation des épaules',
-      description: 'Mouvements circulaires lents et contrôlés',
+      name: 'Ouverture thoracique',
+      description: 'Bras tendus dans le dos, entrelacez les doigts et poussez vers le haut. Corrige la posture, ouvre la cage thoracique et libère les tensions des épaules.',
       duration: '1 min',
       completed: false
     },
     {
       id: '3',
-      name: 'Étirement du dos',
-      description: 'Penchez-vous en avant, laissez pendre les bras',
-      duration: '45 sec',
+      name: 'Flexion avant debout',
+      description: 'Pieds écartés largeur d\'épaules, penchez-vous en avant en laissant pendre les bras. Étire toute la chaîne postérieure et décompresse la colonne vertébrale.',
+      duration: '1 min',
       completed: false
     },
     {
       id: '4',
-      name: 'Torsion du tronc',
-      description: 'Assis, tournez doucement le buste de chaque côté',
-      duration: '30 sec',
+      name: 'Rotation du rachis',
+      description: 'Assis jambes croisées, placez une main au sol derrière vous et tournez le buste. Améliore la mobilité vertébrale et masse les organes internes.',
+      duration: '45 sec',
       completed: false
     },
     {
       id: '5',
-      name: 'Étirement des jambes',
-      description: 'Debout, pliez une jambe vers les fessiers',
-      duration: '30 sec',
+      name: 'Étirement des ischio-jambiers',
+      description: 'Debout, posez un talon sur un support bas et penchez-vous vers l\'avant. Prévient les blessures et améliore la flexibilité des jambes.',
+      duration: '45 sec',
+      completed: false
+    },
+    {
+      id: '6',
+      name: 'Étirement des fléchisseurs de hanche',
+      description: 'En fente, poussez le bassin vers l\'avant. Compense la position assise prolongée et améliore la posture globale.',
+      duration: '45 sec',
       completed: false
     }
   ]);
@@ -96,7 +103,7 @@ const StretchingRoutineContent: React.FC<StretchingRoutineProps> = ({ onNavigate
           Routine Stretching
         </h1>
         <p className="text-muted-foreground">
-          5 minutes pour délier votre corps
+          6 exercices ciblés pour améliorer votre mobilité
         </p>
       </div>
 
@@ -125,7 +132,7 @@ const StretchingRoutineContent: React.FC<StretchingRoutineProps> = ({ onNavigate
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2 text-sm text-muted-foreground">
             <Clock className="w-4 h-4" />
-            <span>~5 minutes total</span>
+            <span>~7 minutes total</span>
           </div>
           {completedCount > 0 && (
             <Button

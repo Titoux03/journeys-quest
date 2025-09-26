@@ -6,7 +6,7 @@ import {
   BarChart3, 
   Timer, 
   Shield, 
-  Activity,
+  Dumbbell,
   LogOut,
   LogIn
 } from 'lucide-react';
@@ -38,7 +38,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
     { id: 'journal', icon: BookOpen, label: 'Journal' },
     { id: 'meditation', icon: Timer, label: 'Focus' },
     { id: 'abstinence', icon: Shield, label: 'Abstinence' },
-    { id: 'stretching', icon: Activity, label: 'Stretching' },
+    { id: 'stretching', icon: Dumbbell, label: 'Stretching' },
     { id: 'progress', icon: BarChart3, label: 'Progrès' },
   ];
 
