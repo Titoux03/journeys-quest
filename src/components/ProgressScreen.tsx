@@ -335,8 +335,8 @@ const ProgressScreenContent: React.FC<ProgressScreenProps> = ({ entries, onNavig
                 .slice(0, 10)
                 .map(entry => (
                   <div key={entry.date} className="journey-card">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
+                    <div className="grid grid-cols-[1fr_auto] gap-4 items-start">
+                      <div className="min-w-0">
                         <div className="font-medium text-foreground">
                           {new Date(entry.date).toLocaleDateString('fr-FR', {
                             weekday: 'long',
@@ -345,12 +345,12 @@ const ProgressScreenContent: React.FC<ProgressScreenProps> = ({ entries, onNavig
                           })}
                         </div>
                         {entry.reflection && (
-                          <p className="text-xs text-muted-foreground mt-1 truncate max-w-xs">
+                          <p className="text-xs text-muted-foreground mt-1 line-clamp-2 break-words">
                             {entry.reflection}
                           </p>
                         )}
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 flex-shrink-0">
                         <div className={`score-indicator ${getScoreClass(entry.totalScore)} !w-12 !h-12 !text-sm`}>
                           {entry.totalScore > 10 ? Math.round(entry.totalScore) : entry.totalScore}
                         </div>
