@@ -25,7 +25,7 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
         { skill: 'Physique', score: 0, maxScore: 10, color: '#3b82f6', fillColor: 'rgba(59, 130, 246, 0.15)' },
         { skill: 'Régularité', score: 0, maxScore: 10, color: '#8b5cf6', fillColor: 'rgba(139, 92, 246, 0.15)' },
         { skill: 'Réalisation', score: 0, maxScore: 10, color: '#f59e0b', fillColor: 'rgba(245, 158, 11, 0.15)' },
-        { skill: 'Force âme', score: 0, maxScore: 10, color: '#ef4444', fillColor: 'rgba(239, 68, 68, 0.15)' }
+        { skill: 'Force âme', score: 0, maxScore: 10, color: '#ffffff', fillColor: 'rgba(255, 255, 255, 0.15)' }
       ];
     }
 
@@ -88,7 +88,7 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
       { skill: 'Physique', score: Math.round(physicalScore * 10) / 10, maxScore: 10, color: '#3b82f6', fillColor: 'rgba(59, 130, 246, 0.15)' },
       { skill: 'Régularité', score: Math.round(regularityScore * 10) / 10, maxScore: 10, color: '#8b5cf6', fillColor: 'rgba(139, 92, 246, 0.15)' },
       { skill: 'Réalisation', score: Math.round(realizationScore * 10) / 10, maxScore: 10, color: '#f59e0b', fillColor: 'rgba(245, 158, 11, 0.15)' },
-      { skill: 'Force âme', score: Math.round(soulStrengthScore * 10) / 10, maxScore: 10, color: '#ef4444', fillColor: 'rgba(239, 68, 68, 0.15)' }
+      { skill: 'Force âme', score: Math.round(soulStrengthScore * 10) / 10, maxScore: 10, color: '#ffffff', fillColor: 'rgba(255, 255, 255, 0.15)' }
     ];
   };
 
@@ -163,7 +163,13 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
                 fill="transparent"
                 fillOpacity={0}
                 filter="url(#glow)"
-                dot={false}
+                dot={{ 
+                  fill: skill.color, 
+                  strokeWidth: 4, 
+                  stroke: 'hsl(var(--background))',
+                  r: 8,
+                  filter: 'url(#glow)'
+                }}
                 label={{
                   position: 'outside',
                   offset: 15,
