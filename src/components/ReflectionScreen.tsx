@@ -5,12 +5,14 @@ interface ReflectionScreenProps {
   mood: 'low' | 'medium' | 'high';
   totalScore: number;
   onComplete: (reflection: string) => void;
+  freeWriting?: boolean;
 }
 
 export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({
   mood,
   totalScore,
-  onComplete
+  onComplete,
+  freeWriting = false
 }) => {
   const [reflection, setReflection] = useState('');
 
@@ -88,27 +90,29 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({
           <div className="floating-element inline-block mb-4">
             <IconComponent className="w-12 h-12 text-accent mx-auto" />
           </div>
-          <h1 className="text-3xl font-bold text-gradient-primary mb-2">
-            {content.title}
+          <h1 className="text-2xl sm:text-3xl font-bold text-gradient-primary mb-2">
+            {freeWriting ? "Vos notes du jour ✍️" : content.title}
           </h1>
           <p className="text-muted-foreground">
-            {content.subtitle}
+            {freeWriting ? "Écrivez librement vos pensées et réflexions" : content.subtitle}
           </p>
         </div>
 
-        {/* Score display */}
-        <div className="journey-card mb-6 text-center animate-scale-in">
-          <p className="text-sm text-muted-foreground mb-2">Votre score du jour</p>
-          <div className={`score-indicator mx-auto ${
-            mood === 'high' ? 'score-high' : 
-            mood === 'medium' ? 'score-medium' : 'score-low'
-          }`}>
-            {totalScore.toFixed(1)}
+        {/* Score display - masqué en écriture libre */}
+        {!freeWriting && (
+          <div className="journey-card mb-6 text-center animate-scale-in">
+            <p className="text-sm text-muted-foreground mb-2">Votre score du jour</p>
+            <div className={`score-indicator mx-auto ${
+              mood === 'high' ? 'score-high' : 
+              mood === 'medium' ? 'score-medium' : 'score-low'
+            }`}>
+              {totalScore.toFixed(1)}
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Questions de réflexion pour les scores bas */}
-        {content.questions.length > 0 && (
+        {/* Questions de réflexion - masquées en écriture libre */}
+        {!freeWriting && content.questions.length > 0 && (
           <div className="mb-8">
             <h3 className="text-lg font-medium mb-4 text-card-foreground">
               Questions pour vous accompagner :
@@ -136,13 +140,13 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({
           <textarea
             value={reflection}
             onChange={(e) => setReflection(e.target.value)}
-            placeholder={content.placeholder}
+            placeholder={freeWriting ? "Écrivez vos pensées, vos émotions, vos découvertes du jour..." : content.placeholder}
             className="w-full h-64 p-0 border-0 bg-transparent resize-none focus:outline-none text-card-foreground placeholder-muted-foreground"
             style={{ fontSize: '16px', lineHeight: '1.6' }}
           />
         </div>
 
-        {/* Encouragement */}
+        {/* Encouragement - adapté pour l'écriture libre */}
         <div className="journey-card mb-6 bg-accent/10 border-accent/20 animate-slide-up">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center">
@@ -150,15 +154,21 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({
             </div>
             <div>
               <p className="font-medium text-card-foreground">
-                {mood === 'low' 
-                  ? "Chaque jour est un nouveau départ"
-                  : "Votre parcours inspire !"
+                {freeWriting 
+                  ? "L'écriture libère l'esprit"
+                  : (mood === 'low' 
+                    ? "Chaque jour est un nouveau départ"
+                    : "Votre parcours inspire !"
+                  )
                 }
               </p>
               <p className="text-sm text-muted-foreground">
-                {mood === 'low'
-                  ? "Soyez fier de prendre ce moment pour vous"
-                  : "Continuez à cultiver ces beaux moments"
+                {freeWriting
+                  ? "Exprimez-vous sans contrainte, chaque mot compte"
+                  : (mood === 'low'
+                    ? "Soyez fier de prendre ce moment pour vous"
+                    : "Continuez à cultiver ces beaux moments"
+                  )
                 }
               </p>
             </div>
@@ -176,7 +186,7 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({
           }`}
         >
           <Send className="w-6 h-6" />
-          {content.buttonText}
+          {freeWriting ? "Sauvegarder mes notes" : content.buttonText}
         </button>
       </div>
     </div>

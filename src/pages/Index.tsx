@@ -11,6 +11,7 @@ import { PremiumUpgrade } from '@/components/PremiumUpgrade';
 import { MarketingNotifications } from '@/components/MarketingNotifications';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { UserStatus } from '@/components/UserStatus';
+import { WelcomeAnimation } from '@/components/WelcomeAnimation';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { usePremium } from '@/hooks/usePremium';
@@ -38,6 +39,7 @@ const Index = () => {
     scores: Record<string, number>;
     totalScore: number;
   } | null>(null);
+  const [showWelcome, setShowWelcome] = useState(true);
 
   // Charger les données locales si l'utilisateur n'est pas connecté
   useEffect(() => {
@@ -56,16 +58,29 @@ const Index = () => {
     }
   }, [user]);
 
-  // Jouer le gong de bienvenue à l'arrivée
+  // Gérer l'animation de bienvenue et le gong
   useEffect(() => {
-    const hasPlayedWelcome = sessionStorage.getItem('hasPlayedWelcome');
-    if (!hasPlayedWelcome) {
-      const timer = setTimeout(() => {
-        playWelcome();
-        sessionStorage.setItem('hasPlayedWelcome', 'true');
-      }, 1500);
+    const hasSeenWelcome = sessionStorage.getItem('hasSeenWelcome');
+    if (!hasSeenWelcome) {
+      setShowWelcome(true);
       
-      return () => clearTimeout(timer);
+      // Masquer l'animation après 1.2s et jouer le gong
+      const welcomeTimer = setTimeout(() => {
+        setShowWelcome(false);
+        sessionStorage.setItem('hasSeenWelcome', 'true');
+      }, 1200);
+      
+      // Jouer le gong après l'animation
+      const gongTimer = setTimeout(() => {
+        playWelcome();
+      }, 1400);
+      
+      return () => {
+        clearTimeout(welcomeTimer);
+        clearTimeout(gongTimer);
+      };
+    } else {
+      setShowWelcome(false);
     }
   }, [playWelcome]);
 
@@ -165,13 +180,18 @@ const Index = () => {
       case 'journal':
         return <DailyJournal onComplete={handleJournalComplete} />;
       case 'reflection':
-        if (!currentJournalData) return <HomePage onNavigate={setCurrentScreen} entries={entries} />;
-        const reflectionMood = currentJournalData.totalScore <= 4 ? 'low' : currentJournalData.totalScore <= 7 ? 'medium' : 'high';
+        // Permettre l'accès libre aux notes (sans avoir besoin de currentJournalData)
+        const mood = currentJournalData?.totalScore ? 
+          (currentJournalData.totalScore <= 4 ? 'low' : currentJournalData.totalScore <= 7 ? 'medium' : 'high') : 
+          'medium';
+        const score = currentJournalData?.totalScore || 5.0;
+        
         return (
           <ReflectionScreen 
-            mood={reflectionMood} 
-            totalScore={currentJournalData.totalScore}
+            mood={mood}
+            totalScore={score}
             onComplete={handleReflectionComplete}
+            freeWriting={!currentJournalData} // Nouveau prop pour indiquer l'écriture libre
           />
         );
       case 'progress':
@@ -189,6 +209,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen pb-24">
+      {/* Animation d'accueil */}
+      {showWelcome && <WelcomeAnimation />}
+      
       {/* Optimisations CSS mobile */}
       <MobileOptimizations />
       
