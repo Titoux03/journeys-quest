@@ -127,10 +127,21 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
             />
             <PolarAngleAxis 
               dataKey="skill" 
-              tick={{ 
-                fontSize: window.innerWidth < 640 ? 12 : window.innerWidth < 768 ? 14 : 16, 
-                fill: 'hsl(var(--foreground))',
-                fontWeight: 600
+              tick={({ x, y, textAnchor, value }) => {
+                const skill = skillData.find(s => s.skill === value);
+                const fontSize = window.innerWidth < 640 ? 12 : window.innerWidth < 768 ? 14 : 16;
+                return (
+                  <text 
+                    x={x} 
+                    y={y} 
+                    textAnchor={textAnchor} 
+                    fontSize={fontSize}
+                    fontWeight={600}
+                    fill={skill?.color || 'hsl(var(--foreground))'}
+                  >
+                    {value}
+                  </text>
+                );
               }}
               className="text-xs sm:text-sm md:text-base font-semibold"
             />
