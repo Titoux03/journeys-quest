@@ -36,7 +36,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   const navItems = [
     { id: 'home', icon: Home, label: 'Accueil' },
     { id: 'journal', icon: BookOpen, label: 'Journal' },
-    { id: 'meditation', icon: Timer, label: 'Méditation' },
+    { id: 'meditation', icon: Timer, label: 'Focus' },
     { id: 'abstinence', icon: Shield, label: 'Abstinence' },
     { id: 'stretching', icon: Activity, label: 'Stretching' },
     { id: 'progress', icon: BarChart3, label: 'Progrès' },

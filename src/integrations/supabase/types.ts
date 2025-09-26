@@ -44,6 +44,77 @@ export type Database = {
         }
         Relationships: []
       }
+      addiction_types: {
+        Row: {
+          color: string
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          name: string
+        }
+        Insert: {
+          color: string
+          created_at?: string
+          description: string
+          icon: string
+          id?: string
+          name: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      badges: {
+        Row: {
+          addiction_type_id: string | null
+          category: string
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          name: string
+          requirement_type: string
+          requirement_value: number
+        }
+        Insert: {
+          addiction_type_id?: string | null
+          category: string
+          created_at?: string
+          description: string
+          icon: string
+          id?: string
+          name: string
+          requirement_type: string
+          requirement_value: number
+        }
+        Update: {
+          addiction_type_id?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          name?: string
+          requirement_type?: string
+          requirement_value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "badges_addiction_type_id_fkey"
+            columns: ["addiction_type_id"]
+            isOneToOne: false
+            referencedRelation: "addiction_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       journal_entries: {
         Row: {
           created_at: string
@@ -75,6 +146,39 @@ export type Database = {
           reflection?: string | null
           scores?: Json
           total_score?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      login_streaks: {
+        Row: {
+          created_at: string
+          current_streak: number
+          id: string
+          last_login_date: string
+          longest_streak: number
+          streak_start_date: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_streak?: number
+          id?: string
+          last_login_date: string
+          longest_streak?: number
+          streak_start_date: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_streak?: number
+          id?: string
+          last_login_date?: string
+          longest_streak?: number
+          streak_start_date?: string
           updated_at?: string
           user_id?: string
         }
@@ -169,6 +273,85 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_addictions: {
+        Row: {
+          addiction_type_id: string
+          created_at: string
+          current_streak: number
+          id: string
+          is_active: boolean
+          last_relapse_date: string | null
+          longest_streak: number
+          start_date: string
+          total_relapses: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          addiction_type_id: string
+          created_at?: string
+          current_streak?: number
+          id?: string
+          is_active?: boolean
+          last_relapse_date?: string | null
+          longest_streak?: number
+          start_date: string
+          total_relapses?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          addiction_type_id?: string
+          created_at?: string
+          current_streak?: number
+          id?: string
+          is_active?: boolean
+          last_relapse_date?: string | null
+          longest_streak?: number
+          start_date?: string
+          total_relapses?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_addictions_addiction_type_id_fkey"
+            columns: ["addiction_type_id"]
+            isOneToOne: false
+            referencedRelation: "addiction_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_badges: {
+        Row: {
+          badge_id: string
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          earned_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

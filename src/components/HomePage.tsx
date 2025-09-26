@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { DailyQuote } from '@/components/DailyQuote';
-import { Sparkles, TrendingUp, Target, Brain, Shield, Dumbbell, Crown } from 'lucide-react';
+import { LoginStreakDisplay } from '@/components/LoginStreakDisplay';
+import { AddictionCard } from '@/components/AddictionCard';
+import { Sparkles, TrendingUp, Target, Brain, Shield, Dumbbell, Crown, Star, Flame } from 'lucide-react';
 import { usePremium } from '@/hooks/usePremium';
 import { useAuth } from '@/hooks/useAuth';
+import { useAddictions } from '@/hooks/useAddictions';
 
 interface JournalEntry {
   date: string;
@@ -21,6 +24,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
   const [currentQuote, setCurrentQuote] = useState<string>('');
   const { isPremium, showUpgradeModal } = usePremium();
   const { user } = useAuth();
+  const { 
+    addictionTypes, 
+    userAddictions, 
+    userBadges, 
+    loginStreak,
+    startAddictionTracking,
+    markRelapse
+  } = useAddictions();
 
   const today = new Date();
   const todayStr = today.toISOString().split('T')[0];
@@ -64,15 +75,89 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
         )}
       </div>
 
-      {/* Premium Status Banner */}
-      {isPremium && (
-        <div className="journey-card-glow mb-6">
-          <div className="flex items-center justify-center space-x-3">
-            <Crown className="w-6 h-6 text-primary" />
-            <span className="text-lg font-semibold text-gradient-primary">
-              Journeys Premium
-            </span>
-            <Crown className="w-6 h-6 text-primary" />
+      {/* Premium Status & Streaks */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        {isPremium && (
+          <div className="journey-card-glow">
+            <div className="flex items-center justify-center space-x-3">
+              <Crown className="w-6 h-6 text-primary" />
+              <span className="text-lg font-semibold text-gradient-primary">
+                Journeys Premium
+              </span>
+              <Crown className="w-6 h-6 text-primary" />
+            </div>
+          </div>
+        )}
+        
+        {user && (
+          <LoginStreakDisplay loginStreak={loginStreak} />
+        )}
+      </div>
+
+      {/* Featured Addictions Preview */}
+      {isPremium && user && userAddictions.length > 0 && (
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-foreground">Mes Addictions Actives</h2>
+            <button
+              onClick={() => onNavigate('abstinence')}
+              className="text-primary hover:text-primary-glow transition-colors text-sm font-medium"
+            >
+              Voir tout →
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {userAddictions.slice(0, 2).map((userAddiction) => {
+              const addictionType = addictionTypes.find(at => at.id === userAddiction.addiction_type_id);
+              if (!addictionType) return null;
+              
+              return (
+                <AddictionCard
+                  key={userAddiction.id}
+                  addictionType={addictionType}
+                  userAddiction={userAddiction}
+                  onStart={() => {}}
+                  onRelapse={() => markRelapse(userAddiction.id)}
+                  className="cursor-pointer"
+                />
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Recent Badges */}
+      {isPremium && user && userBadges.length > 0 && (
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-foreground flex items-center">
+              <Star className="w-6 h-6 mr-2 text-accent" />
+              Derniers Badges Débloqués
+            </h2>
+            <button
+              onClick={() => onNavigate('abstinence')}
+              className="text-accent hover:text-accent-glow transition-colors text-sm font-medium"
+            >
+              Voir tous les badges →
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {userBadges.slice(0, 4).map((userBadge) => (
+              <div
+                key={userBadge.id}
+                className="flex items-center space-x-3 p-3 rounded-xl bg-gradient-to-r from-accent/10 to-accent-glow/5 border border-accent/20"
+              >
+                <div className="text-2xl">{userBadge.badge.icon}</div>
+                <div className="flex-1">
+                  <div className="font-medium text-foreground text-sm">{userBadge.badge.name}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {userBadge.badge.description}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
@@ -120,10 +205,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
             </div>
           </div>
           <h3 className={`font-semibold text-lg mb-2 ${!isPremium && 'text-muted-foreground'}`}>
-            Méditation & Deep Work
+            Focus & Deep Work
           </h3>
           <p className="text-sm text-muted-foreground">
-            Minuteurs premium pour concentration
+            Méditation et minuteurs premium pour concentration
           </p>
         </button>
 
@@ -149,10 +234,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
             </div>
           </div>
           <h3 className={`font-semibold text-lg mb-2 ${!isPremium && 'text-muted-foreground'}`}>
-            Compteur d'abstinence
+            Abstinence Multi-Addictions
           </h3>
           <p className="text-sm text-muted-foreground">
-            Suivez vos progrès jour par jour
+            Cigarette, porno, scroll, procrastination + système de badges
           </p>
         </button>
 

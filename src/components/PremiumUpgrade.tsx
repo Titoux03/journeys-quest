@@ -42,13 +42,23 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
   const premiumFeatures = [
     {
       icon: <Brain className="w-6 h-6" />,
-      title: "Méditation & Deep Work",
-      description: "Minuteurs premium pour concentration et sérénité"
+      title: "Focus & Deep Work",
+      description: "Méditation et minuteurs premium pour concentration et sérénité"
     },
     {
       icon: <Shield className="w-6 h-6" />,
-      title: "Compteur d'abstinence",
-      description: "Suivez vos progrès avec des statistiques détaillées"
+      title: "Abstinence Multi-Addictions",
+      description: "Cigarette, porno, scroll, procrastination - Surmontez toutes vos dépendances"
+    },
+    {
+      icon: <Crown className="w-6 h-6" />,
+      title: "Système de Badges",
+      description: "Débloquez des récompenses et suivez vos accomplissements"
+    },
+    {
+      icon: <Sparkles className="w-6 h-6" />,
+      title: "Streaks de Fidélité",
+      description: "Gagnez des badges spéciaux en vous connectant quotidiennement"
     },
     {
       icon: <Dumbbell className="w-6 h-6" />,
@@ -57,18 +67,8 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
     },
     {
       icon: <TrendingUp className="w-6 h-6" />,
-      title: "Historique complet",
-      description: "Visualisez votre évolution sur plusieurs mois"
-    },
-    {
-      icon: <Crown className="w-6 h-6" />,
-      title: "Gamification avancée",
-      description: "Badges exclusifs et statistiques premium"
-    },
-    {
-      icon: <Sparkles className="w-6 h-6" />,
-      title: "Citations personnalisées",
-      description: "Messages inspirants générés par IA chaque jour"
+      title: "Statistiques avancées",
+      description: "Analyse complète avec historique détaillé et tendances"
     }
   ];
 
