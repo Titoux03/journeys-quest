@@ -157,6 +157,193 @@ const FreeNotesContent: React.FC<FreeNotesProps> = ({ freeNotes, onNavigate, onU
   );
 };
 
+// BasicProgressContent - For logged users without premium (access to notes but not premium features)  
+const BasicProgressContent: React.FC<ProgressScreenProps> = ({ entries, onNavigate, onUpdateEntry }) => {
+  const [editingEntry, setEditingEntry] = useState<JournalEntry | null>(null);
+  const { deleteJournalEntry } = useProgress();
+
+  const handleDeleteEntry = async (entryDate: string) => {
+    try {
+      await deleteJournalEntry(entryDate);
+      toast.success('Entrée supprimée avec succès');
+    } catch (error) {
+      toast.error('Erreur lors de la suppression');
+    }
+  };
+
+  const freeNotes = entries.filter(entry => entry.totalScore === 0);
+  const journalEntries = entries.filter(entry => entry.totalScore > 0);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background to-background/80 p-4">
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <Button 
+            variant="outline" 
+            onClick={() => onNavigate('home')}
+            className="flex items-center space-x-2"
+          >
+            <TrendingUp className="w-4 h-4" />
+            <span>Retour</span>
+          </Button>
+          <h1 className="text-2xl font-bold text-gradient-primary">Mon Historique</h1>
+          <div></div>
+        </div>
+
+        {/* Premium features locked */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <PremiumLock feature="Statistiques avancées" className="h-48">
+            <div className="p-6 bg-secondary/20 rounded-lg h-full flex items-center justify-center">
+              <p className="text-muted-foreground">Statistiques détaillées</p>
+            </div>
+          </PremiumLock>
+          
+          <PremiumLock feature="Diagramme de compétences" className="h-48">
+            <div className="p-6 bg-secondary/20 rounded-lg h-full flex items-center justify-center">
+              <p className="text-muted-foreground">Diagramme radar des compétences</p>
+            </div>
+          </PremiumLock>
+        </div>
+
+        {/* Journal Entries - Accessible */}
+        {journalEntries.length > 0 && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold flex items-center space-x-2">
+              <Calendar className="w-5 h-5" />
+              <span>Historique des évaluations ({journalEntries.length})</span>
+            </h2>
+            
+            <div className="grid gap-4">
+              {journalEntries.slice(0, 10).map((entry) => (
+                <div key={entry.date} className="journey-card p-4">
+                  <div className="grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
+                    <div className="text-sm font-medium text-muted-foreground whitespace-nowrap">
+                      {new Date(entry.date).toLocaleDateString('fr-FR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                      })}
+                    </div>
+                    
+                    <div className="min-w-0">
+                      {entry.reflection && (
+                        <p className="text-sm text-muted-foreground line-clamp-2 break-words">
+                          "{entry.reflection}"
+                        </p>
+                      )}
+                    </div>
+                    
+                    <div className="text-lg font-bold text-primary whitespace-nowrap">
+                      {entry.totalScore.toFixed(1)}/10
+                    </div>
+                    
+                    <div className="flex space-x-2 whitespace-nowrap">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setEditingEntry(entry)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <Edit3 className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteEntry(entry.date)}
+                        className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Free Notes - Accessible */}
+        {freeNotes.length > 0 && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold flex items-center space-x-2">
+              <FileText className="w-5 h-5" />
+              <span>Notes libres ({freeNotes.length})</span>
+            </h2>
+            
+            <div className="grid gap-4">
+              {freeNotes.slice(0, 10).map((entry) => (
+                <div key={entry.date} className="journey-card p-4">
+                  <div className="grid grid-cols-[auto_1fr_auto] gap-4 items-center">
+                    <div className="text-sm font-medium text-muted-foreground whitespace-nowrap">
+                      {new Date(entry.date).toLocaleDateString('fr-FR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                      })}
+                    </div>
+                    
+                    <div className="min-w-0">
+                      <p className="text-sm text-muted-foreground line-clamp-2 break-words">
+                        "{entry.reflection || 'Note sans contenu'}"
+                      </p>
+                    </div>
+                    
+                    <div className="flex space-x-2 whitespace-nowrap">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setEditingEntry(entry)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <Edit3 className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteEntry(entry.date)}
+                        className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {entries.length === 0 && (
+          <div className="text-center py-12">
+            <Calendar className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+            <h3 className="text-xl font-semibold mb-2">Aucune entrée</h3>
+            <p className="text-muted-foreground">
+              Commencez à noter vos journées pour voir vos progrès ici.
+            </p>
+          </div>
+        )}
+
+        {/* Edit Dialog */}
+        {editingEntry && (
+          <Dialog open={!!editingEntry} onOpenChange={() => setEditingEntry(null)}>
+            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+              <EditJournalEntry
+                entry={editingEntry}
+                onSave={(updatedEntry) => {
+                  onUpdateEntry?.(updatedEntry);
+                  setEditingEntry(null);
+                }}
+                onCancel={() => setEditingEntry(null)}
+              />
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export const ProgressScreen: React.FC<ProgressScreenProps> = ({ entries, onNavigate, onUpdateEntry }) => {
   const { isPremium } = usePremium();
   const { user } = useAuth();
