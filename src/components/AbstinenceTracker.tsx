@@ -5,6 +5,8 @@ import { PremiumLock } from '@/components/PremiumLock';
 import { AddictionCard } from '@/components/AddictionCard';
 import { BadgesList } from '@/components/BadgesList';
 import { LoginStreakDisplay } from '@/components/LoginStreakDisplay';
+import { AllBadgesDisplay } from '@/components/AllBadgesDisplay';
+import { ProcrastinationTasks } from '@/components/ProcrastinationTasks';
 import { useAddictions } from '@/hooks/useAddictions';
 import { useGongSounds } from '@/hooks/useGongSounds';
 
@@ -24,6 +26,7 @@ const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate
   const { 
     addictionTypes, 
     userAddictions, 
+    badges,
     userBadges, 
     loginStreak, 
     loading,
@@ -87,13 +90,19 @@ const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate
             );
             
             return (
-              <AddictionCard
-                key={addictionType.id}
-                addictionType={addictionType}
-                userAddiction={userAddiction}
-                onStart={() => handleStartAddiction(addictionType.id)}
-                onRelapse={() => userAddiction && handleRelapse(userAddiction.id)}
-              />
+              <div key={addictionType.id} className="space-y-4">
+                <AddictionCard
+                  addictionType={addictionType}
+                  userAddiction={userAddiction}
+                  onStart={() => handleStartAddiction(addictionType.id)}
+                  onRelapse={() => userAddiction && handleRelapse(userAddiction.id)}
+                />
+                
+                {/* Système de tâches pour la procrastination */}
+                {addictionType.name === 'Procrastination' && userAddiction && (
+                  <ProcrastinationTasks />
+                )}
+              </div>
             );
           })}
         </div>
@@ -112,6 +121,13 @@ const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate
         </div>
         
         <BadgesList userBadges={userBadges} />
+        
+        {/* Tous les badges disponibles */}
+        <AllBadgesDisplay 
+          addictionTypes={addictionTypes}
+          badges={badges}
+          userBadges={userBadges}
+        />
       </div>
     </div>
   );
