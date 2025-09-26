@@ -21,11 +21,11 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
   const calculateSkillScores = () => {
     if (entries.length === 0) {
       return [
-        { skill: 'Santé mentale', score: 0, maxScore: 10, color: '#22c55e', fillColor: 'rgba(34, 197, 94, 0.15)' },
+        { skill: 'Mental', score: 0, maxScore: 10, color: '#22c55e', fillColor: 'rgba(34, 197, 94, 0.15)' },
         { skill: 'Physique', score: 0, maxScore: 10, color: '#3b82f6', fillColor: 'rgba(59, 130, 246, 0.15)' },
         { skill: 'Régularité', score: 0, maxScore: 10, color: '#8b5cf6', fillColor: 'rgba(139, 92, 246, 0.15)' },
         { skill: 'Réalisation', score: 0, maxScore: 10, color: '#f59e0b', fillColor: 'rgba(245, 158, 11, 0.15)' },
-        { skill: 'Force de l\'âme', score: 0, maxScore: 10, color: '#ef4444', fillColor: 'rgba(239, 68, 68, 0.15)' }
+        { skill: 'Force âme', score: 0, maxScore: 10, color: '#ef4444', fillColor: 'rgba(239, 68, 68, 0.15)' }
       ];
     }
 
@@ -84,11 +84,11 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
     })();
 
     return [
-      { skill: 'Santé mentale', score: Math.round(mentalHealthScore * 10) / 10, maxScore: 10, color: '#22c55e', fillColor: 'rgba(34, 197, 94, 0.15)' },
+      { skill: 'Mental', score: Math.round(mentalHealthScore * 10) / 10, maxScore: 10, color: '#22c55e', fillColor: 'rgba(34, 197, 94, 0.15)' },
       { skill: 'Physique', score: Math.round(physicalScore * 10) / 10, maxScore: 10, color: '#3b82f6', fillColor: 'rgba(59, 130, 246, 0.15)' },
       { skill: 'Régularité', score: Math.round(regularityScore * 10) / 10, maxScore: 10, color: '#8b5cf6', fillColor: 'rgba(139, 92, 246, 0.15)' },
       { skill: 'Réalisation', score: Math.round(realizationScore * 10) / 10, maxScore: 10, color: '#f59e0b', fillColor: 'rgba(245, 158, 11, 0.15)' },
-      { skill: 'Force de l\'âme', score: Math.round(soulStrengthScore * 10) / 10, maxScore: 10, color: '#ef4444', fillColor: 'rgba(239, 68, 68, 0.15)' }
+      { skill: 'Force âme', score: Math.round(soulStrengthScore * 10) / 10, maxScore: 10, color: '#ef4444', fillColor: 'rgba(239, 68, 68, 0.15)' }
     ];
   };
 
@@ -118,7 +118,7 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
       {/* Graphique radar */}
       <div className="relative z-10 h-96">
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart data={skillData} margin={{ top: 30, right: 40, bottom: 30, left: 40 }}>
+          <RadarChart data={skillData} margin={{ top: 50, right: 60, bottom: 50, left: 60 }}>
             <defs>
               <filter id="glow">
                 <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
@@ -159,7 +159,7 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
                 name={skill.skill}
                 dataKey="score"
                 stroke={skill.color}
-                strokeWidth={3}
+                strokeWidth={4}
                 fill="transparent"
                 fillOpacity={0}
                 filter="url(#glow)"
@@ -167,8 +167,16 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
                   fill: skill.color, 
                   strokeWidth: 4, 
                   stroke: 'hsl(var(--background))',
-                  r: 8,
+                  r: 10,
                   filter: 'url(#glow)'
+                }}
+                label={{
+                  position: 'outside',
+                  offset: 15,
+                  fontSize: 14,
+                  fontWeight: 'bold',
+                  fill: skill.color,
+                  formatter: (value: number) => value.toString()
                 }}
               />
             ))}
