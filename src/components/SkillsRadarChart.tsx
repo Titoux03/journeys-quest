@@ -99,13 +99,13 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
   return (
     <div className="relative">
       {/* Graphique radar */}
-      <div className="relative z-10 h-[400px] md:h-[600px]">
+      <div className="relative z-10 h-[300px] sm:h-[400px] md:h-[500px]">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={skillData} margin={{ 
-            top: window.innerWidth < 768 ? 40 : 80, 
-            right: window.innerWidth < 768 ? 20 : 100, 
-            bottom: window.innerWidth < 768 ? 40 : 80, 
-            left: window.innerWidth < 768 ? 20 : 100 
+            top: window.innerWidth < 640 ? 60 : window.innerWidth < 768 ? 70 : 80, 
+            right: window.innerWidth < 640 ? 50 : window.innerWidth < 768 ? 60 : 100, 
+            bottom: window.innerWidth < 640 ? 60 : window.innerWidth < 768 ? 70 : 80, 
+            left: window.innerWidth < 640 ? 50 : window.innerWidth < 768 ? 60 : 100 
           }}>
             <defs>
               <filter id="glow">
@@ -126,11 +126,11 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
             <PolarAngleAxis 
               dataKey="skill" 
               tick={{ 
-                fontSize: 16, 
+                fontSize: window.innerWidth < 640 ? 12 : window.innerWidth < 768 ? 14 : 16, 
                 fill: 'hsl(var(--foreground))',
-                fontWeight: 700
+                fontWeight: 600
               }}
-              className="text-base font-bold"
+              className="text-xs sm:text-sm md:text-base font-semibold"
             />
             <PolarRadiusAxis 
               angle={90} 

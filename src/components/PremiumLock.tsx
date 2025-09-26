@@ -33,7 +33,7 @@ export const PremiumLock: React.FC<PremiumLockProps> = ({
   return (
     <div className={`relative ${className}`}>
       {/* Blurred/Dimmed Content */}
-      <div className="opacity-60 pointer-events-none filter blur-[1px]">
+      <div className="opacity-50 pointer-events-none filter blur-[2px] scale-95 transform-gpu">
         {children}
       </div>
 
