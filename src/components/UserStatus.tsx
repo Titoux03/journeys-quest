@@ -19,8 +19,7 @@ export const UserStatus: React.FC = () => {
           </div>
           <div>
             <p className="text-sm font-medium">Mode invité</p>
-            <p className="text-xs text-muted-foreground">Inscrit toi pour sauvegarder 
-tes notes et ta progression</p>
+            <p className="text-xs text-muted-foreground">Inscrit toi pour sauvegarder<br />tes notes et ta progression</p>
           </div>
         </div>
         
