@@ -110,15 +110,16 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
                   <feMergeNode in="SourceGraphic"/>
                 </feMerge>
               </filter>
-              {/* Image de l'homme de Vitruve en arrière-plan du diagramme */}
-              <pattern id="vitruvianPattern" patternUnits="userSpaceOnUse" width="300" height="300">
+              {/* Image de l'homme de Vitruve centrée dans le diagramme */}
+              <pattern id="vitruvianPattern" patternUnits="objectBoundingBox" width="1" height="1">
                 <image 
                   href={vitruvianMan} 
-                  x="75" 
-                  y="75" 
-                  width="150" 
-                  height="150" 
-                  opacity="0.2"
+                  x="0.1" 
+                  y="0.1" 
+                  width="0.8" 
+                  height="0.8" 
+                  opacity="0.3"
+                  preserveAspectRatio="xMidYMid meet"
                 />
               </pattern>
             </defs>
