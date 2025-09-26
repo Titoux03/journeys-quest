@@ -1,15 +1,8 @@
-import React, { useState } from 'react';
-import { Check, Clock, Play, RotateCcw } from 'lucide-react';
+import React from 'react';
+import { Check, Clock, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PremiumLock } from '@/components/PremiumLock';
-
-interface Exercise {
-  id: string;
-  name: string;
-  description: string;
-  duration: string;
-  completed: boolean;
-}
+import { useStretching } from '@/hooks/useStretching';
 
 interface StretchingRoutineProps {
   onNavigate: (screen: string) => void;
@@ -24,69 +17,27 @@ export const StretchingRoutine: React.FC<StretchingRoutineProps> = ({ onNavigate
 };
 
 const StretchingRoutineContent: React.FC<StretchingRoutineProps> = ({ onNavigate }) => {
-  const [exercises, setExercises] = useState<Exercise[]>([
-    {
-      id: '1',
-      name: 'Étirement des trapèzes supérieurs',
-      description: 'Inclinez la tête sur le côté en plaçant la main opposée derrière le dos. Réduit les tensions cervicales et améliore la mobilité du cou.',
-      duration: '45 sec',
-      completed: false
-    },
-    {
-      id: '2',
-      name: 'Ouverture thoracique',
-      description: 'Bras tendus dans le dos, entrelacez les doigts et poussez vers le haut. Corrige la posture, ouvre la cage thoracique et libère les tensions des épaules.',
-      duration: '1 min',
-      completed: false
-    },
-    {
-      id: '3',
-      name: 'Flexion avant debout',
-      description: 'Pieds écartés largeur d\'épaules, penchez-vous en avant en laissant pendre les bras. Étire toute la chaîne postérieure et décompresse la colonne vertébrale.',
-      duration: '1 min',
-      completed: false
-    },
-    {
-      id: '4',
-      name: 'Rotation du rachis',
-      description: 'Assis jambes croisées, placez une main au sol derrière vous et tournez le buste. Améliore la mobilité vertébrale et masse les organes internes.',
-      duration: '45 sec',
-      completed: false
-    },
-    {
-      id: '5',
-      name: 'Étirement des ischio-jambiers',
-      description: 'Debout, posez un talon sur un support bas et penchez-vous vers l\'avant. Prévient les blessures et améliore la flexibilité des jambes.',
-      duration: '45 sec',
-      completed: false
-    },
-    {
-      id: '6',
-      name: 'Étirement des fléchisseurs de hanche',
-      description: 'En fente, poussez le bassin vers l\'avant. Compense la position assise prolongée et améliore la posture globale.',
-      duration: '45 sec',
-      completed: false
-    }
-  ]);
+  const { 
+    exercises, 
+    isLoading, 
+    toggleExercise, 
+    resetSession, 
+    completedCount, 
+    totalCount, 
+    isCompleted 
+  } = useStretching();
 
-  const toggleExercise = (id: string) => {
-    setExercises(prev =>
-      prev.map(exercise =>
-        exercise.id === id
-          ? { ...exercise, completed: !exercise.completed }
-          : exercise
-      )
+  if (isLoading) {
+    return (
+      <div className="min-h-screen p-6 bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Chargement de votre routine...</p>
+        </div>
+      </div>
     );
-  };
+  }
 
-  const resetAll = () => {
-    setExercises(prev =>
-      prev.map(exercise => ({ ...exercise, completed: false }))
-    );
-  };
-
-  const completedCount = exercises.filter(ex => ex.completed).length;
-  const totalCount = exercises.length;
   const progressPercentage = (completedCount / totalCount) * 100;
 
   return (
@@ -136,7 +87,7 @@ const StretchingRoutineContent: React.FC<StretchingRoutineProps> = ({ onNavigate
           </div>
           {completedCount > 0 && (
             <Button
-              onClick={resetAll}
+              onClick={resetSession}
               variant="outline"
               size="sm"
               className="text-xs"
@@ -208,14 +159,14 @@ const StretchingRoutineContent: React.FC<StretchingRoutineProps> = ({ onNavigate
       </div>
 
       {/* Completion Message */}
-      {completedCount === totalCount && (
+      {isCompleted && (
         <div className="journey-card-glow mt-6 text-center">
           <div className="text-4xl mb-3">🎉</div>
           <h3 className="text-lg font-semibold text-success mb-2">
             Félicitations !
           </h3>
           <p className="text-sm text-muted-foreground">
-            Vous avez terminé votre routine de stretching
+            Vous avez terminé votre routine de stretching d'aujourd'hui
           </p>
         </div>
       )}

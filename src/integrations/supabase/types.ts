@@ -274,6 +274,42 @@ export type Database = {
         }
         Relationships: []
       }
+      stretching_sessions: {
+        Row: {
+          completed_count: number
+          created_at: string
+          exercises_completed: Json
+          id: string
+          is_completed: boolean
+          session_date: string
+          total_exercises: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_count?: number
+          created_at?: string
+          exercises_completed?: Json
+          id?: string
+          is_completed?: boolean
+          session_date?: string
+          total_exercises?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_count?: number
+          created_at?: string
+          exercises_completed?: Json
+          id?: string
+          is_completed?: boolean
+          session_date?: string
+          total_exercises?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_addictions: {
         Row: {
           addiction_type_id: string
