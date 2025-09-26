@@ -1,0 +1,16 @@
+{
+  "name": "journeys-load-testing",
+  "version": "1.0.0",
+  "description": "Load testing suite for Journeys app",
+  "scripts": {
+    "test:load": "k6 run scripts/load-test.js",
+    "test:stress": "k6 run scripts/stress-test.js", 
+    "test:spike": "k6 run scripts/spike-test.js",
+    "test:endurance": "k6 run scripts/endurance-test.js",
+    "test:all": "npm run test:load && npm run test:spike && npm run test:stress",
+    "report": "k6 run --out json=results.json scripts/load-test.js"
+  },
+  "devDependencies": {
+    "k6": "^0.47.0"
+  }
+}
