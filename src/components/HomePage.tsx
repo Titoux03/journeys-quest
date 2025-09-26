@@ -266,7 +266,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
                 ? 'bg-success/10 text-success group-hover:bg-success group-hover:text-success-foreground'
                 : 'bg-muted/20 text-muted-foreground'
             }`}>
-              <Dumbbell className="w-6 h-6" />
+              <Leaf className="w-6 h-6" />
             </div>
           </div>
           <h3 className={`font-semibold text-lg mb-2 ${!isPremium && 'text-muted-foreground'}`}>

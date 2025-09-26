@@ -136,28 +136,36 @@ export const AddictionCommitment: React.FC<AddictionCommitmentProps> = ({
   }, [step]);
 
   const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
     const canvas = canvasRef.current;
     const ctx = ctxRef.current;
     if (!canvas || !ctx) return;
 
     setIsDrawing(true);
     const rect = canvas.getBoundingClientRect();
-    const x = 'touches' in e ? e.touches[0].clientX - rect.left : e.nativeEvent.offsetX;
-    const y = 'touches' in e ? e.touches[0].clientY - rect.top : e.nativeEvent.offsetY;
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
+    const x = ('touches' in e ? e.touches[0].clientX - rect.left : e.nativeEvent.offsetX) * scaleX;
+    const y = ('touches' in e ? e.touches[0].clientY - rect.top : e.nativeEvent.offsetY) * scaleY;
     
     ctx.beginPath();
     ctx.moveTo(x, y);
   };
 
   const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
     if (!isDrawing) return;
     const canvas = canvasRef.current;
     const ctx = ctxRef.current;
     if (!canvas || !ctx) return;
 
     const rect = canvas.getBoundingClientRect();
-    const x = 'touches' in e ? e.touches[0].clientX - rect.left : e.nativeEvent.offsetX;
-    const y = 'touches' in e ? e.touches[0].clientY - rect.top : e.nativeEvent.offsetY;
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
+    const x = ('touches' in e ? e.touches[0].clientX - rect.left : e.nativeEvent.offsetX) * scaleX;
+    const y = ('touches' in e ? e.touches[0].clientY - rect.top : e.nativeEvent.offsetY) * scaleY;
     
     ctx.lineTo(x, y);
     ctx.stroke();
@@ -181,8 +189,8 @@ export const AddictionCommitment: React.FC<AddictionCommitmentProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-lg">
-      <div className="journey-card-premium max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pb-24 bg-background/80 backdrop-blur-lg">
+      <div className="journey-card-premium max-w-2xl w-full max-h-[85vh] overflow-y-auto">
         <button
           onClick={onCancel}
           className="absolute top-6 right-6 p-2 rounded-full bg-secondary/50 hover:bg-secondary transition-colors z-10"
