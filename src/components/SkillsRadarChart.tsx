@@ -163,13 +163,7 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
                 fill="transparent"
                 fillOpacity={0}
                 filter="url(#glow)"
-                dot={{ 
-                  fill: skill.color, 
-                  strokeWidth: 4, 
-                  stroke: 'hsl(var(--background))',
-                  r: 8,
-                  filter: 'url(#glow)'
-                }}
+                dot={false}
               />
             ))}
             
