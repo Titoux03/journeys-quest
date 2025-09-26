@@ -5,6 +5,7 @@ import { Input } from './ui/input';
 import { Plus, Heart, Users, Dumbbell, BookOpen, Brain, Check, Sparkles, X } from 'lucide-react';
 import { useProgress } from '@/hooks/useProgress';
 import { useAuth } from '@/hooks/useAuth';
+import { usePremium } from '@/hooks/usePremium';
 import { toast } from 'sonner';
 import { PremiumTeaser } from '@/components/PremiumTeaser';
 
@@ -93,6 +94,7 @@ const defaultCriteria: LifeCriterion[] = [
 
 export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
   const { user } = useAuth();
+  const { isPremium } = usePremium();
   const { saveJournalEntry } = useProgress();
   const [scores, setScores] = useState<Record<string, number>>(
     defaultCriteria.reduce((acc, criterion) => ({
@@ -188,16 +190,20 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
           <h1 className="text-2xl sm:text-3xl font-bold text-gradient-primary mb-2">
             Comment s'est passée votre journée ?
           </h1>
-          <p className="text-sm sm:text-base text-muted-foreground mb-4">
-            ✨ Visualise ta progression complète avec Journeys Premium
-          </p>
-          
-          <PremiumTeaser 
-            title="Débloque ton historique complet"
-            description="Transforme chaque jour en victoire visible"
-            variant="compact"
-            className="mb-6"
-          />
+          {!isPremium && (
+            <>
+              <p className="text-sm sm:text-base text-muted-foreground mb-4">
+                ✨ Visualise ta progression complète avec Journeys Premium
+              </p>
+              
+              <PremiumTeaser 
+                title="Débloque ton historique complet"
+                description="Transforme chaque jour en victoire visible"
+                variant="compact"
+                className="mb-6"
+              />
+            </>
+          )}
         </div>
 
         {/* Score global */}
