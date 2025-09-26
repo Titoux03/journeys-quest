@@ -37,7 +37,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
     { id: 'home', icon: Home, label: 'Accueil' },
     { id: 'journal', icon: BookOpen, label: 'Journal' },
     { id: 'meditation', icon: Timer, label: 'Focus' },
-    { id: 'abstinence', icon: Shield, label: 'Abstinence' },
+    { id: 'abstinence', icon: Shield, label: 'Addiction' },
     { id: 'stretching', icon: Leaf, label: 'Stretching' },
     { id: 'progress', icon: BarChart3, label: 'Progrès' },
   ];
@@ -62,7 +62,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                 }`}
               >
                 <Icon size={20} className="shrink-0" />
-                <span className="text-[10px] font-medium leading-tight text-center">{item.label}</span>
+                <span className="text-[9px] font-medium leading-tight text-center px-0.5">{item.label}</span>
               </Button>
             );
           })}
@@ -79,12 +79,12 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
             {user ? (
               <>
                 <LogOut size={20} className="shrink-0" />
-                <span className="text-[10px] font-medium leading-tight text-center">Sortir</span>
+                <span className="text-[9px] font-medium leading-tight text-center px-0.5">Sortir</span>
               </>
             ) : (
               <>
                 <LogIn size={20} className="shrink-0" />
-                <span className="text-[10px] font-medium leading-tight text-center">Connexion</span>
+                <span className="text-[9px] font-medium leading-tight text-center px-0.5">Connexion</span>
               </>
             )}
           </Button>
