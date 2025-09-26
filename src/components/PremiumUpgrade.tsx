@@ -43,33 +43,39 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
   const premiumFeatures = [
     {
       icon: <Brain className="w-6 h-6" />,
-      title: "Focus & Deep Work",
-      description: "Méditation et minuteurs premium pour concentration et sérénité"
+      title: "Focus & Deep Work Premium",
+      description: "Historique des sessions, analyses de progression et gongs exclusifs",
+      highlight: true
     },
     {
       icon: <Shield className="w-6 h-6" />,
-      title: "Abstinence Multi-Addictions",
-      description: "Cigarette, porno, scroll, procrastination - Surmontez toutes vos dépendances"
-    },
-    {
-      icon: <Crown className="w-6 h-6" />,
-      title: "Système de Badges",
-      description: "Débloquez des récompenses et suivez vos accomplissements"
-    },
-    {
-      icon: <Sparkles className="w-6 h-6" />,
-      title: "Streaks de Fidélité",
-      description: "Gagnez des badges spéciaux en vous connectant quotidiennement"
-    },
-    {
-      icon: <Dumbbell className="w-6 h-6" />,
-      title: "Routine stretching",
-      description: "5 exercices guidés pour votre bien-être physique"
+      title: "Contrôle Multi-Addictions",
+      description: "Cigarette, porno, scroll, procrastination - Surmontez toutes vos dépendances avec des compteurs motivants",
+      highlight: false
     },
     {
       icon: <TrendingUp className="w-6 h-6" />,
-      title: "Profil de Développement",
-      description: "Diagramme radar de vos 5 compétences de vie avec analyse avancée"
+      title: "Profil de Développement Complet",
+      description: "Diagramme radar évolutif + historique illimité + analyses personnalisées",
+      highlight: true
+    },
+    {
+      icon: <Crown className="w-6 h-6" />,
+      title: "Gamification Avancée",
+      description: "Système de badges exclusifs, streaks de fidélité et récompenses motivantes",
+      highlight: false
+    },
+    {
+      icon: <Dumbbell className="w-6 h-6" />,
+      title: "Routines Bien-être",
+      description: "Stretching guidé avec suivi de progression et routines personnalisées",
+      highlight: false
+    },
+    {
+      icon: <Sparkles className="w-6 h-6" />,
+      title: "Citations Inspirantes Exclusives",
+      description: "Citations premium quotidiennes générées par IA selon votre humeur",
+      highlight: true
     }
   ];
 
@@ -107,19 +113,19 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           </div>
           
           <h1 className="text-3xl font-bold text-gradient-primary mb-3">
-            {!user ? 'Créez votre compte Premium' : 'Débloque ton potentiel complet'}
+            Débloque ton potentiel complet
           </h1>
           
           {feature && (
             <p className="text-lg text-muted-foreground mb-4">
-              Accédez à <span className="text-primary font-semibold">{feature}</span> et bien plus
+              <span className="text-primary font-semibold">{feature}</span> est disponible avec Journeys Premium
             </p>
           )}
           
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground leading-relaxed">
             {!user 
-              ? 'Créez un compte pour sauvegarder vos progrès et débloquer toutes les fonctionnalités premium'
-              : 'Transformez votre routine quotidienne en véritable parcours de développement personnel'
+              ? 'Créez un compte pour sauvegarder vos progrès et transformez votre routine quotidienne en véritable parcours de développement personnel'
+              : 'Transformez chaque jour en victoire. Ne laissez pas votre potentiel inexploité — débloquez toutes les fonctionnalités qui font la différence.'
             }
           </p>
         </div>
@@ -161,20 +167,29 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           </div>
         </div>
 
-        {/* Features Grid */}
+        {/* Features Grid avec highlights */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           {premiumFeatures.map((feature, index) => (
             <div
               key={index}
-              className="p-4 rounded-xl bg-gradient-to-br from-secondary/30 to-secondary/10 border border-border/30 hover:border-primary/20 transition-all duration-300 hover:scale-[1.02]"
+              className={`p-4 rounded-xl border transition-all duration-300 hover:scale-[1.02] ${
+                feature.highlight 
+                  ? 'bg-gradient-to-br from-primary/10 to-primary-glow/10 border-primary/30 shadow-lg shadow-primary/10' 
+                  : 'bg-gradient-to-br from-secondary/30 to-secondary/10 border-border/30 hover:border-primary/20'
+              }`}
             >
               <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 p-2 rounded-lg bg-primary/10 text-primary">
+                <div className={`flex-shrink-0 p-2 rounded-lg ${
+                  feature.highlight ? 'bg-primary/20 text-primary' : 'bg-primary/10 text-primary'
+                }`}>
                   {feature.icon}
                 </div>
                 <div>
-                  <h3 className="font-semibold text-foreground mb-1">
+                  <h3 className={`font-semibold mb-1 ${
+                    feature.highlight ? 'text-primary' : 'text-foreground'
+                  }`}>
                     {feature.title}
+                    {feature.highlight && <span className="ml-2 text-xs">⭐</span>}
                   </h3>
                   <p className="text-sm text-muted-foreground">
                     {feature.description}
@@ -185,40 +200,45 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           ))}
         </div>
 
-        {/* Pricing */}
+        {/* Pricing amélioré */}
         <div className="text-center mb-8">
-          <div className="journey-card bg-gradient-to-br from-primary/5 to-primary-glow/5 border-2 border-primary/20 mb-6">
-            <div className="flex items-center justify-center space-x-4">
-              <div>
-                <div className="text-4xl font-bold text-gradient-primary">14,99€</div>
-                <div className="text-sm text-muted-foreground">paiement unique</div>
+          <div className="journey-card bg-gradient-to-br from-primary/10 to-primary-glow/10 border-2 border-primary/30 mb-6 relative overflow-hidden">
+            <div className="absolute top-4 right-4 bg-success text-success-foreground text-xs font-bold px-2 py-1 rounded-full">
+              LANCEMENT
+            </div>
+            <div className="flex items-center justify-center space-x-6">
+              <div className="text-center">
+                <div className="text-5xl font-bold text-gradient-primary">14,99€</div>
+                <div className="text-sm text-muted-foreground line-through opacity-60">29,99€</div>
+                <div className="text-xs text-success font-medium">-50% Aujourd'hui</div>
               </div>
-              <div className="h-12 w-px bg-border"></div>
+              <div className="h-16 w-px bg-border"></div>
               <div className="text-left">
-                <div className="text-sm text-success font-medium">Accès à vie</div>
-                <div className="text-xs text-muted-foreground">Aucun abonnement</div>
+                <div className="text-lg font-bold text-success">Accès à vie</div>
+                <div className="text-sm text-muted-foreground">Aucun abonnement</div>
+                <div className="text-xs text-primary">Toutes les futures mises à jour</div>
               </div>
             </div>
           </div>
 
-          {/* Benefits */}
-          <div className="flex items-center justify-center space-x-6 text-sm text-muted-foreground mb-6">
+          {/* Social proof */}
+          <div className="flex items-center justify-center space-x-8 text-sm text-muted-foreground mb-6">
             <div className="flex items-center space-x-1">
-              <Calendar className="w-4 h-4 text-success" />
-              <span>Achat unique</span>
+              <div className="flex -space-x-1">
+                <div className="w-6 h-6 rounded-full bg-primary/20 border-2 border-background"></div>
+                <div className="w-6 h-6 rounded-full bg-primary-glow/20 border-2 border-background"></div>
+                <div className="w-6 h-6 rounded-full bg-success/20 border-2 border-background"></div>
+              </div>
+              <span>+1000 utilisateurs actifs</span>
             </div>
             <div className="flex items-center space-x-1">
               <Shield className="w-4 h-4 text-success" />
-              <span>Accès permanent</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <Sparkles className="w-4 h-4 text-success" />
-              <span>Toutes les fonctionnalités</span>
+              <span>Paiement sécurisé</span>
             </div>
           </div>
         </div>
 
-        {/* CTA */}
+        {/* CTA amélioré */}
         <div className="space-y-4">
           {!user ? (
             <div className="space-y-3">
@@ -228,17 +248,20 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
                 <UserPlus className="w-5 h-5 mr-2" />
-                Créer un compte
+                Créer un compte Premium
               </Button>
               
-              <Button
-                onClick={handleUpgrade}
-                variant="outline"
-                className="w-full text-lg py-6 border-primary/20 hover:bg-primary/5"
-              >
-                <Crown className="w-5 h-5 mr-2" />
-                Acheter sans compte
-              </Button>
+              <div className="text-center space-y-2">
+                <p className="text-xs text-muted-foreground">
+                  Déjà un compte ? 
+                  <button 
+                    onClick={handleUpgrade}
+                    className="text-primary hover:text-primary-glow ml-1 font-medium"
+                  >
+                    Débloquer Premium
+                  </button>
+                </p>
+              </div>
             </div>
           ) : (
             <Button
@@ -250,23 +273,26 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
               {loading ? (
                 <>
                   <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Redirection...
+                  Redirection vers le paiement...
                 </>
               ) : (
                 <>
                   <Crown className="w-5 h-5 mr-2" />
-                  Acheter Journeys Premium
+                  Débloquer maintenant (-50%)
                 </>
               )}
             </Button>
           )}
           
-          <div className="text-center">
+          <div className="text-center space-y-2">
+            <p className="text-xs text-success font-medium">
+              ⚡ Offre limitée - Plus que quelques heures
+            </p>
             <button
               onClick={onClose}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              Continuer en version limitée
+              Rester en version limitée (vous ratez -50%)
             </button>
           </div>
         </div>

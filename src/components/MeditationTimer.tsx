@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, RotateCcw, Brain, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { PremiumLock } from '@/components/PremiumLock';
 import { useGongSounds } from '@/hooks/useGongSounds';
 import { useToast } from '@/hooks/use-toast';
+import { PremiumTeaser, PremiumBadge } from '@/components/PremiumTeaser';
 
 interface MeditationTimerProps {
   onNavigate: (screen: string) => void;
@@ -21,9 +21,7 @@ const presetDurations = [
 
 export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onNavigate }) => {
   return (
-    <PremiumLock feature="Méditation & Deep Work" className="min-h-screen">
-      <MeditationTimerContent onNavigate={onNavigate} />
-    </PremiumLock>
+    <MeditationTimerContent onNavigate={onNavigate} />
   );
 };
 

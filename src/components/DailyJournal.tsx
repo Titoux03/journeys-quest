@@ -6,6 +6,7 @@ import { Plus, Heart, Users, Dumbbell, BookOpen, Brain, Check, Sparkles, X } fro
 import { useProgress } from '@/hooks/useProgress';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { PremiumTeaser } from '@/components/PremiumTeaser';
 
 interface DailyJournalProps {
   onComplete: (scores: Record<string, number>, totalScore: number) => void;

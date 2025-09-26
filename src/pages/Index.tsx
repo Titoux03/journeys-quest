@@ -8,6 +8,7 @@ import { AbstinenceTracker } from '@/components/AbstinenceTracker';
 import { StretchingRoutine } from '@/components/StretchingRoutine';
 import { DailyQuote } from '@/components/DailyQuote';
 import { PremiumUpgrade } from '@/components/PremiumUpgrade';
+import { MarketingNotifications } from '@/components/MarketingNotifications';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { UserStatus } from '@/components/UserStatus';
 import { useAuth } from '@/hooks/useAuth';
@@ -189,6 +190,9 @@ const Index = () => {
     <div className="min-h-screen pb-24">
       {/* User Status Header */}
       <UserStatus />
+      
+      {/* Marketing Notifications */}
+      <MarketingNotifications />
       
       {renderScreen()}
 
