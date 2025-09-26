@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Shield, Plus, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PremiumLock } from '@/components/PremiumLock';
 import { AddictionCard } from '@/components/AddictionCard';
+import { AddictionCommitment } from '@/components/AddictionCommitment';
 import { BadgesList } from '@/components/BadgesList';
 import { LoginStreakDisplay } from '@/components/LoginStreakDisplay';
 import { AllBadgesDisplay } from '@/components/AllBadgesDisplay';
@@ -35,10 +36,27 @@ const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate
     deactivateAddiction
   } = useAddictions();
   const { playPremium } = useGongSounds();
+  
+  const [showCommitment, setShowCommitment] = useState(false);
+  const [selectedAddictionType, setSelectedAddictionType] = useState<any>(null);
 
-  const handleStartAddiction = async (addictionTypeId: string) => {
-    playPremium();
-    await startAddictionTracking(addictionTypeId);
+  const handleStartAddiction = (addictionType: any) => {
+    setSelectedAddictionType(addictionType);
+    setShowCommitment(true);
+  };
+
+  const handleCommitmentConfirm = async (selectedEffects: string[], personalGoal: string) => {
+    if (selectedAddictionType) {
+      playPremium();
+      await startAddictionTracking(selectedAddictionType.id);
+      setShowCommitment(false);
+      setSelectedAddictionType(null);
+    }
+  };
+
+  const handleCommitmentCancel = () => {
+    setShowCommitment(false);
+    setSelectedAddictionType(null);
   };
 
   const handleDeactivateAddiction = async (addictionId: string) => {
@@ -102,7 +120,7 @@ const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate
                 <AddictionCard
                   addictionType={addictionType}
                   userAddiction={userAddiction}
-                  onStart={() => handleStartAddiction(addictionType.id)}
+                  onStart={() => handleStartAddiction(addictionType)}
                   onRelapse={() => userAddiction && handleRelapse(userAddiction.id)}
                   onDeactivate={() => userAddiction && handleDeactivateAddiction(userAddiction.id)}
                 />
@@ -138,6 +156,15 @@ const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate
           userBadges={userBadges}
         />
       </div>
+      
+      {/* Commitment Modal */}
+      {showCommitment && selectedAddictionType && (
+        <AddictionCommitment
+          addictionType={selectedAddictionType}
+          onConfirm={handleCommitmentConfirm}
+          onCancel={handleCommitmentCancel}
+        />
+      )}
     </div>
   );
 };

@@ -24,11 +24,11 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
   const calculateSkillScores = () => {
     if (entries.length === 0) {
       return [
-        { skill: 'Mental', score: 0, maxScore: 10, color: 'hsl(var(--primary))', fillColor: 'hsl(var(--primary) / 0.2)' },
-        { skill: 'Physique', score: 0, maxScore: 10, color: 'hsl(var(--accent))', fillColor: 'hsl(var(--accent) / 0.2)' },
-        { skill: 'Régularité', score: 0, maxScore: 10, color: 'hsl(var(--secondary))', fillColor: 'hsl(var(--secondary) / 0.2)' },
-        { skill: 'Réalisation', score: 0, maxScore: 10, color: 'hsl(var(--muted-foreground))', fillColor: 'hsl(var(--muted-foreground) / 0.2)' },
-        { skill: 'Force âme', score: 0, maxScore: 10, color: 'hsl(var(--foreground))', fillColor: 'hsl(var(--foreground) / 0.15)' }
+        { skill: 'Mental', score: 0, maxScore: 10, color: 'hsl(var(--skill-mental))', fillColor: 'hsl(var(--skill-mental) / 0.2)' },
+        { skill: 'Physique', score: 0, maxScore: 10, color: 'hsl(var(--skill-physique))', fillColor: 'hsl(var(--skill-physique) / 0.2)' },
+        { skill: 'Régularité', score: 0, maxScore: 10, color: 'hsl(var(--skill-regularite))', fillColor: 'hsl(var(--skill-regularite) / 0.2)' },
+        { skill: 'Réalisation', score: 0, maxScore: 10, color: 'hsl(var(--skill-realisation))', fillColor: 'hsl(var(--skill-realisation) / 0.2)' },
+        { skill: 'Force âme', score: 0, maxScore: 10, color: 'hsl(var(--skill-ame))', fillColor: 'hsl(var(--skill-ame) / 0.15)' }
       ];
     }
 
@@ -87,11 +87,11 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
     })();
 
     return [
-      { skill: 'Mental', score: Math.round(mentalHealthScore * 10) / 10, maxScore: 10, color: 'hsl(var(--primary))', fillColor: 'hsl(var(--primary) / 0.2)' },
-      { skill: 'Physique', score: Math.round(physicalScore * 10) / 10, maxScore: 10, color: 'hsl(var(--accent))', fillColor: 'hsl(var(--accent) / 0.2)' },
-      { skill: 'Régularité', score: Math.round(regularityScore * 10) / 10, maxScore: 10, color: 'hsl(var(--secondary))', fillColor: 'hsl(var(--secondary) / 0.2)' },
-      { skill: 'Réalisation', score: Math.round(realizationScore * 10) / 10, maxScore: 10, color: 'hsl(var(--muted-foreground))', fillColor: 'hsl(var(--muted-foreground) / 0.2)' },
-      { skill: 'Force âme', score: Math.round(soulStrengthScore * 10) / 10, maxScore: 10, color: 'hsl(var(--foreground))', fillColor: 'hsl(var(--foreground) / 0.15)' }
+      { skill: 'Mental', score: Math.round(mentalHealthScore * 10) / 10, maxScore: 10, color: 'hsl(var(--skill-mental))', fillColor: 'hsl(var(--skill-mental) / 0.2)' },
+      { skill: 'Physique', score: Math.round(physicalScore * 10) / 10, maxScore: 10, color: 'hsl(var(--skill-physique))', fillColor: 'hsl(var(--skill-physique) / 0.2)' },
+      { skill: 'Régularité', score: Math.round(regularityScore * 10) / 10, maxScore: 10, color: 'hsl(var(--skill-regularite))', fillColor: 'hsl(var(--skill-regularite) / 0.2)' },
+      { skill: 'Réalisation', score: Math.round(realizationScore * 10) / 10, maxScore: 10, color: 'hsl(var(--skill-realisation))', fillColor: 'hsl(var(--skill-realisation) / 0.2)' },
+      { skill: 'Force âme', score: Math.round(soulStrengthScore * 10) / 10, maxScore: 10, color: 'hsl(var(--skill-ame))', fillColor: 'hsl(var(--skill-ame) / 0.15)' }
     ];
   };
 

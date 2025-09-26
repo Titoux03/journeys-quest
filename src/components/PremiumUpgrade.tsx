@@ -142,79 +142,16 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
             <div className="relative max-w-md mx-auto">
               <SkillsRadarChart entries={mockJournalEntries} />
             </div>
-            <div className="mt-4 grid grid-cols-5 gap-2 text-xs">
-              <div className="flex items-center justify-center">
-                <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: 'hsl(142, 76%, 36%)' }}></div>
-                <span className="text-muted-foreground">Mental</span>
-              </div>
-              <div className="flex items-center justify-center">
-                <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: 'hsl(221, 83%, 53%)' }}></div>
-                <span className="text-muted-foreground">Physique</span>
-              </div>
-              <div className="flex items-center justify-center">
-                <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: 'hsl(262, 83%, 58%)' }}></div>
-                <span className="text-muted-foreground">Régularité</span>
-              </div>
-              <div className="flex items-center justify-center">
-                <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: 'hsl(32, 98%, 56%)' }}></div>
-                <span className="text-muted-foreground">Objectifs</span>
-              </div>
-              <div className="flex items-center justify-center">
-                <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: 'hsl(346, 77%, 49%)' }}></div>
-                <span className="text-muted-foreground">Âme</span>
-              </div>
-            </div>
           </div>
-        </div>
-
-        {/* Features Grid avec highlights */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          {premiumFeatures.map((feature, index) => (
-            <div
-              key={index}
-              className={`p-4 rounded-xl border transition-all duration-300 hover:scale-[1.02] ${
-                feature.highlight 
-                  ? 'bg-gradient-to-br from-primary/10 to-primary-glow/10 border-primary/30 shadow-lg shadow-primary/10' 
-                  : 'bg-gradient-to-br from-secondary/30 to-secondary/10 border-border/30 hover:border-primary/20'
-              }`}
-            >
-              <div className="flex items-start space-x-3">
-                <div className={`flex-shrink-0 p-2 rounded-lg ${
-                  feature.highlight ? 'bg-primary/20 text-primary' : 'bg-primary/10 text-primary'
-                }`}>
-                  {feature.icon}
-                </div>
-                <div>
-                  <h3 className={`font-semibold mb-1 ${
-                    feature.highlight ? 'text-primary' : 'text-foreground'
-                  }`}>
-                    {feature.title}
-                    {feature.highlight && <span className="ml-2 text-xs">⭐</span>}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {feature.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
         </div>
 
         {/* Pricing amélioré */}
         <div className="text-center mb-8">
           <div className="journey-card bg-gradient-to-br from-primary/10 to-primary-glow/10 border-2 border-primary/30 mb-6 relative overflow-hidden">
-            <div className="absolute top-4 right-4 bg-success text-success-foreground text-xs font-bold px-2 py-1 rounded-full">
-              LANCEMENT
-            </div>
-            <div className="flex items-center justify-center space-x-6">
+            <div className="flex items-center justify-center">
               <div className="text-center">
                 <div className="text-5xl font-bold text-gradient-primary">14,99€</div>
-                <div className="text-sm text-muted-foreground line-through opacity-60">29,99€</div>
-                <div className="text-xs text-success font-medium">-50% Aujourd'hui</div>
-              </div>
-              <div className="h-16 w-px bg-border"></div>
-              <div className="text-left">
-                <div className="text-lg font-bold text-success">Accès à vie</div>
+                <div className="text-lg font-bold text-success mt-2">Accès à vie</div>
                 <div className="text-sm text-muted-foreground">Aucun abonnement</div>
                 <div className="text-xs text-primary">Toutes les futures mises à jour</div>
               </div>
@@ -284,17 +221,14 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
             </Button>
           )}
           
-          <div className="text-center space-y-2">
-            <p className="text-xs text-success font-medium">
-              ⚡ Offre limitée - Plus que quelques heures
-            </p>
-            <button
-              onClick={onClose}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Rester en version limitée (vous ratez -50%)
-            </button>
-          </div>
+              <div className="text-center space-y-2">
+                <button
+                  onClick={onClose}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Rester en version limitée
+                </button>
+              </div>
         </div>
 
         {/* Trust Indicators */}
