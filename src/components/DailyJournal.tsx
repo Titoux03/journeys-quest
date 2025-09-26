@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { Slider } from './ui/slider';
 import { Input } from './ui/input';
-import { Plus, Heart, Users, Dumbbell, BookOpen, Brain, Check } from 'lucide-react';
+import { Plus, Heart, Users, Dumbbell, BookOpen, Brain, Check, Sparkles, X } from 'lucide-react';
 import { useProgress } from '@/hooks/useProgress';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
@@ -80,6 +80,13 @@ const defaultCriteria: LifeCriterion[] = [
     icon: Brain,
     description: 'Pleine conscience et détente',
     color: 'text-indigo-500'
+  },
+  {
+    key: 'wellbeing',
+    label: 'Bien-être',
+    icon: Sparkles,
+    description: 'Sentiment général de bien-être et épanouissement',
+    color: 'text-yellow-500'
   }
 ];
 
@@ -123,6 +130,22 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
       setCustomCriterion('');
       setShowAddCustom(false);
     }
+  };
+
+  const removeCriterion = (key: string) => {
+    // Ne pas permettre de supprimer si moins de 3 critères
+    if (criteria.length <= 3) {
+      toast.error('Vous devez garder au moins 3 critères');
+      return;
+    }
+    
+    setCriteria(prev => prev.filter(c => c.key !== key));
+    setScores(prev => {
+      const newScores = { ...prev };
+      delete newScores[key];
+      return newScores;
+    });
+    toast.success('Critère supprimé');
   };
 
   const calculateTotalScore = () => {
@@ -215,8 +238,18 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
                     <h3 className="font-medium text-card-foreground">{criterion.label}</h3>
                     <p className="text-sm text-muted-foreground">{criterion.description}</p>
                   </div>
-                  <div className="text-2xl font-bold text-primary">
-                    {scores[criterion.key]}
+                  <div className="flex items-center gap-3">
+                    <div className="text-2xl font-bold text-primary">
+                      {scores[criterion.key]}
+                    </div>
+                    {criteria.length > 3 && (
+                      <button
+                        onClick={() => removeCriterion(criterion.key)}
+                        className="w-8 h-8 rounded-full bg-destructive/10 hover:bg-destructive/20 flex items-center justify-center transition-colors"
+                      >
+                        <X className="w-4 h-4 text-destructive" />
+                      </button>
+                    )}
                   </div>
                 </div>
                 

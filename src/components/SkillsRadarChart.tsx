@@ -1,0 +1,181 @@
+import React from 'react';
+import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts';
+import { useAddictions } from '@/hooks/useAddictions';
+import { usePremium } from '@/hooks/usePremium';
+
+interface JournalEntry {
+  date: string;
+  scores: Record<string, number>;
+  totalScore: number;
+  mood: 'low' | 'medium' | 'high';
+}
+
+interface SkillsRadarChartProps {
+  entries: JournalEntry[];
+}
+
+export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) => {
+  const { userAddictions } = useAddictions();
+  const { isPremium } = usePremium();
+
+  const calculateSkillScores = () => {
+    if (entries.length === 0) {
+      return [
+        { skill: 'Santé mentale', score: 0, maxScore: 10 },
+        { skill: 'Physique', score: 0, maxScore: 10 },
+        { skill: 'Régularité', score: 0, maxScore: 10 },
+        { skill: 'Réalisation', score: 0, maxScore: 10 },
+        { skill: 'Force de l\'âme', score: 0, maxScore: 10 }
+      ];
+    }
+
+    // Calculer les moyennes des dernières 7 entrées
+    const recentEntries = entries.slice(0, 7);
+    const totalDays = recentEntries.length;
+
+    // Santé mentale : basée sur méditation, bien-être, vie sociale
+    const mentalHealthScore = recentEntries.reduce((sum, entry) => {
+      const meditation = entry.scores.meditation || 0;
+      const wellbeing = entry.scores.wellbeing || 0;
+      const social = entry.scores.social || 0;
+      return sum + (meditation + wellbeing + social) / 3;
+    }, 0) / totalDays;
+
+    // Physique : basée sur sport et énergie générale
+    const physicalScore = recentEntries.reduce((sum, entry) => {
+      const sport = entry.scores.sport || 0;
+      const wellbeing = entry.scores.wellbeing || 0;
+      return sum + (sport + wellbeing) / 2;
+    }, 0) / totalDays;
+
+    // Régularité : basée sur la fréquence des entrées et les streaks d'addiction
+    const regularityScore = (() => {
+      const entryFrequency = Math.min(totalDays / 7 * 10, 10); // Max 10 si 7 jours complets
+      const addictionBonus = userAddictions.reduce((acc, addiction) => {
+        return acc + Math.min(addiction.current_streak * 0.2, 3); // Bonus pour les streaks
+      }, 0);
+      return Math.min(entryFrequency + addictionBonus, 10);
+    })();
+
+    // Réalisation : basée sur apprentissage, travail, objectifs
+    const realizationScore = recentEntries.reduce((sum, entry) => {
+      const learning = entry.scores.learning || 0;
+      const work = entry.scores.work || entry.scores.travail || 0;
+      const creativity = entry.scores.creativity || entry.scores.créativité || 0;
+      const scores = [learning, work, creativity].filter(s => s > 0);
+      const avg = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : entry.totalScore;
+      return sum + avg;
+    }, 0) / totalDays;
+
+    // Force de l'âme : basée sur la résistance aux addictions et le bien-être émotionnel
+    const soulStrengthScore = (() => {
+      const addictionStrength = userAddictions.length > 0 
+        ? userAddictions.reduce((acc, addiction) => acc + Math.min(addiction.current_streak * 0.3, 4), 0) / userAddictions.length
+        : 5;
+      
+      const emotionalScore = recentEntries.reduce((sum, entry) => {
+        const family = entry.scores.family || 0;
+        const love = entry.scores.love || 0;
+        const wellbeing = entry.scores.wellbeing || 0;
+        return sum + (family + love + wellbeing) / 3;
+      }, 0) / totalDays;
+
+      return Math.min((addictionStrength + emotionalScore) / 2, 10);
+    })();
+
+    return [
+      { skill: 'Santé\nmentale', score: Math.round(mentalHealthScore * 10) / 10, maxScore: 10 },
+      { skill: 'Physique', score: Math.round(physicalScore * 10) / 10, maxScore: 10 },
+      { skill: 'Régularité', score: Math.round(regularityScore * 10) / 10, maxScore: 10 },
+      { skill: 'Réalisation', score: Math.round(realizationScore * 10) / 10, maxScore: 10 },
+      { skill: 'Force de\nl\'âme', score: Math.round(soulStrengthScore * 10) / 10, maxScore: 10 }
+    ];
+  };
+
+  const skillData = calculateSkillScores();
+  const averageScore = skillData.reduce((sum, skill) => sum + skill.score, 0) / skillData.length;
+
+  return (
+    <div className="relative">
+      {/* Fond décoratif avec feu follet */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+        <div className="relative">
+          {/* Corps du feu follet */}
+          <div className="w-32 h-40 relative">
+            <div className="absolute inset-0 bg-gradient-to-t from-primary/30 via-accent/40 to-secondary/50 rounded-full blur-xl animate-pulse"></div>
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 w-16 h-20 bg-gradient-to-t from-primary/50 via-accent/60 to-secondary/70 rounded-full blur-lg animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+            <div className="absolute top-8 left-1/2 -translate-x-1/2 w-8 h-12 bg-gradient-to-t from-primary/70 via-accent/80 to-secondary/90 rounded-full blur-md animate-pulse" style={{ animationDelay: '1s' }}></div>
+          </div>
+          
+          {/* Particules flottantes */}
+          <div className="absolute -top-4 left-4 w-2 h-2 bg-accent rounded-full animate-bounce opacity-60" style={{ animationDelay: '0.2s' }}></div>
+          <div className="absolute -top-2 right-6 w-1 h-1 bg-primary rounded-full animate-bounce opacity-80" style={{ animationDelay: '0.7s' }}></div>
+          <div className="absolute top-6 -left-2 w-1.5 h-1.5 bg-secondary rounded-full animate-bounce opacity-70" style={{ animationDelay: '1.2s' }}></div>
+          <div className="absolute top-12 right-2 w-1 h-1 bg-accent rounded-full animate-bounce opacity-50" style={{ animationDelay: '1.5s' }}></div>
+        </div>
+      </div>
+
+      {/* Graphique radar */}
+      <div className="relative z-10 h-80">
+        <ResponsiveContainer width="100%" height="100%">
+          <RadarChart data={skillData} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
+            <PolarGrid 
+              stroke="hsl(var(--muted))" 
+              strokeWidth={1}
+              strokeOpacity={0.3}
+            />
+            <PolarAngleAxis 
+              dataKey="skill" 
+              tick={{ fontSize: 12, fill: 'hsl(var(--foreground))' }}
+              className="text-xs"
+            />
+            <PolarRadiusAxis 
+              angle={90} 
+              domain={[0, 10]} 
+              tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+              axisLine={false}
+            />
+            <Radar
+              name="Compétences"
+              dataKey="score"
+              stroke="hsl(var(--primary))"
+              strokeWidth={3}
+              fill="hsl(var(--primary))"
+              fillOpacity={0.2}
+              dot={{ 
+                fill: 'hsl(var(--primary))', 
+                strokeWidth: 2, 
+                stroke: 'hsl(var(--background))',
+                r: 6
+              }}
+            />
+          </RadarChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Score moyen */}
+      <div className="text-center mt-4">
+        <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full text-2xl font-bold ${
+          averageScore >= 7 ? 'bg-gradient-to-br from-green-400 to-emerald-600 text-white' :
+          averageScore >= 4 ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-white' :
+          'bg-gradient-to-br from-red-400 to-rose-600 text-white'
+        } shadow-lg`}>
+          {averageScore.toFixed(1)}
+        </div>
+        <p className="text-sm text-muted-foreground mt-2">
+          Score global de développement
+        </p>
+        
+        {/* Légende motivante */}
+        <div className="mt-4 p-4 bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl border border-primary/10">
+          <p className="text-sm font-medium text-primary">
+            {averageScore >= 8 && "🌟 Équilibre exceptionnel ! Vous maîtrisez votre développement personnel."}
+            {averageScore >= 6 && averageScore < 8 && "💪 Belle progression ! Continuez sur cette voie."}
+            {averageScore >= 4 && averageScore < 6 && "🌱 En développement. Chaque jour compte."}
+            {averageScore < 4 && "🌅 Un nouveau départ. Chaque petit pas vous rapproche de vos objectifs."}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};

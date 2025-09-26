@@ -1,6 +1,7 @@
 import React from 'react';
 import { TrendingUp, Calendar, Award, Target } from 'lucide-react';
 import { PremiumLock } from '@/components/PremiumLock';
+import { SkillsRadarChart } from '@/components/SkillsRadarChart';
 
 interface JournalEntry {
   date: string;
@@ -92,6 +93,14 @@ const ProgressScreenContent: React.FC<ProgressScreenProps> = ({ entries, onNavig
             Score moyen
           </div>
         </div>
+      </div>
+
+      {/* Diagramme des compétences */}
+      <div className="journey-card-premium mb-8">
+        <h3 className="text-xl font-semibold text-foreground mb-6 text-center">
+          ✨ Votre Profil de Développement Personnel
+        </h3>
+        <SkillsRadarChart entries={entries} />
       </div>
 
       {/* Recent Entries */}
