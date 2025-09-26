@@ -1,11 +1,13 @@
-import React from 'react';
-import { X, Crown, Sparkles, TrendingUp, Shield, Dumbbell, Brain, Heart, Calendar, Loader2, UserPlus } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Crown, Sparkles, TrendingUp, Shield, Dumbbell, Brain, Heart, Calendar, Loader2, UserPlus, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { usePremium } from '@/hooks/usePremium';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useGongSounds } from '@/hooks/useGongSounds';
 import { SkillsRadarChart } from '@/components/SkillsRadarChart';
+import { TermsOfService } from '@/components/TermsOfService';
 
 interface PremiumUpgradeProps {
   isVisible: boolean;
@@ -22,10 +24,16 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
   const { user } = useAuth();
   const navigate = useNavigate();
   const { playPremium } = useGongSounds();
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
 
   if (!isVisible || isPremium) return null;
 
   const handleUpgrade = async () => {
+    if (!acceptedTerms) {
+      return; // Ne pas permettre l'achat sans accepter les conditions
+    }
+
     // Jouer le gong premium
     playPremium();
     
@@ -175,13 +183,39 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           </div>
         </div>
 
+        {/* Conditions d'utilisation */}
+        <div className="mb-6">
+          <div className="flex items-start space-x-3 p-4 bg-secondary/30 rounded-lg border border-border/50">
+            <Checkbox 
+              id="terms" 
+              checked={acceptedTerms}
+              onCheckedChange={(checked) => setAcceptedTerms(!!checked)}
+              className="mt-0.5"
+            />
+            <div className="flex-1">
+              <label htmlFor="terms" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
+                J'accepte les{' '}
+                <button
+                  onClick={() => setShowTerms(true)}
+                  className="text-primary hover:text-primary-glow font-medium underline inline-flex items-center"
+                >
+                  Conditions Générales d'Utilisation
+                  <ExternalLink className="w-3 h-3 ml-1" />
+                </button>
+                {' '}et confirme avoir lu les informations concernant le traitement de mes données personnelles.
+              </label>
+            </div>
+          </div>
+        </div>
+
         {/* CTA amélioré */}
         <div className="space-y-4">
           {!user ? (
             <div className="space-y-3">
               <Button
                 onClick={() => { navigate('/auth'); onClose(); }}
-                className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group"
+                disabled={!acceptedTerms}
+                className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
                 <UserPlus className="w-5 h-5 mr-2" />
@@ -193,7 +227,8 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
                   Déjà un compte ? 
                   <button 
                     onClick={handleUpgrade}
-                    className="text-primary hover:text-primary-glow ml-1 font-medium"
+                    disabled={!acceptedTerms}
+                    className="text-primary hover:text-primary-glow ml-1 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Débloquer Premium
                   </button>
@@ -203,8 +238,8 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           ) : (
             <Button
               onClick={handleUpgrade}
-              disabled={loading}
-              className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group"
+              disabled={loading || !acceptedTerms}
+              className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
               {loading ? (
@@ -221,14 +256,20 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
             </Button>
           )}
           
-              <div className="text-center space-y-2">
-                <button
-                  onClick={onClose}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Rester en version limitée
-                </button>
-              </div>
+          {!acceptedTerms && (
+            <p className="text-xs text-muted-foreground text-center">
+              Veuillez accepter les conditions d'utilisation pour continuer
+            </p>
+          )}
+          
+          <div className="text-center space-y-2">
+            <button
+              onClick={onClose}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Rester en version limitée
+            </button>
+          </div>
         </div>
 
         {/* Trust Indicators */}
@@ -248,6 +289,12 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
             </div>
           </div>
         </div>
+
+        {/* Modal des conditions d'utilisation */}
+        <TermsOfService 
+          isVisible={showTerms} 
+          onClose={() => setShowTerms(false)} 
+        />
       </div>
     </div>
   );
