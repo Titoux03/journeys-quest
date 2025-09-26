@@ -21,11 +21,11 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
   const calculateSkillScores = () => {
     if (entries.length === 0) {
       return [
-        { skill: 'Santé mentale', score: 0, maxScore: 10 },
-        { skill: 'Physique', score: 0, maxScore: 10 },
-        { skill: 'Régularité', score: 0, maxScore: 10 },
-        { skill: 'Réalisation', score: 0, maxScore: 10 },
-        { skill: 'Force de l\'âme', score: 0, maxScore: 10 }
+        { skill: 'Santé mentale', score: 0, maxScore: 10, color: '#22c55e', fillColor: 'rgba(34, 197, 94, 0.15)' },
+        { skill: 'Physique', score: 0, maxScore: 10, color: '#3b82f6', fillColor: 'rgba(59, 130, 246, 0.15)' },
+        { skill: 'Régularité', score: 0, maxScore: 10, color: '#8b5cf6', fillColor: 'rgba(139, 92, 246, 0.15)' },
+        { skill: 'Réalisation', score: 0, maxScore: 10, color: '#f59e0b', fillColor: 'rgba(245, 158, 11, 0.15)' },
+        { skill: 'Force de l\'âme', score: 0, maxScore: 10, color: '#ef4444', fillColor: 'rgba(239, 68, 68, 0.15)' }
       ];
     }
 
@@ -36,7 +36,7 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
     // Santé mentale : basée sur méditation, bien-être, vie sociale
     const mentalHealthScore = recentEntries.reduce((sum, entry) => {
       const meditation = entry.scores.meditation || 0;
-      const wellbeing = entry.scores.wellbeing || 0;
+      const wellbeing = entry.scores.wellbeing || entry.scores['bien-être'] || 0;
       const social = entry.scores.social || 0;
       return sum + (meditation + wellbeing + social) / 3;
     }, 0) / totalDays;
@@ -44,7 +44,7 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
     // Physique : basée sur sport et énergie générale
     const physicalScore = recentEntries.reduce((sum, entry) => {
       const sport = entry.scores.sport || 0;
-      const wellbeing = entry.scores.wellbeing || 0;
+      const wellbeing = entry.scores.wellbeing || entry.scores['bien-être'] || 0;
       return sum + (sport + wellbeing) / 2;
     }, 0) / totalDays;
 
@@ -59,7 +59,7 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
 
     // Réalisation : basée sur apprentissage, travail, objectifs
     const realizationScore = recentEntries.reduce((sum, entry) => {
-      const learning = entry.scores.learning || 0;
+      const learning = entry.scores.learning || entry.scores.apprentissage || 0;
       const work = entry.scores.work || entry.scores.travail || 0;
       const creativity = entry.scores.creativity || entry.scores.créativité || 0;
       const scores = [learning, work, creativity].filter(s => s > 0);
@@ -74,9 +74,9 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
         : 5;
       
       const emotionalScore = recentEntries.reduce((sum, entry) => {
-        const family = entry.scores.family || 0;
-        const love = entry.scores.love || 0;
-        const wellbeing = entry.scores.wellbeing || 0;
+        const family = entry.scores.family || entry.scores.famille || 0;
+        const love = entry.scores.love || entry.scores.amour || 0;
+        const wellbeing = entry.scores.wellbeing || entry.scores['bien-être'] || 0;
         return sum + (family + love + wellbeing) / 3;
       }, 0) / totalDays;
 
@@ -84,11 +84,11 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
     })();
 
     return [
-      { skill: 'Santé\nmentale', score: Math.round(mentalHealthScore * 10) / 10, maxScore: 10 },
-      { skill: 'Physique', score: Math.round(physicalScore * 10) / 10, maxScore: 10 },
-      { skill: 'Régularité', score: Math.round(regularityScore * 10) / 10, maxScore: 10 },
-      { skill: 'Réalisation', score: Math.round(realizationScore * 10) / 10, maxScore: 10 },
-      { skill: 'Force de\nl\'âme', score: Math.round(soulStrengthScore * 10) / 10, maxScore: 10 }
+      { skill: 'Santé mentale', score: Math.round(mentalHealthScore * 10) / 10, maxScore: 10, color: '#22c55e', fillColor: 'rgba(34, 197, 94, 0.15)' },
+      { skill: 'Physique', score: Math.round(physicalScore * 10) / 10, maxScore: 10, color: '#3b82f6', fillColor: 'rgba(59, 130, 246, 0.15)' },
+      { skill: 'Régularité', score: Math.round(regularityScore * 10) / 10, maxScore: 10, color: '#8b5cf6', fillColor: 'rgba(139, 92, 246, 0.15)' },
+      { skill: 'Réalisation', score: Math.round(realizationScore * 10) / 10, maxScore: 10, color: '#f59e0b', fillColor: 'rgba(245, 158, 11, 0.15)' },
+      { skill: 'Force de l\'âme', score: Math.round(soulStrengthScore * 10) / 10, maxScore: 10, color: '#ef4444', fillColor: 'rgba(239, 68, 68, 0.15)' }
     ];
   };
 
@@ -116,37 +116,56 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
       </div>
 
       {/* Graphique radar */}
-      <div className="relative z-10 h-80">
+      <div className="relative z-10 h-96">
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart data={skillData} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
+          <RadarChart data={skillData} margin={{ top: 30, right: 40, bottom: 30, left: 40 }}>
+            <defs>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge> 
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            
             <PolarGrid 
-              stroke="hsl(var(--muted))" 
-              strokeWidth={1}
-              strokeOpacity={0.3}
+              stroke="hsl(var(--border))" 
+              strokeWidth={1.5}
+              strokeOpacity={0.4}
+              radialLines={true}
             />
             <PolarAngleAxis 
               dataKey="skill" 
-              tick={{ fontSize: 12, fill: 'hsl(var(--foreground))' }}
-              className="text-xs"
+              tick={{ 
+                fontSize: 13, 
+                fill: 'hsl(var(--foreground))',
+                fontWeight: 600
+              }}
+              className="text-sm font-semibold"
             />
             <PolarRadiusAxis 
               angle={90} 
               domain={[0, 10]} 
               tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
               axisLine={false}
+              tickCount={6}
             />
+            
             <Radar
-              name="Compétences"
+              name="Santé mentale"
               dataKey="score"
-              stroke="hsl(var(--primary))"
+              stroke="#22c55e"
               strokeWidth={3}
-              fill="hsl(var(--primary))"
-              fillOpacity={0.2}
+              fill="rgba(34, 197, 94, 0.15)"
+              fillOpacity={0.8}
+              filter="url(#glow)"
               dot={{ 
-                fill: 'hsl(var(--primary))', 
-                strokeWidth: 2, 
+                fill: '#22c55e', 
+                strokeWidth: 3, 
                 stroke: 'hsl(var(--background))',
-                r: 6
+                r: 7,
+                filter: 'url(#glow)'
               }}
             />
           </RadarChart>
@@ -174,6 +193,24 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
             {averageScore >= 4 && averageScore < 6 && "🌱 En développement. Chaque jour compte."}
             {averageScore < 4 && "🌅 Un nouveau départ. Chaque petit pas vous rapproche de vos objectifs."}
           </p>
+        </div>
+
+        {/* Légende des couleurs */}
+        <div className="mt-6 grid grid-cols-5 gap-2 text-xs">
+          {skillData.map((skill, index) => (
+            <div key={index} className="flex flex-col items-center">
+              <div 
+                className="w-4 h-4 rounded-full mb-1" 
+                style={{ backgroundColor: skill.color }}
+              ></div>
+              <span className="text-muted-foreground text-center leading-tight">
+                {skill.skill}
+              </span>
+              <span className="text-primary font-semibold">
+                {skill.score}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { usePremium } from '@/hooks/usePremium';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useGongSounds } from '@/hooks/useGongSounds';
+import { SkillsRadarChart } from '@/components/SkillsRadarChart';
 
 interface PremiumUpgradeProps {
   isVisible: boolean;
@@ -67,8 +68,24 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
     },
     {
       icon: <TrendingUp className="w-6 h-6" />,
-      title: "Statistiques avancées",
-      description: "Analyse complète avec historique détaillé et tendances"
+      title: "Profil de Développement",
+      description: "Diagramme radar de vos 5 compétences de vie avec analyse avancée"
+    }
+  ];
+
+  // Mock data pour le diagramme de démonstration
+  const mockJournalEntries = [
+    {
+      date: '2024-01-20',
+      scores: { meditation: 8, sport: 7, wellbeing: 9, learning: 6, social: 8, creativity: 7 },
+      totalScore: 7.5,
+      mood: 'high' as const
+    },
+    {
+      date: '2024-01-19',
+      scores: { meditation: 9, sport: 6, wellbeing: 8, learning: 8, social: 7, creativity: 8 },
+      totalScore: 7.7,
+      mood: 'high' as const
     }
   ];
 
@@ -105,6 +122,43 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
               : 'Transformez votre routine quotidienne en véritable parcours de développement personnel'
             }
           </p>
+        </div>
+
+        {/* Diagramme Premium Showcase */}
+        <div className="mb-8">
+          <div className="journey-card-premium p-6 text-center">
+            <h2 className="text-2xl font-bold text-gradient-primary mb-2">
+              ✨ Votre Profil de Développement Personnel
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              Visualisez vos 5 compétences de vie avec notre diagramme radar exclusif
+            </p>
+            <div className="relative max-w-md mx-auto">
+              <SkillsRadarChart entries={mockJournalEntries} />
+            </div>
+            <div className="mt-4 grid grid-cols-5 gap-2 text-xs">
+              <div className="flex items-center justify-center">
+                <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: 'hsl(142, 76%, 36%)' }}></div>
+                <span className="text-muted-foreground">Mental</span>
+              </div>
+              <div className="flex items-center justify-center">
+                <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: 'hsl(221, 83%, 53%)' }}></div>
+                <span className="text-muted-foreground">Physique</span>
+              </div>
+              <div className="flex items-center justify-center">
+                <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: 'hsl(262, 83%, 58%)' }}></div>
+                <span className="text-muted-foreground">Régularité</span>
+              </div>
+              <div className="flex items-center justify-center">
+                <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: 'hsl(32, 98%, 56%)' }}></div>
+                <span className="text-muted-foreground">Objectifs</span>
+              </div>
+              <div className="flex items-center justify-center">
+                <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: 'hsl(346, 77%, 49%)' }}></div>
+                <span className="text-muted-foreground">Âme</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Features Grid */}
