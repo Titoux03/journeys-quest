@@ -152,22 +152,25 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
               tickCount={6}
             />
             
-            <Radar
-              name="Santé mentale"
-              dataKey="score"
-              stroke="#22c55e"
-              strokeWidth={3}
-              fill="rgba(34, 197, 94, 0.15)"
-              fillOpacity={0.8}
-              filter="url(#glow)"
-              dot={{ 
-                fill: '#22c55e', 
-                strokeWidth: 3, 
-                stroke: 'hsl(var(--background))',
-                r: 7,
-                filter: 'url(#glow)'
-              }}
-            />
+            {skillData.map((skill, index) => (
+              <Radar
+                key={skill.skill}
+                name={skill.skill}
+                dataKey="score"
+                stroke={skill.color}
+                strokeWidth={3}
+                fill={skill.fillColor}
+                fillOpacity={0.8}
+                filter="url(#glow)"
+                dot={{ 
+                  fill: skill.color, 
+                  strokeWidth: 3, 
+                  stroke: 'hsl(var(--background))',
+                  r: 7,
+                  filter: 'url(#glow)'
+                }}
+              />
+            ))}
           </RadarChart>
         </ResponsiveContainer>
       </div>
