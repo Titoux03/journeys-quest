@@ -19,6 +19,25 @@ interface LifeCriterion {
   color: string;
 }
 
+const motivationalPhrases = [
+  "🌟 Incroyable ! Vous rayonnez aujourd'hui !",
+  "🚀 Vous êtes sur la bonne voie, continuez !",
+  "💪 Cette énergie positive vous mènera loin !",
+  "✨ Quelle belle journée ! Savourez ce moment !",
+  "🎯 Vous dépassez vos objectifs, bravo !",
+  "🔥 Cette motivation est contagieuse !",
+  "🌈 Vous créez votre propre bonheur !",
+  "🏆 Champion aujourd'hui, légende demain !",
+  "💎 Vous brillez de mille feux !",
+  "🌟 Cette excellence mérite d'être célébrée !",
+  "⚡ Votre potentiel est illimité !",
+  "🎊 Continuez, vous touchez aux étoiles !"
+];
+
+const getRandomMotivationalPhrase = () => {
+  return motivationalPhrases[Math.floor(Math.random() * motivationalPhrases.length)];
+};
+
 const defaultCriteria: LifeCriterion[] = [
   {
     key: 'social',
@@ -164,6 +183,18 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
             {mood === 'medium' && 'Journée équilibrée 😊'}
             {mood === 'low' && 'Prenez soin de vous 💙'}
           </p>
+          
+          {/* Phrase motivante pour score > 7 */}
+          {totalScore > 7 && (
+            <div className="mt-4 p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl border border-primary/20 animate-pulse-glow">
+              <p className="text-primary font-medium text-lg">
+                {getRandomMotivationalPhrase()}
+              </p>
+              <p className="text-xs text-muted-foreground mt-2">
+                Continuez sur cette voie exceptionnelle ! 💫
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Critères d'évaluation */}
