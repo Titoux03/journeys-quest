@@ -211,6 +211,10 @@ All colors MUST be HSL. */
     animation: float 3s ease-in-out infinite;
   }
 
+  .moon-float {
+    animation: moon-float 2.5s ease-in-out infinite;
+  }
+
   .pulse-glow {
     animation: pulse-glow 2s ease-in-out infinite;
   }
@@ -238,6 +242,13 @@ All colors MUST be HSL. */
 }
 
 /* Custom Animations */
+@keyframes moon-float {
+  0%, 100% { transform: translateY(0px); }
+  25% { transform: translateY(-25px); }
+  50% { transform: translateY(-40px); }
+  75% { transform: translateY(-25px); }
+}
+
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
