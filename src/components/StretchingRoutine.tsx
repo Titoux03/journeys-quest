@@ -1,7 +1,7 @@
 import React from 'react';
 import { Check, Clock, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { PremiumLock } from '@/components/PremiumLock';
+
 import { useStretching } from '@/hooks/useStretching';
 
 interface StretchingRoutineProps {
@@ -10,9 +10,7 @@ interface StretchingRoutineProps {
 
 export const StretchingRoutine: React.FC<StretchingRoutineProps> = ({ onNavigate }) => {
   return (
-    <PremiumLock feature="Routine Stretching" className="min-h-screen">
-      <StretchingRoutineContent onNavigate={onNavigate} />
-    </PremiumLock>
+    <StretchingRoutineContent onNavigate={onNavigate} />
   );
 };
 
