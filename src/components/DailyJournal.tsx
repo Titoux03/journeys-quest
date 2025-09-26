@@ -181,16 +181,23 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
   const mood = totalScore >= 7 ? 'high' : totalScore >= 4 ? 'medium' : 'low';
 
   return (
-    <div className="min-h-screen p-6 pb-24">
+    <div className="min-h-screen p-4 sm:p-6 pb-24">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8 animate-slide-up">
-          <h1 className="text-3xl font-bold text-gradient-primary mb-2">
+        <div className="text-center mb-6 sm:mb-8 animate-slide-up">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gradient-primary mb-2">
             Comment s'est passée votre journée ?
           </h1>
-          <p className="text-muted-foreground">
-            Évaluez chaque aspect de votre vie sur 10
+          <p className="text-sm sm:text-base text-muted-foreground mb-4">
+            ✨ Visualise ta progression complète avec Journeys Premium
           </p>
+          
+          <PremiumTeaser 
+            title="Débloque ton historique complet"
+            description="Transforme chaque jour en victoire visible"
+            variant="compact"
+            className="mb-6"
+          />
         </div>
 
         {/* Score global */}

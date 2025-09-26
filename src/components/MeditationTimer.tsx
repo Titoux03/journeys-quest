@@ -260,13 +260,13 @@ const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) 
       {/* Duration Selection (only when idle) */}
       {timerState === 'idle' && (
         <div className="journey-card">
-          <h3 className="text-lg font-semibold mb-4 text-foreground">Durée</h3>
-          <div className="grid grid-cols-2 gap-3">
+          <h3 className="text-base sm:text-lg font-semibold mb-4 text-foreground">Durée</h3>
+          <div className="grid grid-cols-2 gap-2 sm:gap-3">
             {presetDurations.map((preset) => (
               <button
                 key={preset.minutes}
                 onClick={() => handleDurationChange(preset.minutes)}
-                className={`p-3 rounded-xl transition-all duration-300 text-sm font-medium ${
+                className={`p-2 sm:p-3 rounded-xl transition-all duration-300 text-xs sm:text-sm font-medium ${
                   duration === preset.minutes
                     ? mode === 'meditation'
                       ? 'bg-accent text-accent-foreground shadow-lg shadow-accent/20'

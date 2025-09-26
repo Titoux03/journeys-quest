@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { DailyQuote } from '@/components/DailyQuote';
 import { LoginStreakDisplay } from '@/components/LoginStreakDisplay';
 import { AddictionCard } from '@/components/AddictionCard';
-import { Sparkles, TrendingUp, Target, Brain, Shield, Dumbbell, Crown, Star, Flame } from 'lucide-react';
+import { Sparkles, TrendingUp, Target, Brain, Shield, Dumbbell, Crown, Star, Flame, Timer, BarChart3, Leaf } from 'lucide-react';
 import { usePremium } from '@/hooks/usePremium';
 import { useAuth } from '@/hooks/useAuth';
 import { useAddictions } from '@/hooks/useAddictions';
+import { PremiumTeaser, PremiumBadge, PremiumLockOverlay } from '@/components/PremiumTeaser';
+import { JourneyCard } from '@/components/JourneyCard';
 
 interface JournalEntry {
   date: string;
@@ -55,16 +57,16 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
   const greeting = getGreeting();
 
   return (
-    <div className="min-h-screen p-6 pb-24 flex flex-col">
+    <div className="min-h-screen p-4 sm:p-6 pb-24 flex flex-col">
       {/* Header avec salutation */}
-      <div className="text-center mb-8 animate-slide-up">
+      <div className="text-center mb-6 sm:mb-8 animate-slide-up">
         <div className="floating-element inline-block">
-          <Sparkles className="w-8 h-8 text-primary mx-auto mb-4" />
+          <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-primary mx-auto mb-4" />
         </div>
-        <h1 className="text-4xl font-bold text-gradient-primary mb-2">
+        <h1 className="text-2xl sm:text-4xl font-bold text-gradient-primary mb-2">
           {greeting.message} {greeting.emoji}
         </h1>
-        <p className="text-lg text-muted-foreground max-w-md mx-auto">
+        <p className="text-sm sm:text-lg text-muted-foreground max-w-md mx-auto">
           {user 
             ? 'Bienvenue dans votre espace de bien-être quotidien' 
             : 'Commencez votre parcours de bien-être dès aujourd\'hui'
@@ -73,7 +75,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
         
         {!user && (
           <div className="mt-4 p-3 bg-primary/5 rounded-xl border border-primary/20">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs sm:text-sm text-muted-foreground">
               💡 Créez un compte pour sauvegarder vos progrès et débloquer les fonctionnalités premium
             </p>
           </div>

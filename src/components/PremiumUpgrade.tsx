@@ -67,9 +67,9 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
     },
     {
       icon: <Dumbbell className="w-6 h-6" />,
-      title: "Routines Bien-être",
-      description: "Stretching guidé avec suivi de progression et routines personnalisées",
-      highlight: false
+      title: "Routines Stretching Premium",
+      description: "Exercices guidés avec suivi de progression et programmes personnalisés",
+      highlight: true
     },
     {
       icon: <Sparkles className="w-6 h-6" />,

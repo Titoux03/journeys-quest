@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { usePremium } from '@/hooks/usePremium';
 import { useProgress } from '@/hooks/useProgress';
 import { useGongSounds } from '@/hooks/useGongSounds';
+import { MobileOptimizations } from '@/components/MobileOptimizations';
 
 interface JournalEntry {
   date: string;
@@ -188,6 +189,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen pb-24">
+      {/* Optimisations CSS mobile */}
+      <MobileOptimizations />
+      
       {/* User Status Header */}
       <UserStatus />
       

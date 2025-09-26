@@ -37,15 +37,15 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
     { id: 'home', icon: Home, label: 'Accueil' },
     { id: 'journal', icon: BookOpen, label: 'Journal' },
     { id: 'meditation', icon: Timer, label: 'Focus' },
-    { id: 'abstinence', icon: Shield, label: 'Addiction' },
-    { id: 'stretching', icon: Leaf, label: 'Stretching' },
-    { id: 'progress', icon: BarChart3, label: 'Progrès' },
+    { id: 'abstinence', icon: Shield, label: 'Contrôle' },
+    { id: 'stretching', icon: Leaf, label: 'Sport' },
+    { id: 'progress', icon: BarChart3, label: 'Stats' },
   ];
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 px-2 pb-2 safe-area-inset-bottom">
       <div className="bg-card/95 backdrop-blur-md border border-border/50 rounded-2xl shadow-lg overflow-hidden">
-        <div className="grid grid-cols-7 gap-0">
+        <div className="grid grid-cols-7 gap-0 px-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentScreen === item.id;
@@ -62,7 +62,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                 }`}
               >
                 <Icon size={20} className="shrink-0" />
-                <span className="text-[9px] font-medium leading-tight text-center px-0.5">{item.label}</span>
+                <span className="text-[8px] font-medium leading-none text-center">{item.label}</span>
               </Button>
             );
           })}
@@ -79,12 +79,12 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
             {user ? (
               <>
                 <LogOut size={20} className="shrink-0" />
-                <span className="text-[9px] font-medium leading-tight text-center px-0.5">Sortir</span>
+                <span className="text-[8px] font-medium leading-none text-center">Sortir</span>
               </>
             ) : (
               <>
                 <LogIn size={20} className="shrink-0" />
-                <span className="text-[9px] font-medium leading-tight text-center px-0.5">Connexion</span>
+                <span className="text-[8px] font-medium leading-none text-center">Login</span>
               </>
             )}
           </Button>
