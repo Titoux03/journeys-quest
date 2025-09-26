@@ -152,6 +152,7 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
               tickCount={6}
             />
             
+            {/* Une ligne colorée pour chaque compétence */}
             {skillData.map((skill, index) => (
               <Radar
                 key={skill.skill}
@@ -159,18 +160,28 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
                 dataKey="score"
                 stroke={skill.color}
                 strokeWidth={3}
-                fill={skill.fillColor}
-                fillOpacity={0.8}
+                fill="transparent"
+                fillOpacity={0}
                 filter="url(#glow)"
                 dot={{ 
                   fill: skill.color, 
-                  strokeWidth: 3, 
+                  strokeWidth: 4, 
                   stroke: 'hsl(var(--background))',
-                  r: 7,
+                  r: 8,
                   filter: 'url(#glow)'
                 }}
               />
             ))}
+            
+            {/* Remplissage global subtil */}
+            <Radar
+              name="Zone globale"
+              dataKey="score"
+              stroke="transparent"
+              strokeWidth={0}
+              fill="hsl(var(--primary) / 0.05)"
+              fillOpacity={0.3}
+            />
           </RadarChart>
         </ResponsiveContainer>
       </div>
