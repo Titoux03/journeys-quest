@@ -167,15 +167,7 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           </div>
 
           {/* Social proof */}
-          <div className="flex items-center justify-center space-x-8 text-sm text-muted-foreground mb-6">
-            <div className="flex items-center space-x-1">
-              <div className="flex -space-x-1">
-                <div className="w-6 h-6 rounded-full bg-primary/20 border-2 border-background"></div>
-                <div className="w-6 h-6 rounded-full bg-primary-glow/20 border-2 border-background"></div>
-                <div className="w-6 h-6 rounded-full bg-success/20 border-2 border-background"></div>
-              </div>
-              <span>+1000 utilisateurs actifs</span>
-            </div>
+          <div className="flex items-center justify-center text-sm text-muted-foreground mb-6">
             <div className="flex items-center space-x-1">
               <Shield className="w-4 h-4 text-success" />
               <span>Paiement sécurisé</span>
