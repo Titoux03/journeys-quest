@@ -22,6 +22,16 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({
     "Quelle petite action positive puis-je faire demain ?"
   ];
 
+  const highScoreQuestions = [
+    "🌟 Qu'est-ce qui vous rend le plus fier de cette excellente journée ?",
+    "🚀 Comment pouvez-vous maintenir cette énergie positive demain ?",
+    "✨ Quel moment de la journée vous a procuré le plus de satisfaction ?",
+    "💪 Quelle nouvelle habitude positive pourriez-vous adopter après cette réussite ?",
+    "🎯 Comment cette belle journée vous rapproche-t-elle de vos objectifs ?",
+    "🌈 Que souhaitez-vous partager ou transmettre suite à cette expérience positive ?",
+    "🔥 Quelle est la prochaine étape pour dépasser encore vos attentes ?"
+  ];
+
   const getPromptContent = () => {
     if (mood === 'low') {
       return {
@@ -39,7 +49,7 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({
           ? "Une belle journée mérite d'être immortalisée !" 
           : "Racontez-nous ce qui a rendu cette journée spéciale",
         icon: mood === 'high' ? Smile : Lightbulb,
-        questions: [],
+        questions: mood === 'high' ? highScoreQuestions : [],
         placeholder: mood === 'high'
           ? "Décrivez vos moments de bonheur, vos réussites, ce qui vous a rendu fier..."
           : "Partagez vos pensées, vos découvertes, vos petites victoires du jour...",
