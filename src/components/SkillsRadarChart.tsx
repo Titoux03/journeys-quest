@@ -98,19 +98,10 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
 
   return (
     <div className="relative">
-      {/* Fond avec l'homme de Vitruve */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-15 pointer-events-none">
-        <img 
-          src={vitruvianMan} 
-          alt="Vitruvian Man" 
-          className="w-96 h-96 object-contain"
-        />
-      </div>
-
-      {/* Graphique radar */}
-      <div className="relative z-10 h-[500px]">
+      {/* Graphique radar avec fond Vitruve */}
+      <div className="relative z-10 h-[600px]">
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart data={skillData} margin={{ top: 60, right: 80, bottom: 60, left: 80 }}>
+          <RadarChart data={skillData} margin={{ top: 80, right: 100, bottom: 80, left: 100 }}>
             <defs>
               <filter id="glow">
                 <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
@@ -119,6 +110,17 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
                   <feMergeNode in="SourceGraphic"/>
                 </feMerge>
               </filter>
+              {/* Image de l'homme de Vitruve en arrière-plan du diagramme */}
+              <pattern id="vitruvianPattern" patternUnits="userSpaceOnUse" width="300" height="300">
+                <image 
+                  href={vitruvianMan} 
+                  x="75" 
+                  y="75" 
+                  width="150" 
+                  height="150" 
+                  opacity="0.2"
+                />
+              </pattern>
             </defs>
             
             <PolarGrid 
@@ -130,11 +132,11 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
             <PolarAngleAxis 
               dataKey="skill" 
               tick={{ 
-                fontSize: 15, 
+                fontSize: 16, 
                 fill: 'hsl(var(--foreground))',
                 fontWeight: 700
               }}
-              className="text-sm font-bold"
+              className="text-base font-bold"
             />
             <PolarRadiusAxis 
               angle={90} 
@@ -142,6 +144,16 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
               tick={false}
               axisLine={false}
               tickCount={11}
+            />
+            
+            {/* Fond avec l'homme de Vitruve intégré */}
+            <Radar
+              name="Fond Vitruve"
+              dataKey={() => 10}
+              stroke="transparent"
+              strokeWidth={0}
+              fill="url(#vitruvianPattern)"
+              fillOpacity={1}
             />
             
             {/* Zones remplies avec effet de superposition - couleurs plus vives */}
