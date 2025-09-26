@@ -98,15 +98,6 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
 
   return (
     <div className="relative">
-      {/* Logo Vitruve en arrière-plan */}
-      <div className="absolute inset-0 flex items-center justify-center z-0">
-        <img 
-          src={vitruvianMan} 
-          alt="Homme de Vitruve" 
-          className="w-80 h-80 object-contain opacity-20 select-none pointer-events-none"
-        />
-      </div>
-      
       {/* Graphique radar */}
       <div className="relative z-10 h-[600px]">
         <ResponsiveContainer width="100%" height="100%">
