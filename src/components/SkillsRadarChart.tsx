@@ -130,9 +130,9 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
             </defs>
             
             <PolarGrid 
-              stroke="hsl(var(--border))" 
-              strokeWidth={1.5}
-              strokeOpacity={0.4}
+              stroke="#ffffff" 
+              strokeWidth={2}
+              strokeOpacity={0.6}
               radialLines={true}
             />
             <PolarAngleAxis 
@@ -147,9 +147,9 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
             <PolarRadiusAxis 
               angle={90} 
               domain={[0, 10]} 
-              tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+              tick={{ fontSize: 12, fill: '#ffffff', fontWeight: 'bold' }}
               axisLine={false}
-              tickCount={6}
+              tickCount={11}
             />
             
             {/* Une ligne colorée pour chaque compétence */}
@@ -163,17 +163,11 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
                 fill="transparent"
                 fillOpacity={0}
                 filter="url(#glow)"
-                dot={{ 
-                  fill: skill.color, 
-                  strokeWidth: 4, 
-                  stroke: 'hsl(var(--background))',
-                  r: 10,
-                  filter: 'url(#glow)'
-                }}
+                dot={false}
                 label={{
                   position: 'outside',
                   offset: 15,
-                  fontSize: 14,
+                  fontSize: 16,
                   fontWeight: 'bold',
                   fill: skill.color,
                   formatter: (value: number) => value.toString()
