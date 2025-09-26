@@ -2,6 +2,7 @@ import React from 'react';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts';
 import { useAddictions } from '@/hooks/useAddictions';
 import { usePremium } from '@/hooks/usePremium';
+import vitruvianMan from '@/assets/vitruvian-man.png';
 
 interface JournalEntry {
   date: string;
@@ -21,11 +22,11 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
   const calculateSkillScores = () => {
     if (entries.length === 0) {
       return [
-        { skill: 'Mental', score: 0, maxScore: 10, color: '#22c55e', fillColor: 'rgba(34, 197, 94, 0.15)' },
-        { skill: 'Physique', score: 0, maxScore: 10, color: '#3b82f6', fillColor: 'rgba(59, 130, 246, 0.15)' },
-        { skill: 'Régularité', score: 0, maxScore: 10, color: '#8b5cf6', fillColor: 'rgba(139, 92, 246, 0.15)' },
-        { skill: 'Réalisation', score: 0, maxScore: 10, color: '#f59e0b', fillColor: 'rgba(245, 158, 11, 0.15)' },
-        { skill: 'Force âme', score: 0, maxScore: 10, color: '#ffffff', fillColor: 'rgba(255, 255, 255, 0.15)' }
+        { skill: 'Mental', score: 0, maxScore: 10, color: 'hsl(var(--primary))', fillColor: 'hsl(var(--primary) / 0.2)' },
+        { skill: 'Physique', score: 0, maxScore: 10, color: 'hsl(var(--accent))', fillColor: 'hsl(var(--accent) / 0.2)' },
+        { skill: 'Régularité', score: 0, maxScore: 10, color: 'hsl(var(--secondary))', fillColor: 'hsl(var(--secondary) / 0.2)' },
+        { skill: 'Réalisation', score: 0, maxScore: 10, color: 'hsl(var(--muted-foreground))', fillColor: 'hsl(var(--muted-foreground) / 0.2)' },
+        { skill: 'Force âme', score: 0, maxScore: 10, color: 'hsl(var(--foreground))', fillColor: 'hsl(var(--foreground) / 0.15)' }
       ];
     }
 
@@ -84,11 +85,11 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
     })();
 
     return [
-      { skill: 'Mental', score: Math.round(mentalHealthScore * 10) / 10, maxScore: 10, color: '#22c55e', fillColor: 'rgba(34, 197, 94, 0.15)' },
-      { skill: 'Physique', score: Math.round(physicalScore * 10) / 10, maxScore: 10, color: '#3b82f6', fillColor: 'rgba(59, 130, 246, 0.15)' },
-      { skill: 'Régularité', score: Math.round(regularityScore * 10) / 10, maxScore: 10, color: '#8b5cf6', fillColor: 'rgba(139, 92, 246, 0.15)' },
-      { skill: 'Réalisation', score: Math.round(realizationScore * 10) / 10, maxScore: 10, color: '#f59e0b', fillColor: 'rgba(245, 158, 11, 0.15)' },
-      { skill: 'Force âme', score: Math.round(soulStrengthScore * 10) / 10, maxScore: 10, color: '#ffffff', fillColor: 'rgba(255, 255, 255, 0.15)' }
+      { skill: 'Mental', score: Math.round(mentalHealthScore * 10) / 10, maxScore: 10, color: 'hsl(var(--primary))', fillColor: 'hsl(var(--primary) / 0.2)' },
+      { skill: 'Physique', score: Math.round(physicalScore * 10) / 10, maxScore: 10, color: 'hsl(var(--accent))', fillColor: 'hsl(var(--accent) / 0.2)' },
+      { skill: 'Régularité', score: Math.round(regularityScore * 10) / 10, maxScore: 10, color: 'hsl(var(--secondary))', fillColor: 'hsl(var(--secondary) / 0.2)' },
+      { skill: 'Réalisation', score: Math.round(realizationScore * 10) / 10, maxScore: 10, color: 'hsl(var(--muted-foreground))', fillColor: 'hsl(var(--muted-foreground) / 0.2)' },
+      { skill: 'Force âme', score: Math.round(soulStrengthScore * 10) / 10, maxScore: 10, color: 'hsl(var(--foreground))', fillColor: 'hsl(var(--foreground) / 0.15)' }
     ];
   };
 
@@ -97,22 +98,13 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
 
   return (
     <div className="relative">
-      {/* Fond décoratif avec feu follet */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-        <div className="relative">
-          {/* Corps du feu follet */}
-          <div className="w-32 h-40 relative">
-            <div className="absolute inset-0 bg-gradient-to-t from-primary/30 via-accent/40 to-secondary/50 rounded-full blur-xl animate-pulse"></div>
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 w-16 h-20 bg-gradient-to-t from-primary/50 via-accent/60 to-secondary/70 rounded-full blur-lg animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-            <div className="absolute top-8 left-1/2 -translate-x-1/2 w-8 h-12 bg-gradient-to-t from-primary/70 via-accent/80 to-secondary/90 rounded-full blur-md animate-pulse" style={{ animationDelay: '1s' }}></div>
-          </div>
-          
-          {/* Particules flottantes */}
-          <div className="absolute -top-4 left-4 w-2 h-2 bg-accent rounded-full animate-bounce opacity-60" style={{ animationDelay: '0.2s' }}></div>
-          <div className="absolute -top-2 right-6 w-1 h-1 bg-primary rounded-full animate-bounce opacity-80" style={{ animationDelay: '0.7s' }}></div>
-          <div className="absolute top-6 -left-2 w-1.5 h-1.5 bg-secondary rounded-full animate-bounce opacity-70" style={{ animationDelay: '1.2s' }}></div>
-          <div className="absolute top-12 right-2 w-1 h-1 bg-accent rounded-full animate-bounce opacity-50" style={{ animationDelay: '1.5s' }}></div>
-        </div>
+      {/* Fond avec l'homme de Vitruve */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
+        <img 
+          src={vitruvianMan} 
+          alt="Vitruvian Man" 
+          className="w-80 h-80 object-contain"
+        />
       </div>
 
       {/* Graphique radar */}
@@ -121,7 +113,7 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
           <RadarChart data={skillData} margin={{ top: 50, right: 60, bottom: 50, left: 60 }}>
             <defs>
               <filter id="glow">
-                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
                 <feMerge> 
                   <feMergeNode in="coloredBlur"/>
                   <feMergeNode in="SourceGraphic"/>
@@ -130,15 +122,15 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
             </defs>
             
             <PolarGrid 
-              stroke="#ffffff" 
-              strokeWidth={2}
-              strokeOpacity={0.6}
+              stroke="hsl(var(--border))" 
+              strokeWidth={1}
+              strokeOpacity={0.3}
               radialLines={true}
             />
             <PolarAngleAxis 
               dataKey="skill" 
               tick={{ 
-                fontSize: 13, 
+                fontSize: 14, 
                 fill: 'hsl(var(--foreground))',
                 fontWeight: 600
               }}
@@ -147,34 +139,37 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
             <PolarRadiusAxis 
               angle={90} 
               domain={[0, 10]} 
-              tick={{ fontSize: 12, fill: '#ffffff', fontWeight: 'bold' }}
+              tick={false}
               axisLine={false}
               tickCount={11}
             />
             
-            {/* Une ligne colorée pour chaque compétence */}
-            {skillData.map((skill, index) => (
-              <Radar
-                key={skill.skill}
-                name={skill.skill}
-                dataKey="score"
-                stroke={skill.color}
-                strokeWidth={4}
-                fill="transparent"
-                fillOpacity={0}
-                filter="url(#glow)"
-                dot={false}
-              />
-            ))}
-            
-            {/* Remplissage global subtil */}
+            {/* Zones remplies avec effet de superposition */}
             <Radar
               name="Zone globale"
               dataKey="score"
-              stroke="transparent"
-              strokeWidth={0}
-              fill="hsl(var(--primary) / 0.05)"
+              stroke="hsl(var(--primary))"
+              strokeWidth={2}
+              fill="hsl(var(--primary) / 0.1)"
+              fillOpacity={0.4}
+            />
+            
+            <Radar
+              name="Zone de performance"
+              dataKey="score"
+              stroke="hsl(var(--accent))"
+              strokeWidth={2}
+              fill="hsl(var(--accent) / 0.15)"
               fillOpacity={0.3}
+            />
+            
+            <Radar
+              name="Zone d'excellence"
+              dataKey="score"
+              stroke="hsl(var(--secondary))"
+              strokeWidth={3}
+              fill="hsl(var(--secondary) / 0.2)"
+              fillOpacity={0.2}
             />
           </RadarChart>
         </ResponsiveContainer>
