@@ -170,14 +170,6 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
                   r: 8,
                   filter: 'url(#glow)'
                 }}
-                label={{
-                  position: 'outside',
-                  offset: 15,
-                  fontSize: 16,
-                  fontWeight: 'bold',
-                  fill: skill.color,
-                  formatter: (value: number) => value.toString()
-                }}
               />
             ))}
             
