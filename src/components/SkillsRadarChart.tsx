@@ -104,10 +104,10 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
       <div className="relative z-10 h-[300px] sm:h-[400px] md:h-[500px]">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={skillData} margin={{ 
-            top: window.innerWidth < 640 ? 60 : window.innerWidth < 768 ? 70 : 80, 
-            right: window.innerWidth < 640 ? 50 : window.innerWidth < 768 ? 60 : 100, 
-            bottom: window.innerWidth < 640 ? 60 : window.innerWidth < 768 ? 70 : 80, 
-            left: window.innerWidth < 640 ? 50 : window.innerWidth < 768 ? 60 : 100 
+            top: 80, 
+            right: 120, 
+            bottom: 80, 
+            left: 120 
           }}>
             <defs>
               <filter id="glow">
@@ -127,23 +127,12 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
             />
             <PolarAngleAxis 
               dataKey="skill" 
-              tick={({ x, y, textAnchor, value, index }) => {
-                const skill = skillData[index];
-                const fontSize = window.innerWidth < 640 ? 12 : window.innerWidth < 768 ? 14 : 16;
-                return (
-                  <text 
-                    x={x} 
-                    y={y} 
-                    textAnchor={textAnchor} 
-                    fontSize={fontSize}
-                    fontWeight="600"
-                    fill={skill?.color || '#ffffff'}
-                  >
-                    {value}
-                  </text>
-                );
+              tick={{ 
+                fontSize: 14, 
+                fill: '#ffffff',
+                fontWeight: 'bold'
               }}
-              className="text-xs sm:text-sm md:text-base font-semibold"
+              axisLine={false}
             />
             <PolarRadiusAxis 
               angle={90} 
