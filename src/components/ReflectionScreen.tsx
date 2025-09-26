@@ -43,13 +43,18 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({
         buttonText: "Terminer ma réflexion"
       };
     } else {
+      // Pour les scores élevés, sélectionner 3 questions aléatoires
+      const randomQuestions = mood === 'high' 
+        ? highScoreQuestions.sort(() => 0.5 - Math.random()).slice(0, 3)
+        : [];
+        
       return {
         title: mood === 'high' ? "Capturez vos moments heureux ✨" : "Partagez votre journée 😊",
         subtitle: mood === 'high' 
           ? "Une belle journée mérite d'être immortalisée !" 
           : "Racontez-nous ce qui a rendu cette journée spéciale",
         icon: mood === 'high' ? Smile : Lightbulb,
-        questions: mood === 'high' ? highScoreQuestions : [],
+        questions: randomQuestions,
         placeholder: mood === 'high'
           ? "Décrivez vos moments de bonheur, vos réussites, ce qui vous a rendu fier..."
           : "Partagez vos pensées, vos découvertes, vos petites victoires du jour...",
