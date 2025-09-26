@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, RotateCcw, Target, Trophy, Calendar } from 'lucide-react';
+import { Play, RotateCcw, Target, Trophy, Calendar, Pause } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -10,6 +10,7 @@ interface AddictionCardProps {
   userAddiction?: UserAddiction;
   onStart: () => void;
   onRelapse: () => void;
+  onDeactivate?: () => void;
   className?: string;
 }
 
@@ -18,6 +19,7 @@ export const AddictionCard: React.FC<AddictionCardProps> = ({
   userAddiction,
   onStart,
   onRelapse,
+  onDeactivate,
   className = ""
 }) => {
   const isActive = !!userAddiction;
@@ -111,15 +113,27 @@ export const AddictionCard: React.FC<AddictionCardProps> = ({
           </div>
 
           {/* Actions */}
-          <div className="flex space-x-3">
+          <div className="grid grid-cols-2 gap-2">
             <Button
               onClick={onRelapse}
               variant="outline"
-              className="flex-1 border-destructive/30 text-destructive hover:bg-destructive/10"
+              className="border-destructive/30 text-destructive hover:bg-destructive/10"
+              size="sm"
             >
               <RotateCcw className="w-4 h-4 mr-2" />
               Rechute
             </Button>
+            {onDeactivate && (
+              <Button
+                onClick={onDeactivate}
+                variant="outline"
+                className="border-muted-foreground/30 text-muted-foreground hover:bg-muted/20"
+                size="sm"
+              >
+                <Pause className="w-4 h-4 mr-2" />
+                Désactiver
+              </Button>
+            )}
           </div>
         </>
       ) : (

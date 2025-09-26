@@ -30,8 +30,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
     userBadges, 
     loginStreak,
     startAddictionTracking,
-    markRelapse
+    markRelapse,
+    deactivateAddiction
   } = useAddictions();
+
+  const handleDeactivateAddiction = async (addictionId: string) => {
+    await deactivateAddiction(addictionId);
+  };
 
   const today = new Date();
   const todayStr = today.toISOString().split('T')[0];
@@ -119,6 +124,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
                   userAddiction={userAddiction}
                   onStart={() => {}}
                   onRelapse={() => markRelapse(userAddiction.id)}
+                  onDeactivate={() => handleDeactivateAddiction(userAddiction.id)}
                   className="cursor-pointer"
                 />
               );

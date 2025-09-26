@@ -31,13 +31,21 @@ const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate
     loginStreak, 
     loading,
     startAddictionTracking,
-    markRelapse
+    markRelapse,
+    deactivateAddiction
   } = useAddictions();
   const { playPremium } = useGongSounds();
 
   const handleStartAddiction = async (addictionTypeId: string) => {
     playPremium();
     await startAddictionTracking(addictionTypeId);
+  };
+
+  const handleDeactivateAddiction = async (addictionId: string) => {
+    const result = await deactivateAddiction(addictionId);
+    if (result.success) {
+      playPremium();
+    }
   };
 
   const handleRelapse = async (addictionId: string) => {
@@ -96,6 +104,7 @@ const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate
                   userAddiction={userAddiction}
                   onStart={() => handleStartAddiction(addictionType.id)}
                   onRelapse={() => userAddiction && handleRelapse(userAddiction.id)}
+                  onDeactivate={() => userAddiction && handleDeactivateAddiction(userAddiction.id)}
                 />
                 
                 {/* Système de tâches pour la procrastination */}

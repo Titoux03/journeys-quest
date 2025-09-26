@@ -241,7 +241,51 @@ export const useAddictions = () => {
     }
   };
 
-  // Mettre à jour les streaks (appelé quotidiennement)
+  // Désactiver une addiction
+  const deactivateAddiction = async (addictionId: string) => {
+    if (!user) return { success: false, error: 'Not authenticated' };
+
+    try {
+      const { error } = await supabase
+        .from('user_addictions')
+        .update({ is_active: false })
+        .eq('id', addictionId);
+
+      if (error) throw error;
+
+      setUserAddictions(prev => prev.filter(a => a.id !== addictionId));
+      return { success: true };
+    } catch (error) {
+      console.error('Error deactivating addiction:', error);
+      return { success: false, error };
+    }
+  };
+
+  // Charger toutes les addictions (actives et inactives)
+  const loadAllUserAddictions = async () => {
+    if (!user) return [];
+
+    try {
+      const { data, error } = await supabase
+        .from('user_addictions')
+        .select(`
+          *,
+          addiction_type:addiction_types(*)
+        `)
+        .eq('user_id', user.id)
+        .order('is_active', { ascending: false });
+
+      if (error) throw error;
+      
+      return (data || []).map(addiction => ({
+        ...addiction,
+        addiction_type: addiction.addiction_type as AddictionType
+      }));
+    } catch (error) {
+      console.error('Error loading all user addictions:', error);
+      return [];
+    }
+  };
   const updateStreaks = async () => {
     if (!user) return;
 
@@ -441,6 +485,8 @@ export const useAddictions = () => {
     loading,
     startAddictionTracking,
     markRelapse,
+    deactivateAddiction,
+    loadAllUserAddictions,
     updateStreaks,
     checkAndAwardBadges,
     loadAllData

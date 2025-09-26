@@ -1,7 +1,10 @@
-import React from 'react';
-import { TrendingUp, Calendar, Award, Target } from 'lucide-react';
+import React, { useState } from 'react';
+import { TrendingUp, Calendar, Award, Target, Edit3 } from 'lucide-react';
 import { PremiumLock } from '@/components/PremiumLock';
 import { SkillsRadarChart } from '@/components/SkillsRadarChart';
+import { EditJournalEntry } from '@/components/EditJournalEntry';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 interface JournalEntry {
   date: string;
@@ -14,17 +17,19 @@ interface JournalEntry {
 interface ProgressScreenProps {
   entries: JournalEntry[];
   onNavigate: (screen: 'home' | 'journal' | 'reflection' | 'progress') => void;
+  onUpdateEntry?: (updatedEntry: JournalEntry) => void;
 }
 
-export const ProgressScreen: React.FC<ProgressScreenProps> = ({ entries, onNavigate }) => {
+export const ProgressScreen: React.FC<ProgressScreenProps> = ({ entries, onNavigate, onUpdateEntry }) => {
   return (
     <PremiumLock feature="Historique et statistiques avancées" className="min-h-screen">
-      <ProgressScreenContent entries={entries} onNavigate={onNavigate} />
+      <ProgressScreenContent entries={entries} onNavigate={onNavigate} onUpdateEntry={onUpdateEntry} />
     </PremiumLock>
   );
 };
 
-const ProgressScreenContent: React.FC<ProgressScreenProps> = ({ entries, onNavigate }) => {
+const ProgressScreenContent: React.FC<ProgressScreenProps> = ({ entries, onNavigate, onUpdateEntry }) => {
+  const [editingEntry, setEditingEntry] = useState<JournalEntry | null>(null);
   const getScoreClass = (score: number) => {
     if (score >= 7) return 'score-high';
     if (score >= 4) return 'score-medium';
@@ -34,6 +39,21 @@ const ProgressScreenContent: React.FC<ProgressScreenProps> = ({ entries, onNavig
   const getAverageScore = () => {
     if (entries.length === 0) return 0;
     return entries.reduce((acc, entry) => acc + entry.totalScore, 0) / entries.length;
+  };
+
+  const handleEditEntry = (entry: JournalEntry) => {
+    setEditingEntry(entry);
+  };
+
+  const handleSaveEntry = (updatedEntry: JournalEntry) => {
+    if (onUpdateEntry) {
+      onUpdateEntry(updatedEntry);
+    }
+    setEditingEntry(null);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingEntry(null);
   };
 
   const getStreakCount = () => {
@@ -126,7 +146,7 @@ const ProgressScreenContent: React.FC<ProgressScreenProps> = ({ entries, onNavig
             .map(entry => (
               <div key={entry.date} className="journey-card">
                 <div className="flex items-center justify-between">
-                  <div>
+                  <div className="flex-1">
                     <div className="font-medium text-foreground">
                       {new Date(entry.date).toLocaleDateString('fr-FR', {
                         weekday: 'long',
@@ -140,14 +160,37 @@ const ProgressScreenContent: React.FC<ProgressScreenProps> = ({ entries, onNavig
                       </p>
                     )}
                   </div>
-                  <div className={`score-indicator ${getScoreClass(entry.totalScore)} !w-12 !h-12 !text-sm`}>
-                    {entry.totalScore > 10 ? Math.round(entry.totalScore) : entry.totalScore}
+                  <div className="flex items-center space-x-2">
+                    <div className={`score-indicator ${getScoreClass(entry.totalScore)} !w-12 !h-12 !text-sm`}>
+                      {entry.totalScore > 10 ? Math.round(entry.totalScore) : entry.totalScore}
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleEditEntry(entry)}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                    </Button>
                   </div>
                 </div>
               </div>
             ))
         )}
       </div>
+
+      {/* Modal d'édition */}
+      <Dialog open={!!editingEntry} onOpenChange={() => setEditingEntry(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-auto p-0">
+          {editingEntry && (
+            <EditJournalEntry
+              entry={editingEntry}
+              onSave={handleSaveEntry}
+              onCancel={handleCancelEdit}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

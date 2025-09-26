@@ -102,6 +102,25 @@ const Index = () => {
     setCurrentScreen('reflection');
   };
 
+  const handleUpdateEntry = async (updatedEntry: JournalEntry) => {
+    if (user) {
+      // Mettre à jour en base de données
+      await saveJournalEntry(
+        updatedEntry.scores, 
+        updatedEntry.totalScore, 
+        updatedEntry.mood, 
+        updatedEntry.reflection || ''
+      );
+    } else {
+      // Mettre à jour les données locales
+      const updatedEntries = localJournalEntries.map(entry => 
+        entry.date === updatedEntry.date ? updatedEntry : entry
+      );
+      setLocalJournalEntries(updatedEntries);
+      localStorage.setItem('journalEntries', JSON.stringify(updatedEntries));
+    }
+  };
+
   const handleReflectionComplete = async (reflection: string) => {
     const today = new Date().toISOString().split('T')[0];
     
@@ -154,7 +173,7 @@ const Index = () => {
           />
         );
       case 'progress':
-        return <ProgressScreen entries={entries} onNavigate={setCurrentScreen} />;
+        return <ProgressScreen entries={entries} onNavigate={setCurrentScreen} onUpdateEntry={handleUpdateEntry} />;
       case 'abstinence':
         return <AbstinenceTracker onNavigate={setCurrentScreen} />;
       case 'stretching':

@@ -99,9 +99,14 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
   return (
     <div className="relative">
       {/* Graphique radar */}
-      <div className="relative z-10 h-[600px]">
+      <div className="relative z-10 h-[400px] md:h-[600px]">
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart data={skillData} margin={{ top: 80, right: 100, bottom: 80, left: 100 }}>
+          <RadarChart data={skillData} margin={{ 
+            top: window.innerWidth < 768 ? 40 : 80, 
+            right: window.innerWidth < 768 ? 20 : 100, 
+            bottom: window.innerWidth < 768 ? 40 : 80, 
+            left: window.innerWidth < 768 ? 20 : 100 
+          }}>
             <defs>
               <filter id="glow">
                 <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
