@@ -6,7 +6,7 @@ export const WelcomeAnimation: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(false);
-    }, 1200); // Animation de 1.2s
+    }, 2500); // Animation de 2.5s pour plus d'immersion
 
     return () => clearTimeout(timer);
   }, []);
@@ -16,11 +16,11 @@ export const WelcomeAnimation: React.FC = () => {
   return (
     <div 
       className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-background via-card to-secondary animate-fade-out"
-      style={{ animationDelay: '1000ms', animationDuration: '400ms' }}
+      style={{ animationDelay: '2200ms', animationDuration: '400ms' }}
     >
       <div className="text-center">
         <div 
-          className="text-8xl mb-4 animate-scale-in"
+          className="text-8xl mb-4 animate-scale-in floating-element"
           style={{ animationDuration: '800ms' }}
         >
           🌙
