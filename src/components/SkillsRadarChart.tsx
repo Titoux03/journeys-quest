@@ -198,17 +198,17 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
           </div>
 
           {/* Légende des couleurs */}
-          <div className="mt-6 grid grid-cols-5 gap-2 text-xs">
+          <div className="mt-6 grid grid-cols-5 gap-1 text-xs">
             {skillData.map((skill, index) => (
-              <div key={index} className="flex flex-col items-center">
+              <div key={index} className="flex flex-col items-center px-1">
                 <div 
-                  className="w-4 h-4 rounded-full mb-1" 
+                  className="w-3 h-3 rounded-full mb-1" 
                   style={{ backgroundColor: skill.color }}
                 ></div>
-                <span className="text-muted-foreground text-center leading-tight">
+                <span className="text-muted-foreground text-center leading-none text-[10px] sm:text-[11px] font-medium">
                   {skill.skill}
                 </span>
-                <span className="text-primary font-semibold">
+                <span className="text-primary font-semibold text-[11px] sm:text-xs mt-0.5">
                   {skill.score}
                 </span>
               </div>
