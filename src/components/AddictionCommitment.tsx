@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { CheckCircle2, X, Heart, Target, ArrowRight } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { CheckCircle2, X, Heart, Target, ArrowRight, PenTool, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { AddictionType } from '@/hooks/useAddictions';
+import { Canvas as FabricCanvas } from 'fabric';
 
 interface AddictionCommitmentProps {
   addictionType: AddictionType;
@@ -85,6 +86,9 @@ export const AddictionCommitment: React.FC<AddictionCommitmentProps> = ({
   const [selectedEffects, setSelectedEffects] = useState<string[]>([]);
   const [personalGoal, setPersonalGoal] = useState('');
   const [step, setStep] = useState(1);
+  const [signature, setSignature] = useState<string>('');
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const fabricCanvasRef = useRef<FabricCanvas | null>(null);
 
   const effects = addictionEffects[addictionType.name.toLowerCase() as keyof typeof addictionEffects] || [
     "Impact sur la santé physique",
@@ -108,9 +112,52 @@ export const AddictionCommitment: React.FC<AddictionCommitmentProps> = ({
     }
   };
 
+  const handleNextToSignature = () => {
+    if (personalGoal.trim()) {
+      setStep(3);
+    }
+  };
+
   const handleConfirm = () => {
-    if (personalGoal.trim() && selectedEffects.length > 0) {
+    if (personalGoal.trim() && selectedEffects.length > 0 && signature) {
       onConfirm(selectedEffects, personalGoal.trim());
+    }
+  };
+
+  useEffect(() => {
+    if (step === 3 && canvasRef.current && !fabricCanvasRef.current) {
+      const canvas = new FabricCanvas(canvasRef.current, {
+        width: 400,
+        height: 200,
+        backgroundColor: '#ffffff',
+        isDrawingMode: true,
+      });
+
+      canvas.freeDrawingBrush.color = '#000000';
+      canvas.freeDrawingBrush.width = 2;
+
+      canvas.on('path:created', () => {
+        const dataURL = canvas.toDataURL();
+        setSignature(dataURL);
+      });
+
+      fabricCanvasRef.current = canvas;
+    }
+
+    return () => {
+      if (fabricCanvasRef.current && step !== 3) {
+        fabricCanvasRef.current.dispose();
+        fabricCanvasRef.current = null;
+      }
+    };
+  }, [step]);
+
+  const clearSignature = () => {
+    if (fabricCanvasRef.current) {
+      fabricCanvasRef.current.clear();
+      fabricCanvasRef.current.backgroundColor = '#ffffff';
+      fabricCanvasRef.current.renderAll();
+      setSignature('');
     }
   };
 
@@ -237,12 +284,87 @@ export const AddictionCommitment: React.FC<AddictionCommitmentProps> = ({
                 Retour
               </Button>
               <Button
-                onClick={handleConfirm}
+                onClick={handleNextToSignature}
                 disabled={!personalGoal.trim()}
                 className="journey-button-primary px-8"
               >
+                Continuer
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-xl font-semibold mb-4 flex items-center">
+                <PenTool className="w-5 h-5 mr-2 text-primary" />
+                Signez votre engagement
+              </h2>
+              <p className="text-sm text-muted-foreground mb-4">
+                Pour officialiser votre engagement, signez ci-dessous avec votre doigt ou votre souris :
+              </p>
+              
+              <div className="journey-card bg-primary/5 border-primary/20 mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold text-primary">Zone de signature</h3>
+                  <Button
+                    onClick={clearSignature}
+                    variant="outline"
+                    size="sm"
+                    className="text-xs"
+                  >
+                    <RotateCcw className="w-3 h-3 mr-1" />
+                    Effacer
+                  </Button>
+                </div>
+                <div className="border-2 border-dashed border-primary/30 rounded-lg p-4 bg-white">
+                  <canvas
+                    ref={canvasRef}
+                    className="border border-gray-200 rounded w-full touch-none"
+                    style={{ touchAction: 'none' }}
+                  />
+                  <p className="text-xs text-muted-foreground mt-2 text-center">
+                    Dessinez votre signature dans la zone ci-dessus
+                  </p>
+                </div>
+              </div>
+
+              <div className="journey-card bg-primary/5 border-primary/20">
+                <h3 className="font-semibold mb-2 text-primary">Récapitulatif de votre engagement :</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  "Je, soussigné(e), m'engage solennellement à arrêter <strong>{addictionType.name}</strong> car je reconnais que cela me cause :"
+                </p>
+                <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 mb-3">
+                  {selectedEffects.map((effect, index) => (
+                    <li key={index}>{effect}</li>
+                  ))}
+                </ul>
+                <p className="text-sm text-muted-foreground mb-3">
+                  "Et je veux retrouver : <strong>{personalGoal}</strong>"
+                </p>
+                <p className="text-xs text-muted-foreground italic">
+                  En signant, je m'engage à respecter cet engagement et à utiliser tous les outils à ma disposition pour réussir.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex justify-between pt-6">
+              <Button
+                onClick={() => setStep(2)}
+                variant="outline"
+                className="px-8"
+              >
+                Retour
+              </Button>
+              <Button
+                onClick={handleConfirm}
+                disabled={!signature}
+                className="journey-button-primary px-8"
+              >
                 <Heart className="w-4 h-4 mr-2" />
-                Je m'engage
+                Confirmer l'engagement
               </Button>
             </div>
           </div>
