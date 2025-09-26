@@ -131,7 +131,7 @@ export const useStretching = () => {
   };
 
   const toggleExercise = async (exerciseId: string) => {
-    if (!currentSession || !user) return;
+    if (!currentSession) return;
 
     try {
       const currentCompleted = currentSession.exercises_completed || [];
@@ -147,29 +147,44 @@ export const useStretching = () => {
       const completedCount = updatedCompleted.length;
       const isSessionCompleted = completedCount === exercises.length;
 
-      const { data, error } = await supabase
-        .from('stretching_sessions')
-        .update({
+      if (user) {
+        // Sauvegarder en base de données
+        const { data, error } = await supabase
+          .from('stretching_sessions')
+          .update({
+            exercises_completed: updatedCompleted,
+            completed_count: completedCount,
+            is_completed: isSessionCompleted
+          })
+          .eq('id', currentSession.id)
+          .select()
+          .single();
+
+        if (error) {
+          console.error('Error updating stretching session:', error);
+          toast.error('Erreur lors de la sauvegarde');
+          return;
+        }
+
+        setCurrentSession({
+          ...data,
+          exercises_completed: Array.isArray(data.exercises_completed) 
+            ? data.exercises_completed as string[]
+            : []
+        });
+      } else {
+        // Sauvegarder localement
+        const today = new Date().toISOString().split('T')[0];
+        const localData = { completed: updatedCompleted };
+        localStorage.setItem(`stretching_${today}`, JSON.stringify(localData));
+        
+        setCurrentSession({
+          ...currentSession,
           exercises_completed: updatedCompleted,
           completed_count: completedCount,
           is_completed: isSessionCompleted
-        })
-        .eq('id', currentSession.id)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error updating stretching session:', error);
-        toast.error('Erreur lors de la sauvegarde');
-        return;
+        });
       }
-
-      setCurrentSession({
-        ...data,
-        exercises_completed: Array.isArray(data.exercises_completed) 
-          ? data.exercises_completed as string[]
-          : []
-      });
 
       if (isSessionCompleted && !currentSession.is_completed) {
         toast.success('Félicitations ! Routine de stretching terminée ! 🎉');
@@ -181,32 +196,48 @@ export const useStretching = () => {
   };
 
   const resetSession = async () => {
-    if (!currentSession || !user) return;
+    if (!currentSession) return;
 
     try {
-      const { data, error } = await supabase
-        .from('stretching_sessions')
-        .update({
+      if (user) {
+        // Réinitialiser en base de données
+        const { data, error } = await supabase
+          .from('stretching_sessions')
+          .update({
+            exercises_completed: [],
+            completed_count: 0,
+            is_completed: false
+          })
+          .eq('id', currentSession.id)
+          .select()
+          .single();
+
+        if (error) {
+          console.error('Error resetting stretching session:', error);
+          toast.error('Erreur lors de la réinitialisation');
+          return;
+        }
+
+        setCurrentSession({
+          ...data,
+          exercises_completed: Array.isArray(data.exercises_completed) 
+            ? data.exercises_completed as string[]
+            : []
+        });
+      } else {
+        // Réinitialiser localement
+        const today = new Date().toISOString().split('T')[0];
+        const localData = { completed: [] };
+        localStorage.setItem(`stretching_${today}`, JSON.stringify(localData));
+        
+        setCurrentSession({
+          ...currentSession,
           exercises_completed: [],
           completed_count: 0,
           is_completed: false
-        })
-        .eq('id', currentSession.id)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error resetting stretching session:', error);
-        toast.error('Erreur lors de la réinitialisation');
-        return;
+        });
       }
 
-      setCurrentSession({
-        ...data,
-        exercises_completed: Array.isArray(data.exercises_completed) 
-          ? data.exercises_completed as string[]
-          : []
-      });
       toast.success('Routine réinitialisée');
     } catch (error) {
       console.error('Error in resetSession:', error);
@@ -227,7 +258,35 @@ export const useStretching = () => {
     if (user) {
       loadTodaySession();
     } else {
-      setCurrentSession(null);
+      // Mode local pour les utilisateurs non connectés
+      const today = new Date().toISOString().split('T')[0];
+      const savedProgress = localStorage.getItem(`stretching_${today}`);
+      
+      if (savedProgress) {
+        try {
+          const progress = JSON.parse(savedProgress);
+          setCurrentSession({
+            id: 'local',
+            session_date: today,
+            exercises_completed: progress.completed || [],
+            total_exercises: exercises.length,
+            completed_count: progress.completed?.length || 0,
+            is_completed: progress.completed?.length === exercises.length
+          });
+        } catch (error) {
+          console.error('Error loading local progress:', error);
+        }
+      } else {
+        // Créer une nouvelle session locale
+        setCurrentSession({
+          id: 'local',
+          session_date: today,
+          exercises_completed: [],
+          total_exercises: exercises.length,
+          completed_count: 0,
+          is_completed: false
+        });
+      }
       setIsLoading(false);
     }
   }, [user]);
