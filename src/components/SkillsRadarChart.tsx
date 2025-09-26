@@ -24,11 +24,11 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
   const calculateSkillScores = () => {
     if (entries.length === 0) {
       return [
-        { skill: 'Mental', score: 0, maxScore: 10, color: '#3b82f6', fillColor: 'hsl(var(--skill-mental) / 0.2)' },
-        { skill: 'Physique', score: 0, maxScore: 10, color: '#10b981', fillColor: 'hsl(var(--skill-physique) / 0.2)' },
-        { skill: 'Régularité', score: 0, maxScore: 10, color: '#f59e0b', fillColor: 'hsl(var(--skill-regularite) / 0.2)' },
-        { skill: 'Réalisation', score: 0, maxScore: 10, color: '#8b5cf6', fillColor: 'hsl(var(--skill-realisation) / 0.2)' },
-        { skill: 'Force âme', score: 0, maxScore: 10, color: '#ef4444', fillColor: 'hsl(var(--skill-ame) / 0.15)' }
+        { skill: 'Mental', score: 0, maxScore: 10, color: 'hsl(var(--skill-mental))', fillColor: 'hsl(var(--skill-mental) / 0.2)' },
+        { skill: 'Physique', score: 0, maxScore: 10, color: 'hsl(var(--skill-physique))', fillColor: 'hsl(var(--skill-physique) / 0.2)' },
+        { skill: 'Régularité', score: 0, maxScore: 10, color: 'hsl(var(--skill-regularite))', fillColor: 'hsl(var(--skill-regularite) / 0.2)' },
+        { skill: 'Réalisation', score: 0, maxScore: 10, color: 'hsl(var(--skill-realisation))', fillColor: 'hsl(var(--skill-realisation) / 0.2)' },
+        { skill: 'Force âme', score: 0, maxScore: 10, color: 'hsl(var(--skill-ame))', fillColor: 'hsl(var(--skill-ame) / 0.15)' }
       ];
     }
 
@@ -87,11 +87,11 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
     })();
 
     return [
-      { skill: 'Mental', score: Math.round(mentalHealthScore * 10) / 10, maxScore: 10, color: '#3b82f6', fillColor: 'hsl(var(--skill-mental) / 0.2)' },
-      { skill: 'Physique', score: Math.round(physicalScore * 10) / 10, maxScore: 10, color: '#10b981', fillColor: 'hsl(var(--skill-physique) / 0.2)' },
-      { skill: 'Régularité', score: Math.round(regularityScore * 10) / 10, maxScore: 10, color: '#f59e0b', fillColor: 'hsl(var(--skill-regularite) / 0.2)' },
-      { skill: 'Réalisation', score: Math.round(realizationScore * 10) / 10, maxScore: 10, color: '#8b5cf6', fillColor: 'hsl(var(--skill-realisation) / 0.2)' },
-      { skill: 'Force âme', score: Math.round(soulStrengthScore * 10) / 10, maxScore: 10, color: '#ef4444', fillColor: 'hsl(var(--skill-ame) / 0.15)' }
+      { skill: 'Mental', score: Math.round(mentalHealthScore * 10) / 10, maxScore: 10, color: 'hsl(var(--skill-mental))', fillColor: 'hsl(var(--skill-mental) / 0.2)' },
+      { skill: 'Physique', score: Math.round(physicalScore * 10) / 10, maxScore: 10, color: 'hsl(var(--skill-physique))', fillColor: 'hsl(var(--skill-physique) / 0.2)' },
+      { skill: 'Régularité', score: Math.round(regularityScore * 10) / 10, maxScore: 10, color: 'hsl(var(--skill-regularite))', fillColor: 'hsl(var(--skill-regularite) / 0.2)' },
+      { skill: 'Réalisation', score: Math.round(realizationScore * 10) / 10, maxScore: 10, color: 'hsl(var(--skill-realisation))', fillColor: 'hsl(var(--skill-realisation) / 0.2)' },
+      { skill: 'Force âme', score: Math.round(soulStrengthScore * 10) / 10, maxScore: 10, color: 'hsl(var(--skill-ame))', fillColor: 'hsl(var(--skill-ame) / 0.15)' }
     ];
   };
 
@@ -127,11 +127,26 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
             />
             <PolarAngleAxis 
               dataKey="skill" 
-              tick={{ 
-                fontSize: 14, 
-                fill: '#ffffff',
-                fontWeight: 'bold'
+              tick={(props: any) => {
+                const { x, y, textAnchor, payload } = props;
+                const idx = payload?.index ?? 0;
+                const label = payload?.value ?? '';
+                const color = (skillData[idx] as any)?.color || 'hsl(var(--foreground))';
+                const fontSize = 14;
+                return (
+                  <text 
+                    x={x} 
+                    y={y} 
+                    textAnchor={textAnchor} 
+                    fontSize={fontSize}
+                    fontWeight="600"
+                    fill={color}
+                  >
+                    {label}
+                  </text>
+                );
               }}
+              tickLine={false}
               axisLine={false}
             />
             <PolarRadiusAxis 
