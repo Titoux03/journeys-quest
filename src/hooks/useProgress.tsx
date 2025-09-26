@@ -81,6 +81,28 @@ export const useProgress = () => {
     }
   };
 
+  // Nouvelle fonction pour supprimer une entrée
+  const deleteJournalEntry = async (date: string) => {
+    if (!user) return { success: false };
+    
+    try {
+      const { error } = await supabase
+        .from('journal_entries')
+        .delete()
+        .match({ user_id: user.id, date });
+
+      if (error) throw error;
+
+      // Mettre à jour l'état local
+      setJournalEntries(prev => prev.filter(entry => entry.date !== date));
+      
+      return { success: true };
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
+      return { success: false, error };
+    }
+  };
+
   // Sauvegarder une session de méditation
   const saveMeditationSession = async (mode: 'meditation' | 'deepwork', duration: number) => {
     if (!user) return;
@@ -249,6 +271,7 @@ export const useProgress = () => {
     abstinenceData,
     loading,
     saveJournalEntry,
+    deleteJournalEntry,
     saveMeditationSession,
     saveAbstinenceData,
     resetAbstinenceData,

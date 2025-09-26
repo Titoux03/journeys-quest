@@ -30,7 +30,7 @@ interface JournalEntry {
 const Index = () => {
   const { user, signOut, loading } = useAuth();
   const { upgradeModalVisible, hideUpgradeModal } = usePremium();
-  const { journalEntries, saveJournalEntry } = useProgress();
+  const { journalEntries, saveJournalEntry, deleteJournalEntry } = useProgress();
   const { playWelcome } = useGongSounds();
   const navigate = useNavigate();
   const [currentScreen, setCurrentScreen] = useState('home');
@@ -122,12 +122,16 @@ const Index = () => {
   const handleUpdateEntry = async (updatedEntry: JournalEntry) => {
     if (user) {
       // Mettre à jour en base de données
-      await saveJournalEntry(
+      const result = await saveJournalEntry(
         updatedEntry.scores, 
         updatedEntry.totalScore, 
         updatedEntry.mood, 
         updatedEntry.reflection || ''
       );
+      
+      if (result?.success) {
+        // Les données seront automatiquement mises à jour via loadProgressData
+      }
     } else {
       // Mettre à jour les données locales
       const updatedEntries = localJournalEntries.map(entry => 
@@ -141,24 +145,48 @@ const Index = () => {
   const handleReflectionComplete = async (reflection: string) => {
     const today = new Date().toISOString().split('T')[0];
     
-    if (user && currentJournalData) {
-      // Sauvegarder avec la réflection en base de données
-      const mood = currentJournalData.totalScore <= 4 ? 'low' : currentJournalData.totalScore <= 7 ? 'medium' : 'high';
-      await saveJournalEntry(
-        currentJournalData.scores, 
-        currentJournalData.totalScore, 
-        mood, 
-        reflection
-      );
+    if (user) {
+      if (currentJournalData) {
+        // Sauvegarder avec la réflection en base de données (journal + notes)
+        const mood = currentJournalData.totalScore <= 4 ? 'low' : currentJournalData.totalScore <= 7 ? 'medium' : 'high';
+        await saveJournalEntry(
+          currentJournalData.scores, 
+          currentJournalData.totalScore, 
+          mood, 
+          reflection
+        );
+      } else {
+        // Sauvegarder juste les notes libres en base de données
+        await saveJournalEntry(
+          {}, // Scores vides pour les notes libres
+          0,  // Score total à 0 pour les notes libres
+          'medium', // Mood neutre par défaut
+          reflection
+        );
+      }
     } else {
       // Mettre à jour les données locales
-      const updatedEntries = localJournalEntries.map(entry => 
-        entry.date === today 
-          ? { ...entry, reflection }
-          : entry
-      );
-      setLocalJournalEntries(updatedEntries);
-      localStorage.setItem('journalEntries', JSON.stringify(updatedEntries));
+      if (currentJournalData) {
+        const updatedEntries = localJournalEntries.map(entry => 
+          entry.date === today 
+            ? { ...entry, reflection }
+            : entry
+        );
+        setLocalJournalEntries(updatedEntries);
+        localStorage.setItem('journalEntries', JSON.stringify(updatedEntries));
+      } else {
+        // Créer une nouvelle entrée locale pour les notes libres
+        const newEntry: JournalEntry = {
+          date: today,
+          scores: {},
+          totalScore: 0,
+          reflection,
+          mood: 'medium'
+        };
+        const updatedEntries = [newEntry, ...localJournalEntries.filter(e => e.date !== today)];
+        setLocalJournalEntries(updatedEntries);
+        localStorage.setItem('journalEntries', JSON.stringify(updatedEntries));
+      }
     }
     
     setCurrentScreen('home');
