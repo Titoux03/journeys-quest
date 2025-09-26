@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { usePremium } from '@/hooks/usePremium';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { useGongSounds } from '@/hooks/useGongSounds';
 
 interface PremiumUpgradeProps {
   isVisible: boolean;
@@ -19,10 +20,14 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
   const { isPremium, purchasePremium, loading } = usePremium();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { playPremium } = useGongSounds();
 
   if (!isVisible || isPremium) return null;
 
   const handleUpgrade = async () => {
+    // Jouer le gong premium
+    playPremium();
+    
     if (!user) {
       // Rediriger vers la page d'authentification
       navigate('/auth');

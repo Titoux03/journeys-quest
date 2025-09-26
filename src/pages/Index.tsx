@@ -14,6 +14,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { usePremium } from '@/hooks/usePremium';
 import { useProgress } from '@/hooks/useProgress';
+import { useGongSounds } from '@/hooks/useGongSounds';
 
 interface JournalEntry {
   date: string;
@@ -27,6 +28,7 @@ const Index = () => {
   const { user, signOut, loading } = useAuth();
   const { upgradeModalVisible, hideUpgradeModal } = usePremium();
   const { journalEntries, saveJournalEntry } = useProgress();
+  const { playWelcome } = useGongSounds();
   const navigate = useNavigate();
   const [currentScreen, setCurrentScreen] = useState('home');
   const [localJournalEntries, setLocalJournalEntries] = useState<JournalEntry[]>([]);
@@ -51,6 +53,19 @@ const Index = () => {
       setLocalJournalEntries([]);
     }
   }, [user]);
+
+  // Jouer le gong de bienvenue à l'arrivée
+  useEffect(() => {
+    const hasPlayedWelcome = sessionStorage.getItem('hasPlayedWelcome');
+    if (!hasPlayedWelcome) {
+      const timer = setTimeout(() => {
+        playWelcome();
+        sessionStorage.setItem('hasPlayedWelcome', 'true');
+      }, 1500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [playWelcome]);
 
   // Utiliser les données de la base si connecté, sinon les données locales
   const entries = user ? journalEntries.map(entry => ({

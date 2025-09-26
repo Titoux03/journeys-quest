@@ -3,6 +3,7 @@ import { Lock, Crown, Sparkles, UserPlus } from 'lucide-react';
 import { usePremium } from '@/hooks/usePremium';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { useGongSounds } from '@/hooks/useGongSounds';
 
 interface PremiumLockProps {
   children: React.ReactNode;
@@ -18,6 +19,12 @@ export const PremiumLock: React.FC<PremiumLockProps> = ({
   const { isPremium, showUpgradeModal } = usePremium();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { playPremium } = useGongSounds();
+
+  const handlePremiumAction = (action: () => void) => {
+    playPremium();
+    action();
+  };
 
   if (isPremium) {
     return <>{children}</>;
@@ -57,14 +64,14 @@ export const PremiumLock: React.FC<PremiumLockProps> = ({
             {!user ? (
               <>
                 <button
-                  onClick={() => navigate('/auth')}
+                  onClick={() => handlePremiumAction(() => navigate('/auth'))}
                   className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-xl bg-secondary text-secondary-foreground font-medium text-sm hover:bg-secondary/80 transition-colors"
                 >
                   <UserPlus className="w-4 h-4" />
                   <span>Créer un compte</span>
                 </button>
                 <button
-                  onClick={() => showUpgradeModal()}
+                  onClick={() => handlePremiumAction(() => showUpgradeModal())}
                   className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors"
                 >
                   <Sparkles className="w-4 h-4" />
@@ -73,7 +80,7 @@ export const PremiumLock: React.FC<PremiumLockProps> = ({
               </>
             ) : (
               <button
-                onClick={() => showUpgradeModal()}
+                onClick={() => handlePremiumAction(() => showUpgradeModal())}
                 className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors"
               >
                 <Sparkles className="w-4 h-4" />
