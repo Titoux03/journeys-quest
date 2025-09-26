@@ -99,18 +99,18 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
   return (
     <div className="relative">
       {/* Fond avec l'homme de Vitruve */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
+      <div className="absolute inset-0 flex items-center justify-center opacity-15 pointer-events-none">
         <img 
           src={vitruvianMan} 
           alt="Vitruvian Man" 
-          className="w-80 h-80 object-contain"
+          className="w-96 h-96 object-contain"
         />
       </div>
 
       {/* Graphique radar */}
-      <div className="relative z-10 h-96">
+      <div className="relative z-10 h-[500px]">
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart data={skillData} margin={{ top: 50, right: 60, bottom: 50, left: 60 }}>
+          <RadarChart data={skillData} margin={{ top: 60, right: 80, bottom: 60, left: 80 }}>
             <defs>
               <filter id="glow">
                 <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
@@ -122,19 +122,19 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
             </defs>
             
             <PolarGrid 
-              stroke="hsl(var(--border))" 
-              strokeWidth={1}
-              strokeOpacity={0.3}
+              stroke="#ffffff" 
+              strokeWidth={2}
+              strokeOpacity={0.8}
               radialLines={true}
             />
             <PolarAngleAxis 
               dataKey="skill" 
               tick={{ 
-                fontSize: 14, 
+                fontSize: 15, 
                 fill: 'hsl(var(--foreground))',
-                fontWeight: 600
+                fontWeight: 700
               }}
-              className="text-sm font-semibold"
+              className="text-sm font-bold"
             />
             <PolarRadiusAxis 
               angle={90} 
@@ -144,32 +144,32 @@ export const SkillsRadarChart: React.FC<SkillsRadarChartProps> = ({ entries }) =
               tickCount={11}
             />
             
-            {/* Zones remplies avec effet de superposition */}
+            {/* Zones remplies avec effet de superposition - couleurs plus vives */}
             <Radar
-              name="Zone globale"
+              name="Zone principale"
               dataKey="score"
-              stroke="hsl(var(--primary))"
+              stroke="#ffffff"
+              strokeWidth={3}
+              fill="hsl(var(--primary) / 0.25)"
+              fillOpacity={0.6}
+            />
+            
+            <Radar
+              name="Zone secondaire"
+              dataKey="score"
+              stroke="#ffffff"
               strokeWidth={2}
-              fill="hsl(var(--primary) / 0.1)"
+              fill="hsl(var(--accent) / 0.3)"
               fillOpacity={0.4}
             />
             
             <Radar
-              name="Zone de performance"
+              name="Zone tertiaire"
               dataKey="score"
-              stroke="hsl(var(--accent))"
+              stroke="#ffffff"
               strokeWidth={2}
-              fill="hsl(var(--accent) / 0.15)"
+              fill="hsl(var(--secondary) / 0.35)"
               fillOpacity={0.3}
-            />
-            
-            <Radar
-              name="Zone d'excellence"
-              dataKey="score"
-              stroke="hsl(var(--secondary))"
-              strokeWidth={3}
-              fill="hsl(var(--secondary) / 0.2)"
-              fillOpacity={0.2}
             />
           </RadarChart>
         </ResponsiveContainer>
