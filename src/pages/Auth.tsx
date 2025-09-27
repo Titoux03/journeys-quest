@@ -14,6 +14,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [signUpSuccess, setSignUpSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -35,6 +36,7 @@ const Auth = () => {
       [e.target.name]: e.target.value
     }));
     setError(null);
+    setSignUpSuccess(false);
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -64,6 +66,7 @@ const Auth = () => {
       }
     } else {
       setError(null);
+      setSignUpSuccess(true);
       // L'utilisateur sera automatiquement redirigé lors de la connexion
     }
     
@@ -253,6 +256,13 @@ const Auth = () => {
                     <Alert className="border-destructive/50 bg-destructive/10">
                       <AlertDescription className="text-destructive text-sm">
                         {error}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  {signUpSuccess && (
+                    <Alert className="border-green-500/50 bg-green-500/10">
+                      <AlertDescription className="text-green-700 dark:text-green-400 text-sm">
+                        ✅ Compte créé avec succès ! Un email de confirmation a été envoyé à votre adresse. Veuillez vérifier votre boîte de réception.
                       </AlertDescription>
                     </Alert>
                   )}
