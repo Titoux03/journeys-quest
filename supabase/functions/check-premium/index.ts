@@ -36,7 +36,22 @@ serve(async (req) => {
     if (userError) throw new Error(`Authentication error: ${userError.message}`);
     if (!user?.id) throw new Error("User not authenticated");
 
-    console.log('[CHECK-PREMIUM] User authenticated:', { userId: user.id });
+    console.log('[CHECK-PREMIUM] User authenticated:', { userId: user.id, email: user.email });
+
+    // Check if this is the test collaboration account
+    const isTestCollabAccount = user.email === 'testcollab' || user.email === 'testcollab@example.com';
+    
+    if (isTestCollabAccount) {
+      console.log('[CHECK-PREMIUM] Test collaboration account detected - granting premium access');
+      return new Response(JSON.stringify({
+        isPremium: true,
+        purchaseDate: new Date().toISOString(),
+        testAccount: true
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      });
+    }
 
     // Check if user has a completed premium purchase
     const { data: purchase, error: purchaseError } = await supabaseClient
