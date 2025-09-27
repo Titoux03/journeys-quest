@@ -9,8 +9,25 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import { PaymentSuccess } from "./pages/PaymentSuccess";
 import NotFound from "./pages/NotFound";
+import { useAffiliation } from "./hooks/useAffiliation";
 
 const queryClient = new QueryClient();
+
+const AppContent = () => {
+  // Initialiser le système d'affiliation
+  useAffiliation();
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -19,14 +36,7 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/payment-success" element={<PaymentSuccess />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+          <AppContent />
         </TooltipProvider>
       </PremiumProvider>
     </AuthProvider>

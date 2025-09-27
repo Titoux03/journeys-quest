@@ -71,6 +71,48 @@ export type Database = {
         }
         Relationships: []
       }
+      affiliate_referrals: {
+        Row: {
+          affiliate_code: string
+          amount: number | null
+          converted_at: string | null
+          created_at: string
+          currency: string | null
+          id: string
+          payment_intent_id: string | null
+          referred_at: string
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          affiliate_code: string
+          amount?: number | null
+          converted_at?: string | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          payment_intent_id?: string | null
+          referred_at?: string
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          affiliate_code?: string
+          amount?: number | null
+          converted_at?: string | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          payment_intent_id?: string | null
+          referred_at?: string
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       badges: {
         Row: {
           addiction_type_id: string | null

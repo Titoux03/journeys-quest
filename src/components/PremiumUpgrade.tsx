@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useGongSounds } from '@/hooks/useGongSounds';
 import { SkillsRadarChart } from '@/components/SkillsRadarChart';
 import { TermsOfService } from '@/components/TermsOfService';
+import { useAffiliation } from '@/hooks/useAffiliation';
 
 interface PremiumUpgradeProps {
   isVisible: boolean;
@@ -24,6 +25,7 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
   const { user } = useAuth();
   const navigate = useNavigate();
   const { playPremium } = useGongSounds();
+  const { getAffiliateCode } = useAffiliation();
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
 
@@ -44,7 +46,9 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
       return;
     }
     
-    await purchasePremium();
+    // Récupérer le code d'affiliation s'il existe
+    const affiliateCode = getAffiliateCode();
+    await purchasePremium(affiliateCode || undefined);
     onClose();
   };
 

@@ -20,6 +20,9 @@ serve(async (req) => {
   );
 
   try {
+    // Parse request body to get affiliate code
+    const { affiliate_code } = await req.json().catch(() => ({}));
+    
     // Retrieve authenticated user
     const authHeader = req.headers.get("Authorization")!;
     const token = authHeader.replace("Bearer ", "");
@@ -27,7 +30,7 @@ serve(async (req) => {
     const user = data.user;
     if (!user?.email) throw new Error("User not authenticated or email not available");
 
-    console.log('[CREATE-PAYMENT] User authenticated:', { userId: user.id, email: user.email });
+    console.log('[CREATE-PAYMENT] User authenticated:', { userId: user.id, email: user.email, affiliateCode: affiliate_code });
 
     // Initialize Stripe
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
@@ -60,6 +63,17 @@ serve(async (req) => {
       console.log('[CREATE-PAYMENT] No existing customer found');
     }
 
+    // Prepare metadata for the payment session
+    const metadata: any = {
+      user_id: user.id,
+    };
+    
+    // Add affiliate code to metadata if provided
+    if (affiliate_code) {
+      metadata.affiliate_code = affiliate_code;
+      console.log('[CREATE-PAYMENT] Adding affiliate tracking:', affiliate_code);
+    }
+
     // Create a one-time payment session
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
@@ -73,9 +87,7 @@ serve(async (req) => {
       mode: "payment",
       success_url: `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.get("origin")}/`,
-      metadata: {
-        user_id: user.id,
-      },
+      metadata,
     });
 
     console.log('[CREATE-PAYMENT] Payment session created:', session.id);

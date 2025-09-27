@@ -10,7 +10,7 @@ interface PremiumContextType {
   showUpgradeModal: () => void;
   hideUpgradeModal: () => void;
   upgradeModalVisible: boolean;
-  purchasePremium: () => Promise<void>;
+  purchasePremium: (affiliateCode?: string) => Promise<void>;
   loading: boolean;
 }
 
@@ -61,7 +61,7 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
     }
   };
 
-  const purchasePremium = async () => {
+  const purchasePremium = async (affiliateCode?: string) => {
     try {
       setLoading(true);
       
@@ -73,7 +73,12 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
         return;
       }
 
-      const { data, error } = await supabase.functions.invoke('create-payment');
+      // Préparer les données de la requête avec le code d'affiliation
+      const requestBody = affiliateCode ? { affiliate_code: affiliateCode } : {};
+
+      const { data, error } = await supabase.functions.invoke('create-payment', {
+        body: requestBody
+      });
       
       if (error) {
         console.error('Error creating payment:', error);
