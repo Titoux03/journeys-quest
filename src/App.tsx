@@ -8,6 +8,7 @@ import { AuthProvider } from "./hooks/useAuth";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import { PaymentSuccess } from "./pages/PaymentSuccess";
+import { AffiliateAdmin } from "./pages/AffiliateAdmin";
 import NotFound from "./pages/NotFound";
 import { useAffiliation } from "./hooks/useAffiliation";
 
@@ -23,6 +24,7 @@ const AppContent = () => {
         <Route path="/" element={<Index />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/affiliate-admin" element={<AffiliateAdmin />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
