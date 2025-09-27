@@ -203,13 +203,12 @@ export const useProgress = () => {
     setLoading(true);
     
     try {
-      // Charger les entrées de journal
+      // Charger les entrées de journal (toutes les entrées pour garder l'historique complet)
       const { data: journalData, error: journalError } = await supabase
         .from('journal_entries')
         .select('*')
         .eq('user_id', user.id)
-        .order('date', { ascending: false })
-        .limit(30);
+        .order('date', { ascending: false });
 
       if (journalError) throw journalError;
       const mappedJournalData: JournalEntry[] = (journalData || []).map(entry => ({
