@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Crown, TrendingUp, Clock, Users, Star, Zap, Target } from 'lucide-react';
+import { Crown, TrendingUp, Star, Zap, Target } from 'lucide-react';
 import { usePremium } from '@/hooks/usePremium';
 import { useAuth } from '@/hooks/useAuth';
 import { useGongSounds } from '@/hooks/useGongSounds';
@@ -19,25 +19,10 @@ export const PremiumProgressInterruptor: React.FC<PremiumProgressInterruptorProp
   const { isPremium, showUpgradeModal } = usePremium();
   const { user } = useAuth();
   const { playPremium } = useGongSounds();
-  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prev => prev > 0 ? prev - 1 : 0);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
 
   const handleUpgrade = () => {
     playPremium();
     showUpgradeModal();
-  };
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   if (isPremium || !user) return null;
@@ -78,7 +63,7 @@ export const PremiumProgressInterruptor: React.FC<PremiumProgressInterruptorProp
               Bravo ! 3 jours de suite 🔥
             </h2>
             <p className="text-muted-foreground mb-6">
-              Tu fais partie des 23% qui tiennent plus de 3 jours. Les utilisateurs Premium maintiennent leur streak 5x plus longtemps.
+              Excellent début ! Avec Premium, vous pourriez maintenant accéder aux fonctionnalités avancées de suivi.
             </p>
           </>
         )}
@@ -89,7 +74,7 @@ export const PremiumProgressInterruptor: React.FC<PremiumProgressInterruptorProp
               Incroyable ! Une semaine complète 🚀
             </h2>
             <p className="text-muted-foreground mb-6">
-              Seulement 7% arrivent à 1 semaine. Tu es exceptionnel ! Les Premium débloqueraient maintenant des badges exclusifs.
+              Une semaine de régularité, c'est déjà un excellent début ! Avec Premium, vous pourriez maintenant débloquer des fonctionnalités avancées.
             </p>
           </>
         )}
@@ -97,10 +82,10 @@ export const PremiumProgressInterruptor: React.FC<PremiumProgressInterruptorProp
         {journalDay === 14 && (
           <>
             <h2 className="text-2xl font-bold text-gradient-primary mb-3">
-              Legend ! 2 semaines d'affilée 👑
+              Excellent ! 2 semaines d'affilée 👑
             </h2>
             <p className="text-muted-foreground mb-6">
-              Tu es dans le top 3% ! Mais sans Premium, tu perds l'historique complet et les statistiques de progression.
+              Vous développez une vraie habitude ! Avec Premium, vous accéderiez à l'historique complet et aux statistiques de progression.
             </p>
           </>
         )}
@@ -108,10 +93,10 @@ export const PremiumProgressInterruptor: React.FC<PremiumProgressInterruptorProp
         {journalDay >= 21 && (
           <>
             <h2 className="text-2xl font-bold text-gradient-primary mb-3">
-              Maître absolu ! {journalDay} jours 🏆
+              Formidable ! {journalDay} jours 🏆
             </h2>
             <p className="text-muted-foreground mb-6">
-              Tu es dans l'élite mondiale ! Mais imagine avec Premium : suivi d'addictions, badges, communauté...
+              Vous avez développé une discipline remarquable ! Premium vous offrirait suivi d'addictions, badges et bien plus.
             </p>
           </>
         )}
@@ -119,43 +104,15 @@ export const PremiumProgressInterruptor: React.FC<PremiumProgressInterruptorProp
         {/* Stats de comparaison */}
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-secondary/30 rounded-lg p-3">
-            <div className="text-lg font-bold text-foreground">Toi</div>
+            <div className="text-lg font-bold text-foreground">Actuel</div>
             <div className="text-sm text-muted-foreground">{journalDay} jours</div>
-            <div className="text-xs text-warning">Limité</div>
+            <div className="text-xs text-warning">Fonctions de base</div>
           </div>
           <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
             <div className="text-lg font-bold text-gradient-primary">Premium</div>
-            <div className="text-sm text-foreground">{Math.floor(journalDay * 1.5)} jours</div>
-            <div className="text-xs text-success">+50% de succès</div>
+            <div className="text-sm text-foreground">Fonctions avancées</div>
+            <div className="text-xs text-success">Suivi complet</div>
           </div>
-        </div>
-
-        {/* Preuve sociale dynamique */}
-        <div className="bg-accent/10 border border-accent/20 rounded-lg p-4 mb-6 text-left">
-          <div className="flex items-center space-x-3">
-            <Users className="w-5 h-5 text-accent" />
-            <div>
-              <p className="text-sm font-medium text-foreground">
-                +847 nouveaux membres cette semaine
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Moyenne: 28 jours d'abstinence réussie
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Urgence temporelle */}
-        <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3 mb-6">
-          <div className="flex items-center justify-center space-x-2">
-            <Clock className="w-4 h-4 text-destructive" />
-            <span className="text-sm font-medium text-destructive">
-              Offre expire dans: {formatTime(timeLeft)}
-            </span>
-          </div>
-          <p className="text-xs text-muted-foreground mt-1">
-            50% de réduction - Ne rate pas cette chance
-          </p>
         </div>
 
         {/* CTA principal */}
@@ -165,7 +122,7 @@ export const PremiumProgressInterruptor: React.FC<PremiumProgressInterruptorProp
         >
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
           <Crown className="w-5 h-5 mr-2" />
-          Rejoindre l'élite Premium (7,49€)
+          Débloquer Premium (14,99€)
         </Button>
 
         {/* Garanties */}
@@ -176,11 +133,11 @@ export const PremiumProgressInterruptor: React.FC<PremiumProgressInterruptorProp
           </div>
           <div className="flex flex-col items-center">
             <Zap className="w-4 h-4 text-primary mb-1" />
-            <span>Résultats x3</span>
+            <span>Plus de fonctions</span>
           </div>
           <div className="flex flex-col items-center">
             <Target className="w-4 h-4 text-accent mb-1" />
-            <span>94% succès</span>
+            <span>Suivi avancé</span>
           </div>
         </div>
       </div>
