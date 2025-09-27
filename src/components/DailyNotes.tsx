@@ -1,44 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Send, BookOpen, Edit3, Trash2, Plus } from 'lucide-react';
+import React, { useState } from 'react';
+import { Send, BookOpen, Edit3, Trash2 } from 'lucide-react';
 import { Button } from './ui/button';
 import { useAuth } from '@/hooks/useAuth';
-import { useProgress } from '@/hooks/useProgress';
+import { useDailyNotes, DailyNote } from '@/hooks/useDailyNotes';
 import { toast } from 'sonner';
 
 interface DailyNotesProps {
   onNavigate: (screen: string) => void;
 }
 
-interface Note {
-  date: string;
-  content: string;
-}
-
 export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
   const { user } = useAuth();
-  const { saveJournalEntry, journalEntries, deleteJournalEntry } = useProgress();
+  const { notes, loading, saveNote, updateNote, deleteNote } = useDailyNotes();
   const [noteContent, setNoteContent] = useState('');
   const [saving, setSaving] = useState(false);
-  const [editingDate, setEditingDate] = useState<string | null>(null);
-
-  const today = new Date().toISOString().split('T')[0];
-  
-  // Extraire les notes libres (totalScore = 0) des entrées
-  const dailyNotes = journalEntries
-    .filter(entry => entry.total_score === 0)
-    .map(entry => ({
-      date: entry.date,
-      content: entry.reflection || ''
-    }))
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-  // Charger la note du jour si elle existe
-  useEffect(() => {
-    const todayNote = dailyNotes.find(note => note.date === today);
-    if (todayNote && !editingDate) {
-      setNoteContent(todayNote.content);
-    }
-  }, [dailyNotes, today, editingDate]);
+  const [editingNote, setEditingNote] = useState<DailyNote | null>(null);
+  const [editContent, setEditContent] = useState('');
 
   const handleSave = async () => {
     if (!noteContent.trim()) {
@@ -49,22 +26,13 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
     setSaving(true);
     
     try {
-      const targetDate = editingDate || today;
-      const result = await saveJournalEntry(
-        {}, // Scores vides pour les notes libres
-        0,  // Score total à 0 pour les notes libres
-        'medium', // Mood neutre par défaut
-        noteContent.trim()
-      );
+      const result = await saveNote(noteContent.trim());
 
       if (result?.success) {
-        toast.success(editingDate ? 'Note modifiée !' : 'Note sauvegardée !');
-        setEditingDate(null);
-        if (!editingDate) {
-          setNoteContent('');
-        }
+        toast.success('Note sauvegardée !');
+        setNoteContent('');
       } else {
-        toast.error('Erreur lors de la sauvegarde');
+        toast.error(result?.error || 'Erreur lors de la sauvegarde');
       }
     } catch (error) {
       toast.error('Erreur lors de la sauvegarde');
@@ -73,30 +41,54 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
     }
   };
 
-  const handleEdit = (note: Note) => {
-    setEditingDate(note.date);
-    setNoteContent(note.content);
+  const handleEdit = (note: DailyNote) => {
+    setEditingNote(note);
+    setEditContent(note.content);
   };
 
-  const handleDelete = async (date: string) => {
+  const handleUpdate = async () => {
+    if (!editingNote || !editContent.trim()) {
+      toast.error('Veuillez écrire quelque chose avant de sauvegarder');
+      return;
+    }
+
+    setSaving(true);
+    
+    try {
+      const result = await updateNote(editingNote.id, editContent.trim());
+
+      if (result?.success) {
+        toast.success('Note modifiée !');
+        setEditingNote(null);
+        setEditContent('');
+      } else {
+        toast.error(result?.error || 'Erreur lors de la modification');
+      }
+    } catch (error) {
+      toast.error('Erreur lors de la modification');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (note: DailyNote) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cette note ?')) {
-      const result = await deleteJournalEntry(date);
+      const result = await deleteNote(note.id);
       if (result?.success) {
         toast.success('Note supprimée');
-        if (editingDate === date) {
-          setEditingDate(null);
-          setNoteContent('');
+        if (editingNote?.id === note.id) {
+          setEditingNote(null);
+          setEditContent('');
         }
       } else {
-        toast.error('Erreur lors de la suppression');
+        toast.error(result?.error || 'Erreur lors de la suppression');
       }
     }
   };
 
   const handleCancel = () => {
-    setEditingDate(null);
-    const todayNote = dailyNotes.find(note => note.date === today);
-    setNoteContent(todayNote?.content || '');
+    setEditingNote(null);
+    setEditContent('');
   };
 
   if (!user) {
@@ -111,6 +103,16 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
           <Button onClick={() => onNavigate('home')} variant="outline">
             Retour à l'accueil
           </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen p-6 pb-24">
+        <div className="max-w-2xl mx-auto text-center py-12">
+          <p className="text-muted-foreground">Chargement de vos notes...</p>
         </div>
       </div>
     );
@@ -132,12 +134,12 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
               <BookOpen className="w-12 h-12 text-primary mx-auto" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gradient-primary mb-2">
-              {editingDate ? 'Modifier votre note' : 'Vos notes du jour'}
+              {editingNote ? 'Modifier votre note' : 'Vos notes quotidiennes'}
             </h1>
             <p className="text-muted-foreground">
-              {editingDate 
-                ? `Note du ${new Date(editingDate).toLocaleDateString('fr-FR')}`
-                : 'Écrivez vos pensées et réflexions personnelles'
+              {editingNote 
+                ? 'Modifiez votre note personnelle'
+                : 'Écrivez autant de notes que vous voulez, elles restent toutes sauvegardées'
               }
             </p>
           </div>
@@ -149,23 +151,23 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
             <div className="flex items-center gap-2 mb-3">
               <Edit3 className="w-5 h-5 text-primary" />
               <h3 className="font-medium">
-                {editingDate ? 'Modifier votre note' : 'Nouvelle note'}
+                {editingNote ? 'Modifier votre note' : 'Nouvelle note'}
               </h3>
             </div>
             <textarea
-              value={noteContent}
-              onChange={(e) => setNoteContent(e.target.value)}
-              placeholder="Écrivez vos pensées, vos émotions, vos découvertes du jour... C'est votre espace personnel."
+              value={editingNote ? editContent : noteContent}
+              onChange={(e) => editingNote ? setEditContent(e.target.value) : setNoteContent(e.target.value)}
+              placeholder="Écrivez vos pensées, vos émotions, vos découvertes... Chaque note est sauvegardée séparément."
               className="w-full h-64 p-4 border border-input rounded-xl bg-background text-foreground placeholder-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary/20"
               style={{ fontSize: '16px', lineHeight: '1.6' }}
             />
             <div className="text-xs text-muted-foreground mt-2">
-              {noteContent.length} caractères
+              {editingNote ? editContent.length : noteContent.length} caractères
             </div>
           </div>
 
           <div className="flex gap-3">
-            {editingDate && (
+            {editingNote && (
               <Button
                 onClick={handleCancel}
                 variant="outline"
@@ -175,44 +177,46 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
               </Button>
             )}
             <button
-              onClick={handleSave}
-              disabled={!noteContent.trim() || saving}
+              onClick={editingNote ? handleUpdate : handleSave}
+              disabled={editingNote ? !editContent.trim() || saving : !noteContent.trim() || saving}
               className={`flex-1 py-3 flex items-center justify-center gap-2 transition-all duration-300 ${
-                noteContent.trim() && !saving
+                (editingNote ? editContent.trim() : noteContent.trim()) && !saving
                   ? 'journey-button-primary' 
                   : 'bg-muted text-muted-foreground cursor-not-allowed rounded-xl'
               }`}
             >
               <Send className="w-5 h-5" />
-              {saving ? 'Sauvegarde...' : (editingDate ? 'Modifier' : 'Sauvegarder')}
+              {saving ? 'Sauvegarde...' : (editingNote ? 'Modifier' : 'Sauvegarder')}
             </button>
           </div>
         </div>
 
         {/* Historique des notes */}
-        {dailyNotes.length > 0 && (
+        {notes.length > 0 && (
           <div className="space-y-4">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <BookOpen className="w-5 h-5" />
-              Mes notes précédentes ({dailyNotes.length})
+              Toutes vos notes ({notes.length})
             </h2>
             
             <div className="space-y-3">
-              {dailyNotes.map((note) => (
-                <div key={note.date} className="journey-card">
+              {notes.map((note) => (
+                <div key={note.id} className="journey-card">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
-                        <div className="text-sm font-medium text-primary">
-                          {new Date(note.date).toLocaleDateString('fr-FR', {
+                        <div className="text-xs text-muted-foreground">
+                          {new Date(note.created_at).toLocaleDateString('fr-FR', {
                             weekday: 'long',
                             day: 'numeric',
-                            month: 'long'
+                            month: 'long',
+                            hour: '2-digit',
+                            minute: '2-digit'
                           })}
                         </div>
-                        {note.date === today && (
-                          <span className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full">
-                            Aujourd'hui
+                        {note.updated_at !== note.created_at && (
+                          <span className="px-2 py-1 text-xs bg-accent/10 text-accent rounded-full">
+                            Modifiée
                           </span>
                         )}
                       </div>
@@ -233,7 +237,7 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleDelete(note.date)}
+                        onClick={() => handleDelete(note)}
                         className="h-8 w-8 p-0 text-destructive hover:text-destructive"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -247,12 +251,13 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
         )}
 
         {/* Message si aucune note */}
-        {dailyNotes.length === 0 && !noteContent && (
+        {notes.length === 0 && !editingNote && (
           <div className="journey-card text-center py-8">
             <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">Commencez votre journal</h3>
             <p className="text-muted-foreground">
-              Écrivez votre première note pour commencer votre journal personnel
+              Écrivez votre première note pour commencer votre journal personnel.<br />
+              Vous pourrez créer autant de notes que vous voulez !
             </p>
           </div>
         )}
