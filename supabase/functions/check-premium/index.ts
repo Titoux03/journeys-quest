@@ -39,7 +39,7 @@ serve(async (req) => {
     console.log('[CHECK-PREMIUM] User authenticated:', { userId: user.id, email: user.email });
 
     // Check if this is the test collaboration account
-    const isTestCollabAccount = user.email === 'testcollab' || user.email === 'testcollab@example.com';
+    const isTestCollabAccount = user.email === 'testcollab@journeys.com';
     
     if (isTestCollabAccount) {
       console.log('[CHECK-PREMIUM] Test collaboration account detected - granting premium access');
