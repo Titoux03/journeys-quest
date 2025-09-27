@@ -8,7 +8,8 @@ import {
   Shield, 
   Leaf,
   LogOut,
-  LogIn
+  LogIn,
+  PenTool
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -36,10 +37,10 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   const navItems = [
     { id: 'home', icon: Home, label: 'Accueil' },
     { id: 'journal', icon: BookOpen, label: 'Journal' },
+    { id: 'notes', icon: PenTool, label: 'Notes' },
     { id: 'meditation', icon: Timer, label: 'Focus' },
     { id: 'abstinence', icon: Shield, label: 'Contrôle' },
     { id: 'stretching', icon: Leaf, label: 'Stretching' },
-    { id: 'progress', icon: BarChart3, label: 'Stats' },
   ];
 
   return (

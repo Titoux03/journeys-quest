@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { DailyQuote } from '@/components/DailyQuote';
 import { LoginStreakDisplay } from '@/components/LoginStreakDisplay';
 import { AddictionCard } from '@/components/AddictionCard';
-import { Sparkles, TrendingUp, Target, Brain, Shield, Dumbbell, Crown, Star, Flame, Timer, BarChart3, Leaf } from 'lucide-react';
+import { Sparkles, TrendingUp, Target, Brain, Shield, Dumbbell, Crown, Star, Flame, Timer, BarChart3, Leaf, PenTool } from 'lucide-react';
 import { usePremium } from '@/hooks/usePremium';
 import { useAuth } from '@/hooks/useAuth';
 import { useAddictions } from '@/hooks/useAddictions';
@@ -214,14 +214,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
           </p>
         </button>
 
-        {/* Notes Libres - Always Free */}
         <button
-          onClick={() => onNavigate('reflection')}
+          onClick={() => onNavigate('notes')}
           className="journey-card hover:journey-card-glow transition-all duration-300 p-4 sm:p-6 text-left group"
         >
           <div className="flex items-center justify-between mb-2 sm:mb-4">
             <div className="p-2 sm:p-3 rounded-xl bg-accent/10 text-accent group-hover:bg-accent group-hover:text-accent-foreground transition-colors">
-              <Sparkles className="w-4 h-4 sm:w-6 sm:h-6" />
+              <PenTool className="w-4 h-4 sm:w-6 sm:h-6" />
             </div>
           </div>
           <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Notes du Jour</h3>

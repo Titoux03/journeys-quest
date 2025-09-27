@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { HomePage } from '@/components/HomePage';
 import { DailyJournal } from '@/components/DailyJournal';
 import { ReflectionScreen } from '@/components/ReflectionScreen';
+import { DailyNotes } from '@/components/DailyNotes';
 import { ProgressScreen } from '@/components/ProgressScreen';
 import { MeditationTimer } from '@/components/MeditationTimer';
 import { AbstinenceTracker } from '@/components/AbstinenceTracker';
@@ -234,6 +235,9 @@ const Index = () => {
         );
       case 'progress':
         return <ProgressScreen entries={entries} onNavigate={setCurrentScreen} onUpdateEntry={handleUpdateEntry} />;
+      case 'notes':
+      case 'notes':
+        return <DailyNotes onNavigate={setCurrentScreen} />;
       case 'abstinence':
         return <AbstinenceTracker onNavigate={setCurrentScreen} />;
       case 'stretching':
