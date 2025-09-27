@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { ArrowLeft, BarChart3, Users, TrendingUp, DollarSign } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, BarChart3, Users, TrendingUp, DollarSign, Lock, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
 import { AffiliateLinkGenerator } from '@/components/AffiliateLinkGenerator';
 import { generateAffiliateReport, formatCurrency, formatConversionRate, type AffiliateReport } from '@/utils/affiliateReport';
 import { useNavigate } from 'react-router-dom';
@@ -11,10 +12,49 @@ import { useNavigate } from 'react-router-dom';
  * Page d'administration pour la gestion des affiliations
  */
 export const AffiliateAdmin: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [authError, setAuthError] = useState('');
   const [report, setReport] = useState<AffiliateReport | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const ADMIN_PASSWORD = 'valettitsgoat@';
+  const AUTH_KEY = 'affiliate_admin_auth';
+
+  // Vérifier l'authentification au chargement
+  useEffect(() => {
+    const stored = localStorage.getItem(AUTH_KEY);
+    if (stored === 'authenticated') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  /**
+   * Gérer la connexion
+   */
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === ADMIN_PASSWORD) {
+      setIsAuthenticated(true);
+      localStorage.setItem(AUTH_KEY, 'authenticated');
+      setAuthError('');
+      setPassword('');
+    } else {
+      setAuthError('Mot de passe incorrect');
+    }
+  };
+
+  /**
+   * Gérer la déconnexion
+   */
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem(AUTH_KEY);
+    setReport(null);
+  };
 
   /**
    * Génère un rapport d'affiliation
@@ -36,6 +76,72 @@ export const AffiliateAdmin: React.FC = () => {
       setLoading(false);
     }
   };
+
+  // Écran de connexion si non authentifié
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+              <Lock className="w-6 h-6 text-primary" />
+            </div>
+            <CardTitle>Accès Administration</CardTitle>
+            <CardDescription>
+              Entrez le mot de passe pour accéder au portail d'affiliation
+            </CardDescription>
+          </CardHeader>
+          
+          <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="relative">
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Mot de passe"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pr-10"
+                  required
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </Button>
+              </div>
+              
+              {authError && (
+                <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3">
+                  <p className="text-destructive text-sm">❌ {authError}</p>
+                </div>
+              )}
+              
+              <Button type="submit" className="w-full">
+                Se connecter
+              </Button>
+              
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => navigate('/')}
+                className="w-full"
+              >
+                Retour à l'accueil
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -59,6 +165,16 @@ export const AffiliateAdmin: React.FC = () => {
                 <p className="text-muted-foreground">Gestion des liens et rapports d'affiliation</p>
               </div>
             </div>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              className="flex items-center space-x-2 text-destructive hover:bg-destructive/10"
+            >
+              <Lock className="w-4 h-4" />
+              <span>Déconnexion</span>
+            </Button>
           </div>
         </div>
       </div>
