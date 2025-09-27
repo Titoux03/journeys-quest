@@ -215,7 +215,7 @@ const BasicProgressContent: React.FC<ProgressScreenProps> = ({ entries, onNaviga
             </h2>
             
             <div className="grid gap-4">
-              {journalEntries.slice(0, 10).map((entry) => (
+              {journalEntries.map((entry) => (
                 <div key={entry.date} className="journey-card p-4">
                   <div className="grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
                     <div className="text-sm font-medium text-muted-foreground whitespace-nowrap">
@@ -263,56 +263,6 @@ const BasicProgressContent: React.FC<ProgressScreenProps> = ({ entries, onNaviga
           </div>
         )}
 
-        {/* Free Notes - Accessible */}
-        {freeNotes.length > 0 && (
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold flex items-center space-x-2">
-              <FileText className="w-5 h-5" />
-              <span>Notes libres ({freeNotes.length})</span>
-            </h2>
-            
-            <div className="grid gap-4">
-              {freeNotes.slice(0, 10).map((entry) => (
-                <div key={entry.date} className="journey-card p-4">
-                  <div className="grid grid-cols-[auto_1fr_auto] gap-4 items-center">
-                    <div className="text-sm font-medium text-muted-foreground whitespace-nowrap">
-                      {new Date(entry.date).toLocaleDateString('fr-FR', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric'
-                      })}
-                    </div>
-                    
-                    <div className="min-w-0">
-                      <p className="text-sm text-muted-foreground line-clamp-2 break-words">
-                        "{entry.reflection || 'Note sans contenu'}"
-                      </p>
-                    </div>
-                    
-                    <div className="flex space-x-2 whitespace-nowrap">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setEditingEntry(entry)}
-                        className="h-8 w-8 p-0"
-                      >
-                        <Edit3 className="w-3 h-3" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteEntry(entry.date)}
-                        className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {entries.length === 0 && (
           <div className="text-center py-12">
@@ -621,23 +571,18 @@ const ProgressScreenContent: React.FC<ProgressScreenProps> = ({ entries, onNavig
         )}
 
         {/* Message si aucune donnée */}
-        {journalEntries.length === 0 && freeNotes.length === 0 && (
+        {journalEntries.length === 0 && (
           <div className="journey-card text-center py-12">
             <Target className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-muted-foreground mb-2">
-              Aucune donnée disponible
+              Aucune évaluation disponible
             </h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Commencez votre journal ou écrivez vos premières notes
+              Commencez votre journal d'évaluation pour suivre vos progrès
             </p>
-            <div className="flex gap-3 justify-center">
-              <Button onClick={() => onNavigate('journal')} variant="outline">
-                Journal d'évaluation
-              </Button>
-              <Button onClick={() => onNavigate('reflection')} variant="outline">
-                Écrire une note
-              </Button>
-            </div>
+            <Button onClick={() => onNavigate('journal')} variant="outline">
+              Commencer le journal
+            </Button>
           </div>
         )}
       </div>
