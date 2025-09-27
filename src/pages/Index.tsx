@@ -12,6 +12,7 @@ import { MarketingNotifications } from '@/components/MarketingNotifications';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { UserStatus } from '@/components/UserStatus';
 import { WelcomeAnimation } from '@/components/WelcomeAnimation';
+import { PremiumProgressInterruptor } from '@/components/PremiumProgressInterruptor';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { usePremium } from '@/hooks/usePremium';
@@ -29,7 +30,7 @@ interface JournalEntry {
 
 const Index = () => {
   const { user, signOut, loading } = useAuth();
-  const { upgradeModalVisible, hideUpgradeModal } = usePremium();
+  const { upgradeModalVisible, hideUpgradeModal, isPremium } = usePremium();
   const { journalEntries, saveJournalEntry, deleteJournalEntry } = useProgress();
   const { playWelcome } = useGongSounds();
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ const Index = () => {
     totalScore: number;
   } | null>(null);
   const [showWelcome, setShowWelcome] = useState(true);
+  const [showProgressInterruptor, setShowProgressInterruptor] = useState(false);
 
   // Charger les données locales si l'utilisateur n'est pas connecté
   useEffect(() => {
@@ -117,6 +119,14 @@ const Index = () => {
 
     setCurrentJournalData({ scores, totalScore });
     setCurrentScreen('reflection');
+
+    // Vérifier si on doit montrer l'interrupteur de progression (pour les utilisateurs non-premium)
+    const allEntries = user ? journalEntries : localJournalEntries;
+    const journalDay = allEntries.length + 1;
+    
+    if (user && !isPremium && (journalDay === 3 || journalDay === 7 || journalDay === 14 || journalDay === 21 || (journalDay > 21 && journalDay % 7 === 0))) {
+      setTimeout(() => setShowProgressInterruptor(true), 2000);
+    }
   };
 
   const handleUpdateEntry = async (updatedEntry: JournalEntry) => {
@@ -261,6 +271,12 @@ const Index = () => {
       <PremiumUpgrade 
         isVisible={upgradeModalVisible}
         onClose={hideUpgradeModal}
+      />
+
+      {/* Progress Interruptor Modal */}
+      <PremiumProgressInterruptor
+        journalDay={user ? journalEntries.length : localJournalEntries.length}
+        onClose={() => setShowProgressInterruptor(false)}
       />
     </div>
   );

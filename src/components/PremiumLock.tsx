@@ -44,27 +44,41 @@ export const PremiumLock: React.FC<PremiumLockProps> = ({
         </PremiumPreviewProvider>
       </div>
 
-      {/* Premium Overlay */}
-      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-background/80 to-background/60 backdrop-blur-sm">
+      {/* Premium Overlay avec FOMO */}
+      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-background/85 to-background/70 backdrop-blur-sm">
         <div className="text-center p-6 max-w-sm mx-4">
-          {/* Premium Icon */}
+          {/* Premium Icon avec effet de brillance */}
           <div className="relative mb-4">
-            <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center shadow-lg shadow-primary/30 transition-all duration-300">
+            <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center shadow-lg shadow-primary/40 transition-all duration-300 pulse-glow">
               <Crown className="w-8 h-8 text-primary-foreground" />
             </div>
             <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-gradient-to-br from-primary-glow to-primary flex items-center justify-center animate-pulse">
               <Lock className="w-3 h-3 text-primary-foreground" />
             </div>
+            {/* Badge d'offre limitée */}
+            <div className="absolute -top-2 -left-2 bg-destructive text-destructive-foreground text-xs font-bold px-2 py-1 rounded-full animate-pulse">
+              -50%
+            </div>
           </div>
 
-          {/* Text */}
+          {/* Text avec urgence */}
           <h3 className="font-bold text-lg text-gradient-primary mb-2">
-            Fonctionnalité Premium
+            🔒 Fonctionnalité Premium
           </h3>
           
-          <p className="text-sm text-muted-foreground mb-6">
-            {feature} est disponible avec Journeys Premium
+          <p className="text-sm text-muted-foreground mb-3">
+            {feature} transforme votre parcours
           </p>
+
+          {/* Indicateur de valeur sociale */}
+          <div className="bg-primary/10 border border-primary/20 rounded-lg p-3 mb-4">
+            <p className="text-xs text-primary font-medium">
+              ⚡ +2,847 utilisateurs cette semaine
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Ne ratez pas cette progression
+            </p>
+          </div>
 
           {/* Action Buttons */}
           <div className="space-y-3">
