@@ -328,10 +328,10 @@ export const useAddictions = () => {
 
     try {
       if (!loginStreak) {
-        // Créer un nouveau streak
+        // Utiliser upsert pour éviter les doublons
         const { data, error } = await supabase
           .from('login_streaks')
-          .insert({
+          .upsert({
             user_id: user.id,
             current_streak: 1,
             longest_streak: 1,
@@ -353,42 +353,36 @@ export const useAddictions = () => {
           const newStreak = loginStreak.current_streak + 1;
           const newLongestStreak = Math.max(loginStreak.longest_streak, newStreak);
 
-          const { error } = await supabase
+          const { data, error } = await supabase
             .from('login_streaks')
             .update({
               current_streak: newStreak,
               longest_streak: newLongestStreak,
               last_login_date: today
             })
-            .eq('id', loginStreak.id);
+            .eq('user_id', user.id)
+            .select()
+            .single();
 
           if (error) throw error;
 
-          setLoginStreak(prev => prev ? {
-            ...prev,
-            current_streak: newStreak,
-            longest_streak: newLongestStreak,
-            last_login_date: today
-          } : null);
+          setLoginStreak(data);
         } else if (daysDiff > 1) {
           // Streak cassé, recommencer
-          const { error } = await supabase
+          const { data, error } = await supabase
             .from('login_streaks')
             .update({
               current_streak: 1,
               last_login_date: today,
               streak_start_date: today
             })
-            .eq('id', loginStreak.id);
+            .eq('user_id', user.id)
+            .select()
+            .single();
 
           if (error) throw error;
 
-          setLoginStreak(prev => prev ? {
-            ...prev,
-            current_streak: 1,
-            last_login_date: today,
-            streak_start_date: today
-          } : null);
+          setLoginStreak(data);
         }
         // Si daysDiff === 0, l'utilisateur s'est déjà connecté aujourd'hui
       }
