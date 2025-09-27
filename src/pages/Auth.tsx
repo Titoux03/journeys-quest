@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { TermsOfService } from '@/components/TermsOfService';
 
 const Auth = () => {
   const { user, signUp, signIn, loading } = useAuth();
@@ -22,6 +23,7 @@ const Auth = () => {
     fullName: '',
     confirmPassword: ''
   });
+  const [showTerms, setShowTerms] = useState(false);
 
   // Rediriger si l'utilisateur est déjà connecté
   useEffect(() => {
@@ -287,8 +289,20 @@ const Auth = () => {
         </Card>
 
         <div className="text-center mt-6 text-sm text-muted-foreground">
-          En vous inscrivant, vous acceptez nos conditions d'utilisation
+          En vous inscrivant, vous acceptez nos{' '}
+          <button
+            type="button"
+            onClick={() => setShowTerms(true)}
+            className="text-primary hover:text-primary/80 underline transition-colors"
+          >
+            conditions d'utilisation
+          </button>
         </div>
+
+        <TermsOfService 
+          isVisible={showTerms} 
+          onClose={() => setShowTerms(false)} 
+        />
       </div>
     </div>
   );
