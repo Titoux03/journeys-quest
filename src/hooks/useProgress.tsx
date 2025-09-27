@@ -39,9 +39,12 @@ export const useProgress = () => {
     mood: 'low' | 'medium' | 'high',
     reflection?: string
   ) => {
-    if (!user) return;
+    if (!user) return { success: false, error: 'User not authenticated' };
 
     const today = new Date().toISOString().split('T')[0];
+    
+    // Arrondir le score total à 2 décimales pour éviter les erreurs de type
+    const roundedTotalScore = Math.round(totalScore * 100) / 100;
     
     try {
       const { data, error } = await supabase
@@ -50,7 +53,7 @@ export const useProgress = () => {
           user_id: user.id,
           date: today,
           scores,
-          total_score: totalScore,
+          total_score: roundedTotalScore,
           mood,
           reflection
         }, {
@@ -74,10 +77,10 @@ export const useProgress = () => {
         );
       });
 
-      return { success: true };
+      return { success: true, data };
     } catch (error) {
       console.error('Error saving journal entry:', error);
-      return { success: false, error };
+      return { success: false, error: error.message || 'Unknown error' };
     }
   };
 
