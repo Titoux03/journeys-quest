@@ -290,35 +290,17 @@ export const useAddictions = () => {
     if (!user) return;
 
     try {
-      const today = new Date().toISOString().split('T')[0];
-      
-      // Calculer les nouveaux streaks pour chaque addiction active
-      for (const addiction of userAddictions) {
-        const startDate = new Date(addiction.start_date);
-        const todayDate = new Date(today);
-        const daysSince = Math.floor((todayDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-        
-        // Le streak actuel devrait être égal au nombre de jours depuis le début
-        const currentStreak = Math.max(0, daysSince);
-        
-        if (currentStreak !== addiction.current_streak) {
-          const newLongestStreak = Math.max(addiction.longest_streak, currentStreak);
-          
-          await supabase
-            .from('user_addictions')
-            .update({
-              current_streak: currentStreak,
-              longest_streak: newLongestStreak
-            })
-            .eq('id', addiction.id);
-        }
-      }
-
-      // Mettre à jour le streak de connexion
-      await updateLoginStreak();
+      // Utiliser la fonction serveur pour calculer les streaks de manière fiable
+      await supabase.rpc('update_user_streaks_on_login', { 
+        user_id_param: user.id 
+      });
 
       // Recharger les données
-      await loadUserAddictions();
+      await Promise.all([
+        loadUserAddictions(),
+        loadLoginStreak()
+      ]);
+      
       await checkAndAwardBadges();
     } catch (error) {
       console.error('Error updating streaks:', error);

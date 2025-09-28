@@ -460,8 +460,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_addiction_streaks: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       cleanup_old_entries: {
         Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      update_user_streaks_on_login: {
+        Args: { user_id_param: string }
         Returns: undefined
       }
     }
