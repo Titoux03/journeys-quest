@@ -7,7 +7,7 @@ import { ProgressScreen } from '@/components/ProgressScreen';
 import { MeditationTimer } from '@/components/MeditationTimer';
 import { AbstinenceTracker } from '@/components/AbstinenceTracker';
 import { StretchingRoutine } from '@/components/StretchingRoutine';
-import { TodoList } from '@/components/TodoList';
+import TodoList from '@/components/TodoList';
 import { DailyQuote } from '@/components/DailyQuote';
 import { PremiumUpgrade } from '@/components/PremiumUpgrade';
 import { MarketingNotifications } from '@/components/MarketingNotifications';

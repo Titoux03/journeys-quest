@@ -7,11 +7,12 @@ export interface Todo {
   id: string;
   user_id: string;
   text: string;
-  is_priority: boolean;
+  priority_level: number; // 0 = pas prioritaire, 1-3 = niveaux de priorité
   is_completed: boolean;
   created_at: string;
   updated_at: string;
   completed_at?: string;
+  carried_from_previous: boolean;
 }
 
 export interface TodoStats {
@@ -61,8 +62,9 @@ export const useTodos = () => {
   // Sauvegarder un nouveau todo
   const saveTodo = async (todoData: {
     text: string;
-    is_priority: boolean;
+    priority_level: number;
     is_completed: boolean;
+    carried_from_previous?: boolean;
   }) => {
     if (!user) {
       toast({
@@ -80,8 +82,9 @@ export const useTodos = () => {
         .insert([{
           user_id: user.id,
           text: todoData.text,
-          is_priority: todoData.is_priority,
+          priority_level: todoData.priority_level,
           is_completed: todoData.is_completed,
+          carried_from_previous: todoData.carried_from_previous || false,
         }])
         .select()
         .single();
@@ -226,8 +229,8 @@ export const useTodos = () => {
     });
 
     const completed = todayTodos.filter(todo => todo.is_completed).length;
-    const priority = todayTodos.filter(todo => todo.is_priority).length;
-    const priorityCompleted = todayTodos.filter(todo => todo.is_priority && todo.is_completed).length;
+    const priority = todayTodos.filter(todo => todo.priority_level > 0).length;
+    const priorityCompleted = todayTodos.filter(todo => todo.priority_level > 0 && todo.is_completed).length;
 
     return {
       total: todayTodos.length,
@@ -251,8 +254,8 @@ export const useTodos = () => {
   const getGlobalStats = () => {
     const totalTodos = todos.length;
     const completedTodos = todos.filter(todo => todo.is_completed).length;
-    const priorityTodos = todos.filter(todo => todo.is_priority).length;
-    const completedPriorityTodos = todos.filter(todo => todo.is_priority && todo.is_completed).length;
+    const priorityTodos = todos.filter(todo => todo.priority_level > 0).length;
+    const completedPriorityTodos = todos.filter(todo => todo.priority_level > 0 && todo.is_completed).length;
 
     // Calcul des streaks
     const sortedDates = [...new Set(todos.map(todo => new Date(todo.created_at).toDateString()))].sort();

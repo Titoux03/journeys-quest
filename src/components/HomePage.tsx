@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { DailyQuote } from '@/components/DailyQuote';
 import { LoginStreakDisplay } from '@/components/LoginStreakDisplay';
 import { AddictionCard } from '@/components/AddictionCard';
-import { Sparkles, TrendingUp, Target, Brain, Shield, Dumbbell, Crown, Star, Flame, Timer, BarChart3, Leaf, PenTool } from 'lucide-react';
+import { Sparkles, TrendingUp, Target, Brain, Shield, Dumbbell, Crown, Star, Flame, Timer, BarChart3, Leaf, PenTool, CheckSquare } from 'lucide-react';
 import { usePremium } from '@/hooks/usePremium';
 import { useAuth } from '@/hooks/useAuth';
 import { useAddictions } from '@/hooks/useAddictions';
@@ -229,6 +229,35 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
           </p>
         </button>
 
+        {/* Tâches Premium Feature */}
+        <button
+          onClick={() => isPremium ? onNavigate('todos') : showUpgradeModal()}
+          className={`journey-card transition-all duration-300 p-4 sm:p-6 text-left group relative ${
+            isPremium ? 'hover:journey-card-glow' : 'opacity-80'
+          }`}
+        >
+          {!isPremium && (
+            <div className="absolute top-2 right-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-primary flex items-center justify-center pulse-glow">
+              <Crown className="w-2 h-2 sm:w-3 sm:h-3 text-primary-foreground" />
+            </div>
+          )}
+          <div className="flex items-center justify-between mb-2 sm:mb-4">
+            <div className={`p-2 sm:p-3 rounded-xl transition-colors ${
+              isPremium 
+                ? 'bg-purple-500/10 text-purple-500 group-hover:bg-purple-500 group-hover:text-purple-50'
+                : 'bg-muted/20 text-muted-foreground'
+            }`}>
+              <CheckSquare className="w-4 h-4 sm:w-6 sm:h-6" />
+            </div>
+          </div>
+          <h3 className={`font-semibold text-base sm:text-lg mb-1 sm:mb-2 ${!isPremium && 'text-muted-foreground'}`}>
+            Tâches Matinales
+          </h3>
+          <p className="text-xs sm:text-sm text-muted-foreground leading-tight">
+            Système révolutionnaire anti-procrastination
+          </p>
+        </button>
+
         {/* Meditation - Now Premium */}
         <button
           onClick={() => isPremium ? onNavigate('meditation') : showUpgradeModal()}
@@ -354,6 +383,17 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
           </div>
         </div>
       </button>
+
+      {/* Section Premium Todo Teaser */}
+      {!isPremium && (
+        <div className="mb-6">
+          <PremiumTeaser 
+            title="🌅 Tâches Matinales Premium"
+            description="Transformez votre productivité avec notre système révolutionnaire anti-procrastination. Notez vos tâches chaque matin et changez vraiment votre vie !"
+            variant="success"
+          />
+        </div>
+      )}
 
       {/* Premium Upgrade CTA (for free users) */}
       {!isPremium && user && (

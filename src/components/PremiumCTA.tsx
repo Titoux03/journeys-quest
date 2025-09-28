@@ -100,11 +100,11 @@ export const PremiumCTA: React.FC<PremiumCTAProps> = ({
         </div>
         <div className="flex items-center space-x-2 p-2 bg-secondary/30 rounded-lg">
           <div className="w-2 h-2 bg-success rounded-full"></div>
-          <span>Routines premium</span>
+          <span>Tâches matinales</span>
         </div>
         <div className="flex items-center space-x-2 p-2 bg-secondary/30 rounded-lg">
           <div className="w-2 h-2 bg-success rounded-full"></div>
-          <span>Badges exclusifs</span>
+          <span>Routines premium</span>
         </div>
       </div>
       

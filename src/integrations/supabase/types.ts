@@ -378,31 +378,34 @@ export type Database = {
       }
       todos: {
         Row: {
+          carried_from_previous: boolean | null
           completed_at: string | null
           created_at: string
           id: string
           is_completed: boolean
-          is_priority: boolean
+          priority_level: number | null
           text: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          carried_from_previous?: boolean | null
           completed_at?: string | null
           created_at?: string
           id?: string
           is_completed?: boolean
-          is_priority?: boolean
+          priority_level?: number | null
           text: string
           updated_at?: string
           user_id: string
         }
         Update: {
+          carried_from_previous?: boolean | null
           completed_at?: string | null
           created_at?: string
           id?: string
           is_completed?: boolean
-          is_priority?: boolean
+          priority_level?: number | null
           text?: string
           updated_at?: string
           user_id?: string
