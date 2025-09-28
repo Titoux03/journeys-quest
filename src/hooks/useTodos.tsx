@@ -35,7 +35,7 @@ export const useTodos = () => {
     try {
       setIsLoading(true);
       const { data, error } = await supabase
-        .from('todos')
+        .from('todos' as any)
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
@@ -50,7 +50,7 @@ export const useTodos = () => {
         return;
       }
 
-      setTodos(data || []);
+      setTodos((data as unknown as Todo[]) || []);
     } catch (error) {
       console.error('Erreur lors du chargement des todos:', error);
     } finally {
@@ -76,7 +76,7 @@ export const useTodos = () => {
     try {
       setIsLoading(true);
       const { data, error } = await supabase
-        .from('todos')
+        .from('todos' as any)
         .insert([{
           user_id: user.id,
           text: todoData.text,
@@ -97,7 +97,7 @@ export const useTodos = () => {
       }
 
       // Ajouter le nouveau todo à la liste
-      setTodos(prev => [data, ...prev]);
+      setTodos(prev => [data as unknown as Todo, ...prev]);
       
       toast({
         title: "Tâche ajoutée",
@@ -125,7 +125,7 @@ export const useTodos = () => {
     try {
       setIsLoading(true);
       const { data, error } = await supabase
-        .from('todos')
+        .from('todos' as any)
         .update(updates)
         .eq('id', todoId)
         .eq('user_id', user.id)
@@ -144,7 +144,7 @@ export const useTodos = () => {
 
       // Mettre à jour le todo dans la liste
       setTodos(prev => prev.map(todo => 
-        todo.id === todoId ? data : todo
+        todo.id === todoId ? data as unknown as Todo : todo
       ));
 
       return true;
@@ -185,7 +185,7 @@ export const useTodos = () => {
     try {
       setIsLoading(true);
       const { error } = await supabase
-        .from('todos')
+        .from('todos' as any)
         .delete()
         .eq('id', todoId)
         .eq('user_id', user.id);

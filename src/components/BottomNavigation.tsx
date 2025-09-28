@@ -9,7 +9,8 @@ import {
   Leaf,
   LogOut,
   LogIn,
-  PenTool
+  PenTool,
+  CheckSquare
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -37,6 +38,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   const navItems = [
     { id: 'home', icon: Home, label: 'Accueil' },
     { id: 'journal', icon: BookOpen, label: 'Journal' },
+    { id: 'todos', icon: CheckSquare, label: 'Tâches' },
     { id: 'notes', icon: PenTool, label: 'Notes' },
     { id: 'meditation', icon: Timer, label: 'Focus' },
     { id: 'abstinence', icon: Shield, label: 'Contrôle' },
@@ -46,7 +48,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 px-2 pb-2 safe-area-inset-bottom">
       <div className="bg-card/95 backdrop-blur-md border border-border/50 rounded-2xl shadow-lg overflow-hidden">
-        <div className="grid grid-cols-7 gap-0 px-1">
+        <div className="grid grid-cols-8 gap-0 px-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentScreen === item.id;
