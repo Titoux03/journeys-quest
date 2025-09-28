@@ -172,8 +172,8 @@ export const useAddictions = () => {
           user_id: user.id,
           addiction_type_id: addictionTypeId,
           start_date: today,
-          current_streak: 0,
-          longest_streak: 0,
+          current_streak: 1,
+          longest_streak: 1,
           is_active: true
         })
         .select(`
@@ -290,19 +290,24 @@ export const useAddictions = () => {
     if (!user) return;
 
     try {
+      const today = new Date().toISOString().split('T')[0];
+      
       // Calculer les nouveaux streaks pour chaque addiction active
       for (const addiction of userAddictions) {
         const startDate = new Date(addiction.start_date);
-        const today = new Date();
-        const daysSince = Math.floor((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+        const todayDate = new Date(today);
+        const daysSince = Math.floor((todayDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
         
-        if (daysSince !== addiction.current_streak) {
-          const newLongestStreak = Math.max(addiction.longest_streak, daysSince);
+        // Le streak actuel devrait être égal au nombre de jours depuis le début
+        const currentStreak = Math.max(0, daysSince);
+        
+        if (currentStreak !== addiction.current_streak) {
+          const newLongestStreak = Math.max(addiction.longest_streak, currentStreak);
           
           await supabase
             .from('user_addictions')
             .update({
-              current_streak: daysSince,
+              current_streak: currentStreak,
               longest_streak: newLongestStreak
             })
             .eq('id', addiction.id);
@@ -405,11 +410,11 @@ export const useAddictions = () => {
 
         if (badge.category === 'addiction' && badge.addiction_type_id) {
           const addiction = userAddictions.find(a => a.addiction_type_id === badge.addiction_type_id);
-          if (addiction && addiction.current_streak >= badge.requirement_value) {
+          if (addiction && (addiction.current_streak >= badge.requirement_value || addiction.longest_streak >= badge.requirement_value)) {
             shouldAward = true;
           }
         } else if (badge.category === 'login_streak') {
-          if (loginStreak && loginStreak.current_streak >= badge.requirement_value) {
+          if (loginStreak && (loginStreak.current_streak >= badge.requirement_value || loginStreak.longest_streak >= badge.requirement_value)) {
             shouldAward = true;
           }
         }
