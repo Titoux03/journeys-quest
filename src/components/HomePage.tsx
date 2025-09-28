@@ -7,6 +7,7 @@ import { usePremium } from '@/hooks/usePremium';
 import { useAuth } from '@/hooks/useAuth';
 import { useAddictions } from '@/hooks/useAddictions';
 import { PremiumTeaser, PremiumBadge, PremiumLockOverlay } from '@/components/PremiumTeaser';
+import { PremiumTodoTeaser } from '@/components/PremiumTodoTeaser';
 import { JourneyCard } from '@/components/JourneyCard';
 import { PremiumSuccessIndicator } from '@/components/PremiumSuccessIndicator';
 
@@ -387,11 +388,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
       {/* Section Premium Todo Teaser */}
       {!isPremium && (
         <div className="mb-6">
-          <PremiumTeaser 
-            title="🌅 Tâches Matinales Premium"
-            description="Transformez votre productivité avec notre système révolutionnaire anti-procrastination. Notez vos tâches chaque matin et changez vraiment votre vie !"
-            variant="success"
-          />
+          <PremiumTodoTeaser />
         </div>
       )}
 
