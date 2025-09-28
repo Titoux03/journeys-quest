@@ -118,39 +118,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
         )}
       </div>
 
-      {/* Featured Addictions Preview */}
-      {isPremium && user && userAddictions.length > 0 && (
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-foreground">Mes Addictions Actives</h2>
-            <button
-              onClick={() => onNavigate('abstinence')}
-              className="text-primary hover:text-primary-glow transition-colors text-sm font-medium"
-            >
-              Voir tout →
-            </button>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {userAddictions.slice(0, 2).map((userAddiction) => {
-              const addictionType = addictionTypes.find(at => at.id === userAddiction.addiction_type_id);
-              if (!addictionType) return null;
-              
-              return (
-                <AddictionCard
-                  key={userAddiction.id}
-                  addictionType={addictionType}
-                  userAddiction={userAddiction}
-                  onStart={() => {}}
-                  onRelapse={() => markRelapse(userAddiction.id)}
-                  onDeactivate={() => handleDeactivateAddiction(userAddiction.id)}
-                  className="cursor-pointer"
-                />
-              );
-            })}
-          </div>
-        </div>
-      )}
 
       {/* Recent Badges */}
       {isPremium && user && userBadges.length > 0 && (
@@ -389,6 +356,40 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
       {!isPremium && (
         <div className="mb-6">
           <PremiumTodoTeaser />
+        </div>
+      )}
+
+      {/* Featured Addictions Preview - Moved to bottom */}
+      {isPremium && user && userAddictions.length > 0 && (
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-foreground">Mes Addictions Actives</h2>
+            <button
+              onClick={() => onNavigate('abstinence')}
+              className="text-primary hover:text-primary-glow transition-colors text-sm font-medium"
+            >
+              Voir tout →
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {userAddictions.slice(0, 2).map((userAddiction) => {
+              const addictionType = addictionTypes.find(at => at.id === userAddiction.addiction_type_id);
+              if (!addictionType) return null;
+              
+              return (
+                <AddictionCard
+                  key={userAddiction.id}
+                  addictionType={addictionType}
+                  userAddiction={userAddiction}
+                  onStart={() => {}}
+                  onRelapse={() => markRelapse(userAddiction.id)}
+                  onDeactivate={() => handleDeactivateAddiction(userAddiction.id)}
+                  className="cursor-pointer"
+                />
+              );
+            })}
+          </div>
         </div>
       )}
 

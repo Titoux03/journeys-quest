@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { 
   Home, 
-  BookOpen, 
+  TrendingUp, 
   BarChart3, 
   Timer, 
   Shield, 
@@ -37,7 +37,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
 
   const navItems = [
     { id: 'home', icon: Home, label: 'Accueil' },
-    { id: 'journal', icon: BookOpen, label: 'Journal' },
+    { id: 'journal', icon: TrendingUp, label: 'Score' },
     { id: 'todos', icon: CheckSquare, label: 'Tâches' },
     { id: 'notes', icon: PenTool, label: 'Notes' },
     { id: 'meditation', icon: Timer, label: 'Focus' },
