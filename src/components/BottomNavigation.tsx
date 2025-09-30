@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface BottomNavigationProps {
   currentScreen: string;
@@ -26,6 +27,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
 }) => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleAuthAction = async () => {
     if (user) {
@@ -36,13 +38,13 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   };
 
   const navItems = [
-    { id: 'home', icon: Home, label: 'Accueil' },
+    { id: 'home', icon: Home, label: t('navigation.home') },
     { id: 'journal', icon: TrendingUp, label: 'Score' },
-    { id: 'todos', icon: CheckSquare, label: 'Tâches' },
-    { id: 'notes', icon: PenTool, label: 'Notes' },
+    { id: 'todos', icon: CheckSquare, label: t('navigation.todos') },
+    { id: 'notes', icon: PenTool, label: t('navigation.notes') },
     { id: 'meditation', icon: Timer, label: 'Focus' },
-    { id: 'abstinence', icon: Shield, label: 'Contrôle' },
-    { id: 'stretching', icon: Leaf, label: 'Stretching' },
+    { id: 'abstinence', icon: Shield, label: t('navigation.addictions') },
+    { id: 'stretching', icon: Leaf, label: t('navigation.stretching') },
   ];
 
   return (
@@ -82,12 +84,12 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
             {user ? (
               <>
                 <LogOut size={20} className="shrink-0" />
-                <span className="text-[8px] font-medium leading-none text-center">Sortir</span>
+                <span className="text-[8px] font-medium leading-none text-center">{t('navigation.signOut')}</span>
               </>
             ) : (
               <>
                 <LogIn size={20} className="shrink-0" />
-                <span className="text-[8px] font-medium leading-none text-center">Login</span>
+                <span className="text-[8px] font-medium leading-none text-center">{t('navigation.signIn')}</span>
               </>
             )}
           </Button>

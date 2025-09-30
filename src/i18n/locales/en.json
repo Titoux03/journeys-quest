@@ -52,6 +52,11 @@
     "journal": "Journal",
     "notes": "Notes",
     "progress": "Progress",
-    "profile": "Profile"
+    "addictions": "Addictions",
+    "todos": "Tasks",
+    "meditation": "Meditation",
+    "stretching": "Stretching",
+    "signIn": "Sign In",
+    "signOut": "Sign Out"
   }
 }

@@ -10,6 +10,7 @@ import { PremiumTeaser, PremiumBadge, PremiumLockOverlay } from '@/components/Pr
 import { PremiumTodoTeaser } from '@/components/PremiumTodoTeaser';
 import { JourneyCard } from '@/components/JourneyCard';
 import { PremiumSuccessIndicator } from '@/components/PremiumSuccessIndicator';
+import { useTranslation } from 'react-i18next';
 
 interface JournalEntry {
   date: string;
@@ -28,6 +29,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
   const [currentQuote, setCurrentQuote] = useState<string>('');
   const { isPremium, showUpgradeModal } = usePremium();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const { 
     addictionTypes, 
     userAddictions, 
@@ -50,9 +52,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour >= 6 && hour < 18) {
-      return { message: 'Bonjour !', emoji: '☀️' };
+      return { message: t('greeting.morning'), emoji: '☀️' };
     } else {
-      return { message: 'Bonsoir !', emoji: '🌙' };
+      return { message: t('greeting.evening'), emoji: '🌙' };
     }
   };
 
@@ -70,18 +72,18 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
         </h1>
         <p className="text-sm sm:text-lg text-muted-foreground max-w-md mx-auto">
           {user 
-            ? 'Bienvenue dans votre espace de bien-être quotidien' 
-            : 'Commencez votre parcours de bien-être dès aujourd\'hui'
+            ? t('home.welcomeAuth')
+            : t('home.welcomeGuest')
           }
         </p>
         
         {!user && (
           <div className="mt-4 p-4 bg-gradient-to-r from-primary/10 to-primary-glow/5 rounded-xl border border-primary/20 relative overflow-hidden">
             <p className="text-xs sm:text-sm font-medium text-foreground mb-1">
-              🚀 Créez un compte pour sauvegarder vos progrès
+              {t('home.createAccount')}
             </p>
             <p className="text-xs text-muted-foreground">
-              Accédez ensuite aux fonctionnalités premium qui changent tout
+              {t('home.accessPremium')}
             </p>
           </div>
         )}
@@ -90,10 +92,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
           <div className="mt-4 p-4 bg-gradient-to-r from-warning/10 to-warning/5 rounded-xl border border-warning/20">
             <div className="flex items-center space-x-2 mb-2">
               <Crown className="w-4 h-4 text-warning" />
-              <span className="text-sm font-medium text-warning">Compte Gratuit</span>
+              <span className="text-sm font-medium text-warning">{t('home.freeAccount')}</span>
             </div>
             <p className="text-xs text-muted-foreground">
-              Débloquez le suivi avancé et les fonctionnalités premium
+              {t('home.unlockFeatures')}
             </p>
           </div>
         )}
@@ -125,13 +127,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-foreground flex items-center">
               <Star className="w-6 h-6 mr-2 text-accent" />
-              Derniers Badges Débloqués
+              {t('home.lastBadges')}
             </h2>
             <button
               onClick={() => onNavigate('abstinence')}
               className="text-accent hover:text-accent-glow transition-colors text-sm font-medium"
             >
-              Voir tous les badges →
+              {t('home.viewAllBadges')}
             </button>
           </div>
           
@@ -176,9 +178,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
               <Target className="w-4 h-4 sm:w-6 sm:h-6" />
             </div>
           </div>
-          <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Journal Quotidien</h3>
+          <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">{t('home.dailyJournal')}</h3>
           <p className="text-xs sm:text-sm text-muted-foreground leading-tight">
-            Notez votre journée et suivez votre bien-être
+            {t('home.dailyJournalDesc')}
           </p>
         </button>
 
@@ -191,9 +193,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
               <PenTool className="w-4 h-4 sm:w-6 sm:h-6" />
             </div>
           </div>
-          <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Notes du Jour</h3>
+          <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">{t('home.dailyNotes')}</h3>
           <p className="text-xs sm:text-sm text-muted-foreground leading-tight">
-            Écrivez librement vos pensées et réflexions
+            {t('home.dailyNotesDesc')}
           </p>
         </button>
 
@@ -219,10 +221,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
             </div>
           </div>
           <h3 className={`font-semibold text-base sm:text-lg mb-1 sm:mb-2 ${!isPremium && 'text-muted-foreground'}`}>
-            Tâches Matinales
+            {t('home.morningTasks')}
           </h3>
           <p className="text-xs sm:text-sm text-muted-foreground leading-tight">
-            Système révolutionnaire anti-procrastination
+            {t('home.morningTasksDesc')}
           </p>
         </button>
 
@@ -248,10 +250,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
             </div>
           </div>
           <h3 className={`font-semibold text-base sm:text-lg mb-1 sm:mb-2 ${!isPremium && 'text-muted-foreground'}`}>
-            Focus & Deep Work
+            {t('home.focusDeepWork')}
           </h3>
           <p className="text-xs sm:text-sm text-muted-foreground leading-tight">
-            Méditation et minuteurs premium
+            {t('home.focusDeepWorkDesc')}
           </p>
         </button>
 
@@ -277,10 +279,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
             </div>
           </div>
           <h3 className={`font-semibold text-base sm:text-lg mb-1 sm:mb-2 ${!isPremium ? 'text-foreground' : 'text-foreground'}`}>
-            Suivi Multi-Addictions
+            {t('home.addictionTracking')}
           </h3>
           <p className="text-xs sm:text-sm text-muted-foreground leading-tight">
-            Cigarette, porno, réseaux sociaux + badges
+            {t('home.addictionTrackingDesc')}
           </p>
         </button>
       </div>
@@ -308,10 +310,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
             </div>
             <div className="flex-1">
               <h3 className={`font-semibold text-lg sm:text-xl mb-1 sm:mb-2 ${!isPremium && 'text-muted-foreground'}`}>
-                Routine Stretching
+                {t('home.stretching')}
               </h3>
               <p className="text-sm sm:text-base text-muted-foreground">
-                5 exercices guidés pour votre bien-être physique
+                {t('home.stretchingDesc')}
               </p>
             </div>
           </div>
@@ -340,12 +342,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
           </div>
           <div className="flex-1">
             <h3 className={`font-semibold text-lg sm:text-xl mb-1 sm:mb-2 ${!isPremium && 'text-muted-foreground'}`}>
-              Progression & Statistiques
+              {t('home.progress')}
             </h3>
             <p className="text-sm sm:text-base text-muted-foreground">
               {isPremium 
-                ? `Vous avez complété ${entries.length} jours de journal`
-                : 'Débloquez l\'historique complet et les statistiques avancées'
+                ? t('home.progressDesc', { count: entries.length })
+                : t('home.progressDescFree')
               }
             </p>
           </div>
@@ -363,12 +365,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
       {isPremium && user && userAddictions.length > 0 && (
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-foreground">Mes Addictions Actives</h2>
+            <h2 className="text-xl font-bold text-foreground">{t('home.myActiveAddictions')}</h2>
             <button
               onClick={() => onNavigate('abstinence')}
               className="text-primary hover:text-primary-glow transition-colors text-sm font-medium"
             >
-              Voir tout →
+              {t('home.viewAll')}
             </button>
           </div>
           
@@ -407,11 +409,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
             </div>
             
             <h3 className="text-2xl font-bold text-gradient-primary mb-3">
-              Développez tout votre potentiel
+              {t('home.unlockPotential')}
             </h3>
             
             <p className="text-muted-foreground mb-6">
-              Accédez à toutes les fonctionnalités avancées pour un suivi complet de votre développement personnel.
+              {t('home.unlockPotentialDesc')}
             </p>
 
             {/* Comparaison avant/après */}
