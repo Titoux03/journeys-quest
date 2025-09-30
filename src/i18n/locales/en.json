@@ -1,0 +1,57 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close"
+  },
+  "greeting": {
+    "morning": "Good morning!",
+    "evening": "Good evening!"
+  },
+  "userStatus": {
+    "guestMode": "Guest mode",
+    "guestDescription": "Sign up to save\nyour notes and progress",
+    "signIn": "Sign in",
+    "premium": "Journeys Premium",
+    "freeVersion": "Free version"
+  },
+  "home": {
+    "welcomeAuth": "Welcome to your daily wellness space",
+    "welcomeGuest": "Start your wellness journey today",
+    "createAccount": "🚀 Create an account to save your progress",
+    "accessPremium": "Then access premium features that change everything",
+    "freeAccount": "Free Account",
+    "unlockFeatures": "Unlock advanced tracking and premium features",
+    "lastBadges": "Latest Unlocked Badges",
+    "viewAllBadges": "View all badges →",
+    "dailyJournal": "Daily Journal",
+    "dailyJournalDesc": "Record your day and track your well-being",
+    "dailyNotes": "Daily Notes",
+    "dailyNotesDesc": "Write freely your thoughts and reflections",
+    "morningTasks": "Morning Tasks",
+    "morningTasksDesc": "Revolutionary anti-procrastination system",
+    "focusDeepWork": "Focus & Deep Work",
+    "focusDeepWorkDesc": "Premium meditation and timers",
+    "addictionTracking": "Multi-Addiction Tracking",
+    "addictionTrackingDesc": "Cigarettes, porn, social media + badges",
+    "stretching": "Stretching Routine",
+    "stretchingDesc": "5 guided exercises for your physical well-being",
+    "progress": "Progress & Statistics",
+    "progressDesc": "You've completed {{count}} days of journaling",
+    "progressDescFree": "Unlock full history and advanced statistics",
+    "myActiveAddictions": "My Active Addictions",
+    "viewAll": "View all →",
+    "unlockPotential": "Unlock your full potential",
+    "unlockPotentialDesc": "Access all advanced features for complete personal development tracking."
+  },
+  "navigation": {
+    "home": "Home",
+    "journal": "Journal",
+    "notes": "Notes",
+    "progress": "Progress",
+    "profile": "Profile"
+  }
+}

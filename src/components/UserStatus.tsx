@@ -3,7 +3,11 @@ import { User, LogIn, Crown } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { usePremium } from '@/hooks/usePremium';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { LanguageToggle } from './LanguageToggle';
+
 export const UserStatus: React.FC = () => {
+  const { t } = useTranslation();
   const {
     user
   } = useAuth();
@@ -18,15 +22,18 @@ export const UserStatus: React.FC = () => {
             <User className="w-4 h-4 text-muted-foreground" />
           </div>
           <div>
-            <p className="text-sm font-medium">Mode invité</p>
-            <p className="text-xs text-muted-foreground">Inscrit toi pour sauvegarder<br />tes notes et ta progression</p>
+            <p className="text-sm font-medium">{t('userStatus.guestMode')}</p>
+            <p className="text-xs text-muted-foreground whitespace-pre-line">{t('userStatus.guestDescription')}</p>
           </div>
         </div>
         
-        <button onClick={() => navigate('/auth')} className="flex items-center space-x-2 px-3 py-2 text-sm rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-          <LogIn className="w-4 h-4" />
-          <span>Se connecter</span>
-        </button>
+        <div className="flex items-center space-x-2">
+          <LanguageToggle />
+          <button onClick={() => navigate('/auth')} className="flex items-center space-x-2 px-3 py-2 text-sm rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+            <LogIn className="w-4 h-4" />
+            <span>{t('userStatus.signIn')}</span>
+          </button>
+        </div>
       </div>;
   }
   return <div className="flex items-center justify-between p-4 bg-card/50 backdrop-blur-sm border-b border-border/30">
@@ -39,14 +46,17 @@ export const UserStatus: React.FC = () => {
             {user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur'}
           </p>
           <p className="text-xs text-muted-foreground">
-            {isPremium ? 'Journeys Premium' : 'Version gratuite'}
+            {isPremium ? t('userStatus.premium') : t('userStatus.freeVersion')}
           </p>
         </div>
       </div>
       
-      {isPremium && <div className="flex items-center space-x-1 px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
-          <Crown className="w-3 h-3" />
-          <span>Premium</span>
-        </div>}
+      <div className="flex items-center space-x-2">
+        <LanguageToggle />
+        {isPremium && <div className="flex items-center space-x-1 px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
+            <Crown className="w-3 h-3" />
+            <span>Premium</span>
+          </div>}
+      </div>
     </div>;
 };

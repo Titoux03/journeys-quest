@@ -1,0 +1,57 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer"
+  },
+  "greeting": {
+    "morning": "Bonjour !",
+    "evening": "Bonsoir !"
+  },
+  "userStatus": {
+    "guestMode": "Mode invité",
+    "guestDescription": "Inscrit toi pour sauvegarder\ntes notes et ta progression",
+    "signIn": "Se connecter",
+    "premium": "Journeys Premium",
+    "freeVersion": "Version gratuite"
+  },
+  "home": {
+    "welcomeAuth": "Bienvenue dans votre espace de bien-être quotidien",
+    "welcomeGuest": "Commencez votre parcours de bien-être dès aujourd'hui",
+    "createAccount": "🚀 Créez un compte pour sauvegarder vos progrès",
+    "accessPremium": "Accédez ensuite aux fonctionnalités premium qui changent tout",
+    "freeAccount": "Compte Gratuit",
+    "unlockFeatures": "Débloquez le suivi avancé et les fonctionnalités premium",
+    "lastBadges": "Derniers Badges Débloqués",
+    "viewAllBadges": "Voir tous les badges →",
+    "dailyJournal": "Journal Quotidien",
+    "dailyJournalDesc": "Notez votre journée et suivez votre bien-être",
+    "dailyNotes": "Notes du Jour",
+    "dailyNotesDesc": "Écrivez librement vos pensées et réflexions",
+    "morningTasks": "Tâches Matinales",
+    "morningTasksDesc": "Système révolutionnaire anti-procrastination",
+    "focusDeepWork": "Focus & Deep Work",
+    "focusDeepWorkDesc": "Méditation et minuteurs premium",
+    "addictionTracking": "Suivi Multi-Addictions",
+    "addictionTrackingDesc": "Cigarette, porno, réseaux sociaux + badges",
+    "stretching": "Routine Stretching",
+    "stretchingDesc": "5 exercices guidés pour votre bien-être physique",
+    "progress": "Progression & Statistiques",
+    "progressDesc": "Vous avez complété {{count}} jours de journal",
+    "progressDescFree": "Débloquez l'historique complet et les statistiques avancées",
+    "myActiveAddictions": "Mes Addictions Actives",
+    "viewAll": "Voir tout →",
+    "unlockPotential": "Développez tout votre potentiel",
+    "unlockPotentialDesc": "Accédez à toutes les fonctionnalités avancées pour un suivi complet de votre développement personnel."
+  },
+  "navigation": {
+    "home": "Accueil",
+    "journal": "Journal",
+    "notes": "Notes",
+    "progress": "Progrès",
+    "profile": "Profil"
+  }
+}
