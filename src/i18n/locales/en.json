@@ -5,7 +5,16 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
-    "close": "Close"
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "start": "Start",
+    "continue": "Continue",
+    "skip": "Skip",
+    "yes": "Yes",
+    "no": "No"
   },
   "greeting": {
     "morning": "Good morning!",
@@ -59,11 +68,282 @@
     "signIn": "Sign In",
     "signOut": "Sign Out"
   },
+  "journal": {
+    "title": "Daily Journal",
+    "subtitle": "Rate your day on 5 life criteria",
+    "reflection": "Daily reflection",
+    "reflectionPlaceholder": "What did you learn today? How do you feel?",
+    "saveEntry": "Save my day",
+    "criteriaTitle": "My 5 personalized life criteria",
+    "addCriterion": "Add custom criterion",
+    "criterionName": "Criterion name",
+    "criterionDescription": "Description",
+    "totalScore": "Total score",
+    "motivationalPhrases": [
+      "🌟 Amazing! You're shining today!",
+      "🚀 You're on the right track, keep going!",
+      "💪 This positive energy will take you far!",
+      "✨ What a beautiful day! Savor this moment!",
+      "🎯 You're exceeding your goals, bravo!",
+      "🔥 This motivation is contagious!",
+      "🌈 You're creating your own happiness!",
+      "🏆 Champion today, legend tomorrow!",
+      "💎 You shine bright!",
+      "🌟 This excellence deserves celebration!",
+      "⚡ Your potential is unlimited!",
+      "🎊 Keep going, you're reaching for the stars!"
+    ],
+    "criteria": {
+      "social": "Social Life",
+      "socialDesc": "Relationships with friends and colleagues",
+      "family": "Family",
+      "familyDesc": "Time with family",
+      "love": "Love",
+      "loveDesc": "Romantic relationships and intimacy",
+      "sport": "Sport",
+      "sportDesc": "Physical activity and movement",
+      "learning": "Learning",
+      "learningDesc": "New knowledge and skills",
+      "meditation": "Meditation",
+      "meditationDesc": "Mindfulness and relaxation",
+      "wellbeing": "Well-being",
+      "wellbeingDesc": "Overall feeling of well-being and fulfillment"
+    }
+  },
+  "notes": {
+    "title": "Daily Notes",
+    "placeholder": "Write your thoughts, ideas, reflections...",
+    "saveSuccess": "Note saved",
+    "deleteConfirm": "Delete this note?"
+  },
+  "todos": {
+    "title": "Today's Tasks",
+    "subtitle": "Anti-procrastination system with prioritization",
+    "addTask": "Add task",
+    "taskPlaceholder": "New task...",
+    "priority": "Priority",
+    "priorities": {
+      "normal": "Normal",
+      "low": "To do",
+      "medium": "Important",
+      "high": "Ultra Important"
+    },
+    "completedToday": "Completed today",
+    "totalToday": "Today's tasks",
+    "showCompleted": "Show completed",
+    "hideCompleted": "Hide completed",
+    "carriedOver": "Carried over",
+    "stats": {
+      "title": "Statistics",
+      "completed": "Completed",
+      "pending": "Pending",
+      "completionRate": "Completion rate"
+    }
+  },
+  "meditation": {
+    "title": "Meditation & Deep Work",
+    "modes": {
+      "meditation": "Meditation",
+      "deepwork": "Deep Work"
+    },
+    "selectDuration": "Choose duration",
+    "customDuration": "Custom duration",
+    "start": "Start",
+    "pause": "Pause",
+    "resume": "Resume",
+    "reset": "Reset",
+    "completed": "Session completed!",
+    "completedMessage": {
+      "meditation": "🧘 Well done! Your mind is now clear and calm.",
+      "deepwork": "🎯 Excellent work! Your focus was optimal."
+    },
+    "stats": {
+      "totalSessions": "Total sessions",
+      "totalMinutes": "Minutes meditated",
+      "averageSession": "Average duration"
+    }
+  },
+  "addictions": {
+    "title": "Multi-Addiction Tracking",
+    "subtitle": "Free yourself from dependencies",
+    "active": "Active",
+    "inactive": "Inactive",
+    "start": "Start tracking",
+    "relapse": "Report relapse",
+    "deactivate": "Deactivate",
+    "currentStreak": "Current streak",
+    "longestStreak": "Longest streak",
+    "totalRelapses": "Total relapses",
+    "day": "Day",
+    "days": "Days",
+    "goal": "Goal: 90 days",
+    "status": {
+      "newStart": "New start",
+      "beginner": "Beginner",
+      "fighter": "Fighter",
+      "perseverant": "Perseverant",
+      "warrior": "Warrior",
+      "champion": "Champion",
+      "legend": "Legend",
+      "master": "Master",
+      "sage": "Sage",
+      "immortal": "Immortal"
+    },
+    "relapseConfirm": "Are you sure you want to report a relapse?",
+    "relapseMessage": "It's okay. Every day is a new start.",
+    "deactivateConfirm": "Deactivate this addiction?",
+    "stats": "Statistics"
+  },
+  "stretching": {
+    "title": "Stretching Routine",
+    "subtitle": "6 guided exercises",
+    "start": "Start routine",
+    "next": "Next exercise",
+    "complete": "Complete",
+    "completed": "Routine completed!",
+    "duration": "Duration",
+    "seconds": "seconds",
+    "exercises": {
+      "neck": "Neck stretches",
+      "shoulders": "Shoulder stretches",
+      "back": "Back stretches",
+      "hips": "Hip stretches",
+      "legs": "Leg stretches",
+      "fullBody": "Full body stretch"
+    }
+  },
+  "progress": {
+    "title": "Progress & Statistics",
+    "subtitle": "Your personal evolution",
+    "entriesCount": "Journal entries",
+    "currentStreak": "Current streak",
+    "longestStreak": "Longest streak",
+    "totalScore": "Average score",
+    "radarChart": "Radar chart",
+    "history": "History",
+    "noData": "No data available",
+    "loading": "Loading statistics..."
+  },
   "premium": {
+    "title": "Journeys Premium",
+    "subtitle": "Transform your life with Premium",
     "oldPrice": "29.99€",
     "currentPrice": "14.99€",
     "lifetimeAccess": "Lifetime access",
     "noSubscription": "No subscription",
-    "unlockPremium": "Unlock Premium"
+    "unlockPremium": "Unlock Premium",
+    "upgrade": "Upgrade to Premium",
+    "features": {
+      "title": "What you unlock immediately",
+      "focusDeepWork": {
+        "title": "Focus & Deep Work Premium",
+        "description": "Unlimited meditation sessions with custom gongs",
+        "benefits": ["Full history", "Progress analysis", "Exclusive sounds"]
+      },
+      "addictions": {
+        "title": "Multi-Addiction Control",
+        "description": "Overcome cigarettes, porn, social media, procrastination",
+        "benefits": ["Motivating counters", "Progress badges", "Visual streaks"]
+      },
+      "radar": {
+        "title": "Radar Development Profile",
+        "description": "Evolving radar diagram of your 5 life skills",
+        "benefits": ["Unlimited history", "AI analysis", "Personalized reports"]
+      },
+      "badges": {
+        "title": "Exclusive Badge System",
+        "description": "Advanced gamification to maintain your motivation",
+        "benefits": ["60+ unique badges", "Loyalty streaks", "Visual rewards"]
+      },
+      "stretching": {
+        "title": "Guided Stretching Routines",
+        "description": "Personalized exercise programs with tracking",
+        "benefits": ["6 guided exercises", "Tracked progression", "Smart reminders"]
+      },
+      "quotes": {
+        "title": "AI Personalized Quotes",
+        "description": "Motivating quotes generated based on your daily mood",
+        "benefits": ["Adaptive AI", "Exclusive content", "Daily inspiration"]
+      },
+      "history": {
+        "title": "History & Advanced Statistics",
+        "description": "Unlimited backup and detailed analysis",
+        "benefits": ["Unlimited data", "Evolving charts", "Export possible"]
+      },
+      "support": {
+        "title": "Premium Support & Updates",
+        "description": "Priority access and new features",
+        "benefits": ["Priority support", "New features", "Early access"]
+      }
+    },
+    "comparison": {
+      "free": "Free",
+      "premium": "Premium",
+      "freeFeatures": [
+        "Basic journal only",
+        "No addiction tracking",
+        "Limited data",
+        "No gamification"
+      ],
+      "premiumFeatures": [
+        "8 exclusive features",
+        "Complete multi-addiction tracking",
+        "Unlimited history + analysis",
+        "Motivating badge system"
+      ]
+    },
+    "cta": {
+      "createAccount": "Create Premium account",
+      "alreadyHaveAccount": "Already have an account?",
+      "unlock": "Unlock Premium",
+      "processing": "Processing..."
+    },
+    "terms": {
+      "accept": "I accept the",
+      "conditions": "Terms of Service",
+      "privacy": "and confirm that I have read the information about the processing of my personal data."
+    },
+    "value": {
+      "title": "An investment that changes everything",
+      "calculation": "If you use the app for 1 year",
+      "perDay": "per day",
+      "vs": "vs",
+      "coffee": "A coffee",
+      "message": "An investment 62x cheaper than coffee to transform your life"
+    }
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signInWithGoogle": "Continue with Google",
+    "signInWithEmail": "Continue with email",
+    "createAccount": "Create account",
+    "welcome": "Welcome",
+    "welcomeBack": "Welcome back!"
+  },
+  "badges": {
+    "title": "Badges",
+    "unlocked": "Unlocked",
+    "locked": "Locked",
+    "progress": "Progress",
+    "viewAll": "View all badges"
+  },
+  "errors": {
+    "generic": "An error occurred",
+    "network": "Connection error",
+    "auth": "Authentication error",
+    "save": "Error while saving",
+    "load": "Error while loading"
+  },
+  "success": {
+    "saved": "Saved successfully",
+    "updated": "Updated",
+    "deleted": "Deleted",
+    "completed": "Completed"
   }
 }

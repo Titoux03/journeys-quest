@@ -3,6 +3,7 @@ import { Crown, Sparkles, TrendingUp, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePremium } from '@/hooks/usePremium';
 import { useGongSounds } from '@/hooks/useGongSounds';
+import { useTranslation } from 'react-i18next';
 
 interface PremiumCTAProps {
   context?: 'sidebar' | 'footer' | 'inline';
@@ -13,6 +14,7 @@ export const PremiumCTA: React.FC<PremiumCTAProps> = ({
   context = 'inline',
   className = ""
 }) => {
+  const { t } = useTranslation();
   const { isPremium, showUpgradeModal } = usePremium();
   const { playPremium } = useGongSounds();
 
@@ -31,8 +33,8 @@ export const PremiumCTA: React.FC<PremiumCTAProps> = ({
             <Crown className="w-4 h-4 text-primary-foreground" />
           </div>
           <div>
-            <h4 className="font-semibold text-sm text-foreground">Premium</h4>
-            <p className="text-xs text-muted-foreground">Toutes les fonctionnalités</p>
+            <h4 className="font-semibold text-sm text-foreground">{t('premium.title')}</h4>
+            <p className="text-xs text-muted-foreground">{t('premium.features.title')}</p>
           </div>
         </div>
         <Button 
@@ -41,7 +43,7 @@ export const PremiumCTA: React.FC<PremiumCTAProps> = ({
           className="w-full journey-button-primary text-xs"
         >
           <Sparkles className="w-3 h-3 mr-1" />
-          Débloquer
+          {t('premium.unlockPremium')}
         </Button>
       </div>
     );
@@ -60,14 +62,14 @@ export const PremiumCTA: React.FC<PremiumCTAProps> = ({
           <p className="text-xs text-muted-foreground mb-4">
             Accès illimité • Suivi complet • Gamification
           </p>
-          <Button 
-            onClick={handleUpgrade}
-            size="sm"
-            className="journey-button-primary"
-          >
-            <Crown className="w-4 h-4 mr-2" />
-            Journeys Premium
-          </Button>
+        <Button 
+          onClick={handleUpgrade}
+          size="sm"
+          className="journey-button-primary"
+        >
+          <Crown className="w-4 h-4 mr-2" />
+          {t('premium.title')}
+        </Button>
         </div>
       </div>
     );
@@ -114,12 +116,12 @@ export const PremiumCTA: React.FC<PremiumCTAProps> = ({
       >
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
         <Crown className="w-4 h-4 mr-2" />
-        <span className="line-through opacity-60 mr-2">29,99€</span>
-        Débloquer Premium (14,99€)
+        <span className="line-through opacity-60 mr-2">{t('premium.oldPrice')}</span>
+        {t('premium.unlockPremium')} ({t('premium.currentPrice')})
       </Button>
       
       <p className="text-xs text-muted-foreground mt-3">
-        ⚡ Paiement unique • Pas d'abonnement • Accès à vie
+        ⚡ {t('premium.noSubscription')} • {t('premium.lifetimeAccess')}
       </p>
     </div>
   );

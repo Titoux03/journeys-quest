@@ -4,12 +4,14 @@ import { Button } from './ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useDailyNotes, DailyNote } from '@/hooks/useDailyNotes';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 interface DailyNotesProps {
   onNavigate: (screen: string) => void;
 }
 
 export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { notes, loading, saveNote, updateNote, deleteNote } = useDailyNotes();
   const [noteContent, setNoteContent] = useState('');

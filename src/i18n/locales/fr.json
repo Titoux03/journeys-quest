@@ -5,7 +5,16 @@
     "cancel": "Annuler",
     "delete": "Supprimer",
     "edit": "Modifier",
-    "close": "Fermer"
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "finish": "Terminer",
+    "start": "Commencer",
+    "continue": "Continuer",
+    "skip": "Passer",
+    "yes": "Oui",
+    "no": "Non"
   },
   "greeting": {
     "morning": "Bonjour !",
@@ -59,11 +68,282 @@
     "signIn": "Connexion",
     "signOut": "Déconnexion"
   },
+  "journal": {
+    "title": "Journal Quotidien",
+    "subtitle": "Évaluez votre journée sur 5 critères de vie",
+    "reflection": "Réflexion du jour",
+    "reflectionPlaceholder": "Qu'avez-vous appris aujourd'hui ? Quels sont vos ressentis ?",
+    "saveEntry": "Enregistrer ma journée",
+    "criteriaTitle": "Mes 5 critères de vie personnalisés",
+    "addCriterion": "Ajouter un critère personnalisé",
+    "criterionName": "Nom du critère",
+    "criterionDescription": "Description",
+    "totalScore": "Score total",
+    "motivationalPhrases": [
+      "🌟 Incroyable ! Vous rayonnez aujourd'hui !",
+      "🚀 Vous êtes sur la bonne voie, continuez !",
+      "💪 Cette énergie positive vous mènera loin !",
+      "✨ Quelle belle journée ! Savourez ce moment !",
+      "🎯 Vous dépassez vos objectifs, bravo !",
+      "🔥 Cette motivation est contagieuse !",
+      "🌈 Vous créez votre propre bonheur !",
+      "🏆 Champion aujourd'hui, légende demain !",
+      "💎 Vous brillez de mille feux !",
+      "🌟 Cette excellence mérite d'être célébrée !",
+      "⚡ Votre potentiel est illimité !",
+      "🎊 Continuez, vous touchez aux étoiles !"
+    ],
+    "criteria": {
+      "social": "Vie sociale",
+      "socialDesc": "Relations avec mes amis et collègues",
+      "family": "Famille",
+      "familyDesc": "Moments avec ma famille",
+      "love": "Amour",
+      "loveDesc": "Relations amoureuses et intimité",
+      "sport": "Sport",
+      "sportDesc": "Activité physique et mouvement",
+      "learning": "Apprentissage",
+      "learningDesc": "Nouvelles connaissances et compétences",
+      "meditation": "Méditation",
+      "meditationDesc": "Pleine conscience et détente",
+      "wellbeing": "Bien-être",
+      "wellbeingDesc": "Sentiment général de bien-être et épanouissement"
+    }
+  },
+  "notes": {
+    "title": "Notes Quotidiennes",
+    "placeholder": "Écrivez vos pensées, vos idées, vos réflexions...",
+    "saveSuccess": "Note sauvegardée",
+    "deleteConfirm": "Supprimer cette note ?"
+  },
+  "todos": {
+    "title": "Tâches du Jour",
+    "subtitle": "Système anti-procrastination avec priorisation",
+    "addTask": "Ajouter une tâche",
+    "taskPlaceholder": "Nouvelle tâche...",
+    "priority": "Priorité",
+    "priorities": {
+      "normal": "Normal",
+      "low": "À faire",
+      "medium": "Important",
+      "high": "Ultra Important"
+    },
+    "completedToday": "Complétées aujourd'hui",
+    "totalToday": "Tâches du jour",
+    "showCompleted": "Afficher les terminées",
+    "hideCompleted": "Masquer les terminées",
+    "carriedOver": "Reportée",
+    "stats": {
+      "title": "Statistiques",
+      "completed": "Terminées",
+      "pending": "En cours",
+      "completionRate": "Taux de complétion"
+    }
+  },
+  "meditation": {
+    "title": "Méditation & Deep Work",
+    "modes": {
+      "meditation": "Méditation",
+      "deepwork": "Deep Work"
+    },
+    "selectDuration": "Choisir une durée",
+    "customDuration": "Durée personnalisée",
+    "start": "Démarrer",
+    "pause": "Pause",
+    "resume": "Reprendre",
+    "reset": "Réinitialiser",
+    "completed": "Session terminée !",
+    "completedMessage": {
+      "meditation": "🧘 Bravo ! Votre esprit est maintenant clair et apaisé.",
+      "deepwork": "🎯 Excellent travail ! Votre concentration a été optimale."
+    },
+    "stats": {
+      "totalSessions": "Sessions totales",
+      "totalMinutes": "Minutes méditées",
+      "averageSession": "Durée moyenne"
+    }
+  },
+  "addictions": {
+    "title": "Suivi Multi-Addictions",
+    "subtitle": "Libérez-vous de vos dépendances",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "start": "Commencer le suivi",
+    "relapse": "Déclarer un écart",
+    "deactivate": "Désactiver",
+    "currentStreak": "Streak actuel",
+    "longestStreak": "Meilleur streak",
+    "totalRelapses": "Écarts totaux",
+    "day": "Jour",
+    "days": "Jours",
+    "goal": "Objectif: 90 jours",
+    "status": {
+      "newStart": "Nouveau départ",
+      "beginner": "Débutant",
+      "fighter": "Combattant",
+      "perseverant": "Persévérant",
+      "warrior": "Guerrier",
+      "champion": "Champion",
+      "legend": "Légende",
+      "master": "Maître",
+      "sage": "Sage",
+      "immortal": "Immortel"
+    },
+    "relapseConfirm": "Êtes-vous sûr de vouloir déclarer un écart ?",
+    "relapseMessage": "Ce n'est pas grave. Chaque jour est un nouveau départ.",
+    "deactivateConfirm": "Désactiver cette addiction ?",
+    "stats": "Statistiques"
+  },
+  "stretching": {
+    "title": "Routine Stretching",
+    "subtitle": "6 exercices guidés",
+    "start": "Commencer la routine",
+    "next": "Exercice suivant",
+    "complete": "Terminer",
+    "completed": "Routine terminée !",
+    "duration": "Durée",
+    "seconds": "secondes",
+    "exercises": {
+      "neck": "Étirements du cou",
+      "shoulders": "Étirements des épaules",
+      "back": "Étirements du dos",
+      "hips": "Étirements des hanches",
+      "legs": "Étirements des jambes",
+      "fullBody": "Étirement complet"
+    }
+  },
+  "progress": {
+    "title": "Progression & Statistiques",
+    "subtitle": "Votre évolution personnelle",
+    "entriesCount": "Entrées de journal",
+    "currentStreak": "Streak actuel",
+    "longestStreak": "Meilleur streak",
+    "totalScore": "Score moyen",
+    "radarChart": "Diagramme radar",
+    "history": "Historique",
+    "noData": "Aucune donnée disponible",
+    "loading": "Chargement des statistiques..."
+  },
   "premium": {
+    "title": "Journeys Premium",
+    "subtitle": "Transformez votre vie avec Premium",
     "oldPrice": "29,99€",
     "currentPrice": "14,99€",
     "lifetimeAccess": "Accès à vie",
     "noSubscription": "Aucun abonnement",
-    "unlockPremium": "Débloquer Premium"
+    "unlockPremium": "Débloquer Premium",
+    "upgrade": "Passer à Premium",
+    "features": {
+      "title": "Ce que vous débloquez immédiatement",
+      "focusDeepWork": {
+        "title": "Focus & Deep Work Premium",
+        "description": "Sessions de méditation illimitées avec gongs personnalisés",
+        "benefits": ["Historique complet", "Analyses de progression", "Sons exclusifs"]
+      },
+      "addictions": {
+        "title": "Contrôle Multi-Addictions",
+        "description": "Surmontez cigarette, porno, réseaux sociaux, procrastination",
+        "benefits": ["Compteurs motivants", "Badges de progression", "Streaks visuels"]
+      },
+      "radar": {
+        "title": "Profil de Développement Radar",
+        "description": "Diagramme radar évolutif de vos 5 compétences de vie",
+        "benefits": ["Historique illimité", "Analyses IA", "Rapports personnalisés"]
+      },
+      "badges": {
+        "title": "Système de Badges Exclusifs",
+        "description": "Gamification avancée pour maintenir votre motivation",
+        "benefits": ["60+ badges uniques", "Streaks de fidélité", "Récompenses visuelles"]
+      },
+      "stretching": {
+        "title": "Routines Stretching Guidées",
+        "description": "Programmes d'exercices personnalisés avec suivi",
+        "benefits": ["6 exercices guidés", "Progression trackée", "Rappels intelligents"]
+      },
+      "quotes": {
+        "title": "Citations IA Personnalisées",
+        "description": "Citations motivantes générées selon votre humeur du jour",
+        "benefits": ["IA adaptative", "Contenu exclusif", "Inspiration quotidienne"]
+      },
+      "history": {
+        "title": "Historique & Statistiques Avancées",
+        "description": "Sauvegarde illimitée et analyses détaillées",
+        "benefits": ["Données illimitées", "Graphiques évolutifs", "Export possible"]
+      },
+      "support": {
+        "title": "Support Premium & Mises à Jour",
+        "description": "Accès prioritaire et nouvelles fonctionnalités",
+        "benefits": ["Support prioritaire", "Nouvelles features", "Accès anticipé"]
+      }
+    },
+    "comparison": {
+      "free": "Gratuit",
+      "premium": "Premium",
+      "freeFeatures": [
+        "Journal basique uniquement",
+        "Pas de suivi d'addictions",
+        "Données limitées",
+        "Aucune gamification"
+      ],
+      "premiumFeatures": [
+        "8 fonctionnalités exclusives",
+        "Suivi multi-addictions complet",
+        "Historique illimité + analyses",
+        "Système de badges motivant"
+      ]
+    },
+    "cta": {
+      "createAccount": "Créer un compte Premium",
+      "alreadyHaveAccount": "Déjà un compte ?",
+      "unlock": "Débloquer Premium",
+      "processing": "Traitement en cours..."
+    },
+    "terms": {
+      "accept": "J'accepte les",
+      "conditions": "Conditions Générales d'Utilisation",
+      "privacy": "et confirme avoir lu les informations concernant le traitement de mes données personnelles."
+    },
+    "value": {
+      "title": "Un investissement qui change tout",
+      "calculation": "Si vous utilisez l'app 1 an",
+      "perDay": "par jour",
+      "vs": "vs",
+      "coffee": "Un café",
+      "message": "Un investissement 62x moins cher qu'un café pour transformer votre vie"
+    }
+  },
+  "auth": {
+    "signIn": "Connexion",
+    "signUp": "Inscription",
+    "email": "Email",
+    "password": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "noAccount": "Pas encore de compte ?",
+    "hasAccount": "Déjà un compte ?",
+    "signInWithGoogle": "Continuer avec Google",
+    "signInWithEmail": "Continuer avec email",
+    "createAccount": "Créer un compte",
+    "welcome": "Bienvenue",
+    "welcomeBack": "Bon retour !"
+  },
+  "badges": {
+    "title": "Badges",
+    "unlocked": "Débloqué",
+    "locked": "Verrouillé",
+    "progress": "Progression",
+    "viewAll": "Voir tous les badges"
+  },
+  "errors": {
+    "generic": "Une erreur est survenue",
+    "network": "Erreur de connexion",
+    "auth": "Erreur d'authentification",
+    "save": "Erreur lors de la sauvegarde",
+    "load": "Erreur lors du chargement"
+  },
+  "success": {
+    "saved": "Sauvegardé avec succès",
+    "updated": "Mis à jour",
+    "deleted": "Supprimé",
+    "completed": "Terminé"
   }
 }

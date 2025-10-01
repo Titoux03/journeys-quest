@@ -9,6 +9,7 @@ import { useGongSounds } from '@/hooks/useGongSounds';
 import { SkillsRadarChart } from '@/components/SkillsRadarChart';
 import { TermsOfService } from '@/components/TermsOfService';
 import { useAffiliation } from '@/hooks/useAffiliation';
+import { useTranslation } from 'react-i18next';
 
 interface PremiumUpgradeProps {
   isVisible: boolean;
@@ -21,6 +22,7 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
   onClose, 
   feature 
 }) => {
+  const { t } = useTranslation();
   const { isPremium, purchasePremium, loading } = usePremium();
   const { user } = useAuth();
   const navigate = useNavigate();
