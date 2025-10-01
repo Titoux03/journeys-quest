@@ -58,5 +58,12 @@
     "stretching": "Stretching",
     "signIn": "Sign In",
     "signOut": "Sign Out"
+  },
+  "premium": {
+    "oldPrice": "29.99€",
+    "currentPrice": "14.99€",
+    "lifetimeAccess": "Lifetime access",
+    "noSubscription": "No subscription",
+    "unlockPremium": "Unlock Premium"
   }
 }

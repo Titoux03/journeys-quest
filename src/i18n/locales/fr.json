@@ -58,5 +58,12 @@
     "stretching": "Étirements",
     "signIn": "Connexion",
     "signOut": "Déconnexion"
+  },
+  "premium": {
+    "oldPrice": "29,99€",
+    "currentPrice": "14,99€",
+    "lifetimeAccess": "Accès à vie",
+    "noSubscription": "Aucun abonnement",
+    "unlockPremium": "Débloquer Premium"
   }
 }

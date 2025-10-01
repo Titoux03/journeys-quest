@@ -70,6 +70,7 @@ export const PremiumSuccessIndicator: React.FC<PremiumSuccessIndicatorProps> = (
               Débloquer toutes les fonctionnalités
             </div>
             <div className="text-xs text-muted-foreground">
+              <span className="line-through opacity-60 mr-1">29,99€</span>
               Accès complet pour 14,99€
             </div>
           </div>

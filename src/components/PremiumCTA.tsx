@@ -114,6 +114,7 @@ export const PremiumCTA: React.FC<PremiumCTAProps> = ({
       >
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
         <Crown className="w-4 h-4 mr-2" />
+        <span className="line-through opacity-60 mr-2">29,99€</span>
         Débloquer Premium (14,99€)
       </Button>
       
