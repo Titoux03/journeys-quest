@@ -7,24 +7,92 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-/**
- * Edge Function pour générer des rapports d'affiliation
- * Analyse les paiements Stripe et les données Supabase pour créer des rapports détaillés
- */
+// Rate limiting map (in-memory, resets on function restart)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW = 60000; // 1 minute
+const RATE_LIMIT_MAX_REQUESTS = 10;
+
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    console.log('[AFFILIATE-REPORT] Génération du rapport d\'affiliation');
+    // Create Supabase client for authentication
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      console.error('[AFFILIATE-REPORT] No authorization header');
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401,
+      });
+    }
 
-    // Vérifier l'authentification (optionnel : ajouter une vérification admin)
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+      {
+        global: {
+          headers: { Authorization: authHeader },
+        },
+      }
     );
+
+    // Verify user authentication
+    const token = authHeader.replace("Bearer ", "");
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser(token);
+    
+    if (authError || !user) {
+      console.error('[AFFILIATE-REPORT] Authentication failed:', authError);
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401,
+      });
+    }
+
+    // Check if user has admin role
+    const { data: hasAdminRole, error: roleError } = await supabaseClient
+      .rpc('has_role', { _user_id: user.id, _role: 'admin' });
+
+    if (roleError || !hasAdminRole) {
+      console.error('[AFFILIATE-REPORT] Admin check failed:', { userId: user.id, error: roleError });
+      return new Response(JSON.stringify({ error: "Forbidden: Admin access required" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 403,
+      });
+    }
+
+    // Rate limiting
+    const now = Date.now();
+    const userLimit = rateLimitMap.get(user.id);
+    
+    if (userLimit) {
+      if (now < userLimit.resetTime) {
+        if (userLimit.count >= RATE_LIMIT_MAX_REQUESTS) {
+          return new Response(JSON.stringify({ error: "Rate limit exceeded" }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            status: 429,
+          });
+        }
+        userLimit.count++;
+      } else {
+        rateLimitMap.set(user.id, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+      }
+    } else {
+      rateLimitMap.set(user.id, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    }
+
+    console.log('[AFFILIATE-REPORT] Admin user authorized:', { userId: user.id });
+
+    // Use service role for database queries (admin role verified above)
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+      throw new Error("Missing Supabase configuration");
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Initialize Stripe
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
@@ -32,7 +100,7 @@ serve(async (req) => {
     });
 
     // Récupérer les données d'affiliation depuis Supabase
-    const { data: affiliateData, error: supabaseError } = await supabaseClient
+    const { data: affiliateData, error: supabaseError } = await supabase
       .from('affiliate_referrals')
       .select('*')
       .order('created_at', { ascending: false });
@@ -94,12 +162,10 @@ serve(async (req) => {
         : 0;
     });
 
-    // Récupérer des données supplémentaires depuis Stripe si nécessaire
-    // (pour vérifier les paiements et obtenir des détails supplémentaires)
+    // Récupérer des données supplémentaires depuis Stripe
     const stripePayments = [];
     
     try {
-      // Récupérer les paiements récents avec metadata
       const sessions = await stripe.checkout.sessions.list({
         limit: 100,
         expand: ['data.payment_intent']
@@ -114,7 +180,6 @@ serve(async (req) => {
             amount_total: session.amount_total,
             currency: session.currency,
             status: session.payment_status,
-            customer_email: session.customer_details?.email,
             created: session.created
           });
         }
@@ -146,7 +211,6 @@ serve(async (req) => {
     }
 
     console.log('[AFFILIATE-REPORT] Rapport généré avec succès');
-    console.log('[AFFILIATE-REPORT] Résumé:', reportData.summary);
 
     return new Response(JSON.stringify(reportData), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

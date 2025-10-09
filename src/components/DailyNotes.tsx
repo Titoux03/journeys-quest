@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useDailyNotes, DailyNote } from '@/hooks/useDailyNotes';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import { dailyNotesSchema } from '@/utils/validation';
 
 interface DailyNotesProps {
   onNavigate: (screen: string) => void;
@@ -20,8 +21,11 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
   const [editContent, setEditContent] = useState('');
 
   const handleSave = async () => {
-    if (!noteContent.trim()) {
-      toast.error('Veuillez écrire quelque chose avant de sauvegarder');
+    // Validate content
+    const validation = dailyNotesSchema.safeParse({ content: noteContent.trim() });
+    
+    if (!validation.success) {
+      toast.error(validation.error.issues[0]?.message || "Invalid note content");
       return;
     }
 

@@ -5,6 +5,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { AddictionType } from '@/hooks/useAddictions';
 import { useTranslation } from 'react-i18next';
+import { addictionCommitmentSchema } from '@/utils/validation';
+import { toast } from 'sonner';
 
 interface AddictionCommitmentProps {
   addictionType: AddictionType;
@@ -138,8 +140,23 @@ export const AddictionCommitment: React.FC<AddictionCommitmentProps> = ({
 
   const handleConfirm = () => {
     if (personalGoal.trim() && selectedEffects.length > 0 && signature) {
-      // For cigarettes, include the consumption data
+      // For cigarettes, validate and include the consumption data
       if (isCigaretteAddiction) {
+        const validationData = {
+          daily_cigarettes: dailyCigarettes,
+          cigarette_price: packPrice / cigarettesPerPack,
+          pack_price: packPrice,
+          cigarettes_per_pack: cigarettesPerPack,
+        };
+
+        const validation = addictionCommitmentSchema.safeParse(validationData);
+        
+        if (!validation.success) {
+          const errorMessage = validation.error.issues[0]?.message || "Invalid input";
+          toast.error(errorMessage);
+          return;
+        }
+
         const cigarettePrice = packPrice / cigarettesPerPack;
         onConfirm(selectedEffects, personalGoal.trim(), {
           dailyCigarettes,

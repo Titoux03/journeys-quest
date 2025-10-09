@@ -20,8 +20,35 @@ serve(async (req) => {
   );
 
   try {
-    // Parse request body to get affiliate code
-    const { affiliate_code } = await req.json().catch(() => ({}));
+    // Parse and validate request body
+    const body = await req.json().catch(() => ({}));
+    const { affiliate_code } = body;
+    
+    // Validate affiliate code format if provided
+    if (affiliate_code) {
+      if (typeof affiliate_code !== 'string' || affiliate_code.length < 3 || affiliate_code.length > 50) {
+        return new Response(JSON.stringify({ error: "Invalid affiliate code format" }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 400,
+        });
+      }
+      
+      // Check if affiliate code is valid
+      const { data: validCode, error: codeError } = await supabaseClient
+        .from('valid_affiliate_codes')
+        .select('code')
+        .eq('code', affiliate_code)
+        .eq('is_active', true)
+        .single();
+      
+      if (codeError || !validCode) {
+        console.log('[CREATE-PAYMENT] Invalid affiliate code:', affiliate_code);
+        return new Response(JSON.stringify({ error: "Invalid affiliate code" }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 400,
+        });
+      }
+    }
     
     // Retrieve authenticated user
     const authHeader = req.headers.get("Authorization")!;

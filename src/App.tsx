@@ -8,7 +8,7 @@ import { AuthProvider } from "./hooks/useAuth";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import { PaymentSuccess } from "./pages/PaymentSuccess";
-import { AffiliateAdmin } from "./pages/AffiliateAdmin";
+import AffiliateAdmin from "./pages/AffiliateAdmin";
 import NotFound from "./pages/NotFound";
 import { useAffiliation } from "./hooks/useAffiliation";
 

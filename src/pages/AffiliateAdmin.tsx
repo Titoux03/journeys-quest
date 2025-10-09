@@ -1,142 +1,134 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, BarChart3, Users, TrendingUp, DollarSign, Lock, Eye, EyeOff } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
-import { AffiliateLinkGenerator } from '@/components/AffiliateLinkGenerator';
-import { generateAffiliateReport, formatCurrency, formatConversionRate, type AffiliateReport } from '@/utils/affiliateReport';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { LogOut, TrendingUp, Users, DollarSign, BarChart3, AlertCircle } from "lucide-react";
+import { AffiliateLinkGenerator } from "@/components/AffiliateLinkGenerator";
+import { generateAffiliateReport, formatCurrency, formatConversionRate } from "@/utils/affiliateReport";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
-/**
- * Page d'administration pour la gestion des affiliations
- */
-export const AffiliateAdmin: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [authError, setAuthError] = useState('');
-  const [report, setReport] = useState<AffiliateReport | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+const AffiliateAdmin = () => {
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [checkingAdmin, setCheckingAdmin] = useState(true);
+  const [report, setReport] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
-  const ADMIN_PASSWORD = 'valettitsgoat@';
-  const AUTH_KEY = 'affiliate_admin_auth';
-
-  // Vérifier l'authentification au chargement
   useEffect(() => {
-    const stored = localStorage.getItem(AUTH_KEY);
-    if (stored === 'authenticated') {
-      setIsAuthenticated(true);
-    }
-  }, []);
+    const checkAdminStatus = async () => {
+      if (!user) {
+        setCheckingAdmin(false);
+        return;
+      }
 
-  /**
-   * Gérer la connexion
-   */
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-      localStorage.setItem(AUTH_KEY, 'authenticated');
-      setAuthError('');
-      setPassword('');
-    } else {
-      setAuthError('Mot de passe incorrect');
-    }
+      try {
+        const { data, error } = await supabase.rpc('has_role', {
+          _user_id: user.id,
+          _role: 'admin'
+        });
+
+        if (error) {
+          console.error('Error checking admin role:', error);
+          toast.error("Failed to verify admin access");
+          setIsAdmin(false);
+        } else {
+          setIsAdmin(data === true);
+          if (data !== true) {
+            toast.error("Access denied: Admin role required");
+          }
+        }
+      } catch (err) {
+        console.error('Error checking admin role:', err);
+        setIsAdmin(false);
+      } finally {
+        setCheckingAdmin(false);
+      }
+    };
+
+    checkAdminStatus();
+  }, [user]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/auth');
   };
 
-  /**
-   * Gérer la déconnexion
-   */
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem(AUTH_KEY);
-    setReport(null);
-  };
-
-  /**
-   * Génère un rapport d'affiliation
-   */
   const handleGenerateReport = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      setError(null);
-      console.log('Génération du rapport d\'affiliation...');
-      
-      const reportData = await generateAffiliateReport();
-      setReport(reportData);
-      
-      console.log('Rapport généré avec succès');
-    } catch (err) {
-      console.error('Erreur lors de la génération du rapport:', err);
-      setError(err instanceof Error ? err.message : 'Erreur inconnue');
+      const data = await generateAffiliateReport();
+      setReport(data);
+      toast.success("Report generated successfully");
+    } catch (error) {
+      console.error('Error generating report:', error);
+      toast.error("Failed to generate report");
     } finally {
       setLoading(false);
     }
   };
 
-  // Écran de connexion si non authentifié
-  if (!isAuthenticated) {
+  if (authLoading || checkingAdmin) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-              <Lock className="w-6 h-6 text-primary" />
-            </div>
-            <CardTitle>Accès Administration</CardTitle>
-            <CardDescription>
-              Entrez le mot de passe pour accéder au portail d'affiliation
+          <CardContent className="pt-6">
+            <p className="text-center">Loading...</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-center">Affiliate Admin</CardTitle>
+            <CardDescription className="text-center">
+              Please sign in to access the admin panel
             </CardDescription>
           </CardHeader>
-          
           <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="relative">
-                <Input
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Mot de passe"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="pr-10"
-                  required
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-muted-foreground" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-muted-foreground" />
-                  )}
-                </Button>
-              </div>
-              
-              {authError && (
-                <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3">
-                  <p className="text-destructive text-sm">❌ {authError}</p>
-                </div>
-              )}
-              
-              <Button type="submit" className="w-full">
-                Se connecter
-              </Button>
-              
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => navigate('/')}
-                className="w-full"
-              >
-                Retour à l'accueil
-              </Button>
-            </form>
+            <Button 
+              onClick={() => navigate('/auth')} 
+              className="w-full"
+            >
+              Sign In
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-center flex items-center justify-center gap-2">
+              <AlertCircle className="h-6 w-6 text-destructive" />
+              Access Denied
+            </CardTitle>
+            <CardDescription className="text-center">
+              You don't have permission to access this page
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Alert variant="destructive">
+              <AlertDescription>
+                Admin role required to access the affiliate dashboard
+              </AlertDescription>
+            </Alert>
+            <Button onClick={() => navigate('/')} className="w-full">
+              Return to Home
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -145,103 +137,69 @@ export const AffiliateAdmin: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <div className="border-b bg-card">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate('/')}
-                className="flex items-center space-x-2"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                <span>Retour</span>
-              </Button>
-              
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">Administration Affiliation</h1>
-                <p className="text-muted-foreground">Gestion des liens et rapports d'affiliation</p>
-              </div>
+            <div>
+              <h1 className="text-2xl font-bold">Affiliate Admin</h1>
+              <p className="text-sm text-muted-foreground">Manage affiliate links and reports</p>
             </div>
-            
             <Button
+              onClick={handleLogout}
               variant="outline"
               size="sm"
-              onClick={handleLogout}
-              className="flex items-center space-x-2 text-destructive hover:bg-destructive/10"
             >
-              <Lock className="w-4 h-4" />
-              <span>Déconnexion</span>
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
             </Button>
           </div>
         </div>
       </div>
 
-      {/* Contenu principal */}
       <div className="container mx-auto px-4 py-8">
         <Tabs defaultValue="generator" className="space-y-6">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="generator" className="flex items-center space-x-2">
-              <Users className="w-4 h-4" />
-              <span>Générateur de liens</span>
+            <TabsTrigger value="generator">
+              <Users className="w-4 h-4 mr-2" />
+              Link Generator
             </TabsTrigger>
-            <TabsTrigger value="reports" className="flex items-center space-x-2">
-              <BarChart3 className="w-4 h-4" />
-              <span>Rapports</span>
+            <TabsTrigger value="reports">
+              <BarChart3 className="w-4 h-4 mr-2" />
+              Reports
             </TabsTrigger>
           </TabsList>
 
-          {/* Onglet Générateur */}
-          <TabsContent value="generator" className="space-y-6">
+          <TabsContent value="generator">
             <AffiliateLinkGenerator />
           </TabsContent>
 
-          {/* Onglet Rapports */}
           <TabsContent value="reports" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <BarChart3 className="w-5 h-5 text-primary" />
-                  <span>Rapports d'affiliation</span>
-                </CardTitle>
+                <CardTitle>Affiliate Reports</CardTitle>
                 <CardDescription>
-                  Analysez les performances de vos influenceurs
+                  Analyze affiliate performance
                 </CardDescription>
               </CardHeader>
-              
               <CardContent className="space-y-6">
-                {/* Bouton de génération */}
-                <div className="flex justify-center">
-                  <Button
-                    onClick={handleGenerateReport}
-                    disabled={loading}
-                    className="flex items-center space-x-2"
-                  >
-                    <TrendingUp className="w-4 h-4" />
-                    <span>{loading ? 'Génération...' : 'Générer le rapport'}</span>
-                  </Button>
-                </div>
+                <Button
+                  onClick={handleGenerateReport}
+                  disabled={loading}
+                  className="w-full"
+                >
+                  <TrendingUp className="w-4 h-4 mr-2" />
+                  {loading ? 'Generating...' : 'Generate Report'}
+                </Button>
 
-                {/* Erreur */}
-                {error && (
-                  <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
-                    <p className="text-destructive text-sm">❌ {error}</p>
-                  </div>
-                )}
-
-                {/* Rapport */}
                 {report && (
                   <div className="space-y-6">
-                    {/* Résumé */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                       <Card>
                         <CardContent className="p-4">
                           <div className="flex items-center space-x-2">
                             <Users className="w-4 h-4 text-primary" />
                             <div>
-                              <p className="text-xs text-muted-foreground">Influenceurs</p>
+                              <p className="text-xs text-muted-foreground">Affiliates</p>
                               <p className="text-lg font-bold">{report.summary.total_affiliates}</p>
                             </div>
                           </div>
@@ -253,7 +211,7 @@ export const AffiliateAdmin: React.FC = () => {
                           <div className="flex items-center space-x-2">
                             <TrendingUp className="w-4 h-4 text-blue-500" />
                             <div>
-                              <p className="text-xs text-muted-foreground">Références</p>
+                              <p className="text-xs text-muted-foreground">Referrals</p>
                               <p className="text-lg font-bold">{report.summary.total_referrals}</p>
                             </div>
                           </div>
@@ -277,7 +235,7 @@ export const AffiliateAdmin: React.FC = () => {
                           <div className="flex items-center space-x-2">
                             <DollarSign className="w-4 h-4 text-yellow-500" />
                             <div>
-                              <p className="text-xs text-muted-foreground">Revenus</p>
+                              <p className="text-xs text-muted-foreground">Revenue</p>
                               <p className="text-lg font-bold">{formatCurrency(report.summary.total_revenue)}</p>
                             </div>
                           </div>
@@ -285,25 +243,23 @@ export const AffiliateAdmin: React.FC = () => {
                       </Card>
                     </div>
 
-                    {/* Taux de conversion global */}
                     <Card>
                       <CardContent className="p-4 text-center">
-                        <p className="text-sm text-muted-foreground mb-1">Taux de conversion global</p>
+                        <p className="text-sm text-muted-foreground mb-1">Overall Conversion Rate</p>
                         <p className="text-3xl font-bold text-primary">
                           {formatConversionRate(report.summary.overall_conversion_rate)}
                         </p>
                       </CardContent>
                     </Card>
 
-                    {/* Top influenceurs */}
                     {report.affiliates.length > 0 && (
                       <Card>
                         <CardHeader>
-                          <CardTitle>🏆 Top Influenceurs</CardTitle>
+                          <CardTitle>Top Affiliates</CardTitle>
                         </CardHeader>
                         <CardContent>
                           <div className="space-y-4">
-                            {report.affiliates.slice(0, 10).map((affiliate, index) => (
+                            {report.affiliates.slice(0, 10).map((affiliate: any, index: number) => (
                               <div
                                 key={affiliate.affiliate_code}
                                 className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg"
@@ -313,15 +269,15 @@ export const AffiliateAdmin: React.FC = () => {
                                     {index + 1}
                                   </div>
                                   <div>
-                                    <p className="font-semibold text-foreground">{affiliate.affiliate_code}</p>
+                                    <p className="font-semibold">{affiliate.affiliate_code}</p>
                                     <p className="text-xs text-muted-foreground">
-                                      {affiliate.total_referrals} réf. → {affiliate.total_conversions} conv.
+                                      {affiliate.total_referrals} ref. → {affiliate.total_conversions} conv.
                                     </p>
                                   </div>
                                 </div>
                                 
                                 <div className="text-right">
-                                  <p className="font-bold text-foreground">{formatCurrency(affiliate.total_revenue)}</p>
+                                  <p className="font-bold">{formatCurrency(affiliate.total_revenue)}</p>
                                   <p className="text-xs text-muted-foreground">
                                     {formatConversionRate(affiliate.conversion_rate)}
                                   </p>
@@ -332,13 +288,6 @@ export const AffiliateAdmin: React.FC = () => {
                         </CardContent>
                       </Card>
                     )}
-
-                    {/* Timestamp */}
-                    <div className="text-center">
-                      <p className="text-xs text-muted-foreground">
-                        Rapport généré le {new Date(report.generated_at).toLocaleString('fr-FR')}
-                      </p>
-                    </div>
                   </div>
                 )}
               </CardContent>
@@ -349,3 +298,5 @@ export const AffiliateAdmin: React.FC = () => {
     </div>
   );
 };
+
+export default AffiliateAdmin;

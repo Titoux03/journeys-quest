@@ -8,6 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { usePremium } from '@/hooks/usePremium';
 import { toast } from 'sonner';
 import { PremiumTeaser } from '@/components/PremiumTeaser';
+import { customCriteriaSchema } from '@/utils/validation';
 
 interface DailyJournalProps {
   onComplete: (scores: Record<string, number>, totalScore: number) => void;
@@ -116,6 +117,14 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
   };
 
   const addCustomCriterion = () => {
+    // Validate criteria name
+    const validation = customCriteriaSchema.safeParse({ name: customCriterion.trim() });
+    
+    if (!validation.success) {
+      toast.error(validation.error.issues[0]?.message || "Invalid criteria name");
+      return;
+    }
+
     if (customCriterion.trim() && !criteria.find(c => c.key === customCriterion.toLowerCase())) {
       const newCriterion: LifeCriterion = {
         key: customCriterion.toLowerCase(),
