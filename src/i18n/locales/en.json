@@ -312,6 +312,31 @@
       "message": "An investment 62x cheaper than coffee to transform your life"
     }
   },
+  "savings": {
+    "title": "Your Savings",
+    "today": "Today",
+    "total": "Total Saved",
+    "perDay": "{{count}} cigarettes × €{{price}}",
+    "couldBuy": "With this money, you could treat yourself to:",
+    "milestone": {
+      "start": "Fresh Start",
+      "progress": "Making Progress",
+      "warrior": "Warrior",
+      "expert": "Expert",
+      "champion": "Champion",
+      "legendary": "Legendary"
+    },
+    "motivation": {
+      "celebrate": "🎉 You've saved €{{amount}}! Well done on your consistency 🚭",
+      "keep": "Keep it up! Every day counts 💪"
+    },
+    "examples": {
+      "restaurant": "A nice meal",
+      "clothes": "New clothes",
+      "console": "A game console",
+      "trip": "A trip"
+    }
+  },
   "auth": {
     "signIn": "Sign In",
     "signUp": "Sign Up",

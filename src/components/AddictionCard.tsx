@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { AddictionType, UserAddiction } from '@/hooks/useAddictions';
+import { CigaretteSavings } from './CigaretteSavings';
 
 interface AddictionCardProps {
   addictionType: AddictionType;
@@ -25,6 +26,7 @@ export const AddictionCard: React.FC<AddictionCardProps> = ({
   const isActive = !!userAddiction;
   const currentStreak = userAddiction?.current_streak || 0;
   const longestStreak = userAddiction?.longest_streak || 0;
+  const hasCigaretteData = userAddiction?.daily_cigarettes && userAddiction?.cigarette_price;
 
   const getTitleAndMessage = (days: number) => {
     if (days === 0) return { title: "Nouveau départ", emoji: "🌱" };
@@ -111,6 +113,16 @@ export const AddictionCard: React.FC<AddictionCardProps> = ({
               <div className="text-xs text-muted-foreground">Rechutes totales</div>
             </div>
           </div>
+
+          {/* Cigarette Savings - if available */}
+          {hasCigaretteData && (
+            <CigaretteSavings
+              dailyCigarettes={userAddiction.daily_cigarettes!}
+              cigarettePrice={userAddiction.cigarette_price!}
+              currentStreak={currentStreak}
+              className="mb-6"
+            />
+          )}
 
           {/* Actions */}
           <div className="grid grid-cols-2 gap-2">

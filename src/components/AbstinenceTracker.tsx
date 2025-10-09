@@ -45,10 +45,19 @@ const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate
     setShowCommitment(true);
   };
 
-  const handleCommitmentConfirm = async (selectedEffects: string[], personalGoal: string) => {
+  const handleCommitmentConfirm = async (
+    selectedEffects: string[], 
+    personalGoal: string,
+    cigaretteData?: {
+      dailyCigarettes: number;
+      cigarettePrice: number;
+      packPrice: number;
+      cigarettesPerPack: number;
+    }
+  ) => {
     if (selectedAddictionType) {
       playPremium();
-      await startAddictionTracking(selectedAddictionType.id);
+      await startAddictionTracking(selectedAddictionType.id, cigaretteData);
       setShowCommitment(false);
       setSelectedAddictionType(null);
     }

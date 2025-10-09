@@ -312,6 +312,31 @@
       "message": "Un investissement 62x moins cher qu'un café pour transformer votre vie"
     }
   },
+  "savings": {
+    "title": "Vos Économies",
+    "today": "Aujourd'hui",
+    "total": "Total Économisé",
+    "perDay": "{{count}} cigarettes × {{price}}€",
+    "couldBuy": "Avec cet argent, tu pourrais t'offrir :",
+    "milestone": {
+      "start": "Nouveau Départ",
+      "progress": "En Progrès",
+      "warrior": "Guerrier",
+      "expert": "Expert",
+      "champion": "Champion",
+      "legendary": "Légendaire"
+    },
+    "motivation": {
+      "celebrate": "🎉 Tu as économisé {{amount}}€ ! Bravo pour ta constance 🚭",
+      "keep": "Continue comme ça ! Chaque jour compte 💪"
+    },
+    "examples": {
+      "restaurant": "Un bon resto",
+      "clothes": "Des vêtements",
+      "console": "Une console",
+      "trip": "Un voyage"
+    }
+  },
   "auth": {
     "signIn": "Connexion",
     "signUp": "Inscription",

@@ -20,6 +20,10 @@ export interface UserAddiction {
   is_active: boolean;
   last_relapse_date?: string;
   addiction_type?: AddictionType;
+  daily_cigarettes?: number;
+  cigarette_price?: number;
+  pack_price?: number;
+  cigarettes_per_pack?: number;
 }
 
 export interface Badge {
@@ -160,22 +164,40 @@ export const useAddictions = () => {
   };
 
   // Démarrer le suivi d'une addiction
-  const startAddictionTracking = async (addictionTypeId: string) => {
+  const startAddictionTracking = async (
+    addictionTypeId: string, 
+    cigaretteData?: {
+      dailyCigarettes: number;
+      cigarettePrice: number;
+      packPrice: number;
+      cigarettesPerPack: number;
+    }
+  ) => {
     if (!user) return { success: false, error: 'Not authenticated' };
 
     try {
       const today = new Date().toISOString().split('T')[0];
       
+      const insertData: any = {
+        user_id: user.id,
+        addiction_type_id: addictionTypeId,
+        start_date: today,
+        current_streak: 1,
+        longest_streak: 1,
+        is_active: true
+      };
+
+      // Add cigarette-specific data if provided
+      if (cigaretteData) {
+        insertData.daily_cigarettes = cigaretteData.dailyCigarettes;
+        insertData.cigarette_price = cigaretteData.cigarettePrice;
+        insertData.pack_price = cigaretteData.packPrice;
+        insertData.cigarettes_per_pack = cigaretteData.cigarettesPerPack;
+      }
+      
       const { data, error } = await supabase
         .from('user_addictions')
-        .insert({
-          user_id: user.id,
-          addiction_type_id: addictionTypeId,
-          start_date: today,
-          current_streak: 1,
-          longest_streak: 1,
-          is_active: true
-        })
+        .insert(insertData)
         .select(`
           *,
           addiction_type:addiction_types(*)

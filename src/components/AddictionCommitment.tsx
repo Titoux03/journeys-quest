@@ -1,12 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { CheckCircle2, X, Heart, Target, ArrowRight, PenTool, RotateCcw } from 'lucide-react';
+import { CheckCircle2, X, Heart, Target, ArrowRight, PenTool, RotateCcw, Cigarette, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import { AddictionType } from '@/hooks/useAddictions';
+import { useTranslation } from 'react-i18next';
 
 interface AddictionCommitmentProps {
   addictionType: AddictionType;
-  onConfirm: (selectedEffects: string[], personalGoal: string) => void;
+  onConfirm: (selectedEffects: string[], personalGoal: string, cigaretteData?: {
+    dailyCigarettes: number;
+    cigarettePrice: number;
+    packPrice: number;
+    cigarettesPerPack: number;
+  }) => void;
   onCancel: () => void;
 }
 
@@ -89,6 +96,13 @@ export const AddictionCommitment: React.FC<AddictionCommitmentProps> = ({
   const [isDrawing, setIsDrawing] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
+  
+  // Cigarette-specific data
+  const [dailyCigarettes, setDailyCigarettes] = useState<number>(15);
+  const [packPrice, setPackPrice] = useState<number>(12);
+  const [cigarettesPerPack] = useState<number>(20);
+  
+  const isCigaretteAddiction = addictionType.name.toLowerCase().includes('cigarette');
 
   const effects = addictionEffects[addictionType.name.toLowerCase() as keyof typeof addictionEffects] || [
     "Impact sur la santé physique",
@@ -108,18 +122,39 @@ export const AddictionCommitment: React.FC<AddictionCommitmentProps> = ({
 
   const handleNext = () => {
     if (selectedEffects.length > 0) {
-      setStep(2);
+      if (isCigaretteAddiction) {
+        setStep(2); // Go to cigarette data collection
+      } else {
+        setStep(3); // Skip cigarette data, go directly to goal
+      }
+    }
+  };
+  
+  const handleCigaretteNext = () => {
+    if (dailyCigarettes > 0 && packPrice > 0) {
+      setStep(3);
     }
   };
 
   const handleConfirm = () => {
     if (personalGoal.trim() && selectedEffects.length > 0 && signature) {
-      onConfirm(selectedEffects, personalGoal.trim());
+      // For cigarettes, include the consumption data
+      if (isCigaretteAddiction) {
+        const cigarettePrice = packPrice / cigarettesPerPack;
+        onConfirm(selectedEffects, personalGoal.trim(), {
+          dailyCigarettes,
+          cigarettePrice,
+          packPrice,
+          cigarettesPerPack
+        });
+      } else {
+        onConfirm(selectedEffects, personalGoal.trim());
+      }
     }
   };
 
   useEffect(() => {
-    if (step === 2 && canvasRef.current) {
+    if (step === 3 && canvasRef.current) {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext('2d');
       if (ctx) {
@@ -268,7 +303,102 @@ export const AddictionCommitment: React.FC<AddictionCommitmentProps> = ({
           </div>
         )}
 
-        {step === 2 && (
+        {step === 2 && isCigaretteAddiction && (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-xl font-semibold mb-4 flex items-center">
+                <Cigarette className="w-5 h-5 mr-2 text-primary" />
+                Combien de cigarettes fumiez-vous par jour ?
+              </h2>
+              <p className="text-sm text-muted-foreground mb-6">
+                Ces informations nous permettront de calculer vos économies quotidiennes.
+              </p>
+              
+              <div className="space-y-4">
+                <div className="journey-card bg-secondary/20">
+                  <label className="block text-sm font-medium mb-2">
+                    Nombre de cigarettes par jour
+                  </label>
+                  <Input
+                    type="number"
+                    min="1"
+                    max="100"
+                    value={dailyCigarettes}
+                    onChange={(e) => setDailyCigarettes(parseInt(e.target.value) || 0)}
+                    className="text-center text-2xl font-bold h-16"
+                  />
+                  <p className="text-xs text-muted-foreground mt-2">
+                    En moyenne, un fumeur consomme 10-20 cigarettes par jour
+                  </p>
+                </div>
+
+                <div className="journey-card bg-secondary/20">
+                  <label className="block text-sm font-medium mb-2 flex items-center">
+                    <DollarSign className="w-4 h-4 mr-1" />
+                    Prix d'un paquet de cigarettes
+                  </label>
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      type="number"
+                      min="1"
+                      max="50"
+                      step="0.10"
+                      value={packPrice}
+                      onChange={(e) => setPackPrice(parseFloat(e.target.value) || 0)}
+                      className="text-center text-2xl font-bold h-16"
+                    />
+                    <span className="text-2xl font-bold">€</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Prix moyen en France: 12€ le paquet de 20 cigarettes
+                  </p>
+                </div>
+
+                {dailyCigarettes > 0 && packPrice > 0 && (
+                  <div className="journey-card bg-emerald-500/10 border-emerald-300/30">
+                    <h3 className="font-semibold text-emerald-900 dark:text-emerald-100 mb-3">
+                      📊 Aperçu de vos économies futures
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3 text-center">
+                      <div>
+                        <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                          {(dailyCigarettes * (packPrice / cigarettesPerPack)).toFixed(2)} €
+                        </div>
+                        <div className="text-xs text-muted-foreground">Par jour</div>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                          {(dailyCigarettes * (packPrice / cigarettesPerPack) * 30).toFixed(2)} €
+                        </div>
+                        <div className="text-xs text-muted-foreground">Par mois</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex justify-between pt-6">
+              <Button
+                onClick={() => setStep(1)}
+                variant="outline"
+                className="px-8"
+              >
+                Retour
+              </Button>
+              <Button
+                onClick={handleCigaretteNext}
+                disabled={dailyCigarettes <= 0 || packPrice <= 0}
+                className="journey-button-primary px-8"
+              >
+                Continuer
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {step === 3 && (
           <div className="space-y-6">
             <div>
               <h2 className="text-xl font-semibold mb-4 flex items-center">
@@ -344,7 +474,7 @@ export const AddictionCommitment: React.FC<AddictionCommitmentProps> = ({
 
             <div className="flex justify-between pt-6">
               <Button
-                onClick={() => setStep(1)}
+                onClick={() => setStep(isCigaretteAddiction ? 2 : 1)}
                 variant="outline"
                 className="px-8"
               >
