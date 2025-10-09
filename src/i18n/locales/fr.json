@@ -370,5 +370,31 @@
     "updated": "Mis à jour",
     "deleted": "Supprimé",
     "completed": "Terminé"
+  },
+  "addiction": {
+    "startNow": "Commencer maintenant",
+    "cancel": "Annuler",
+    "areYouSure": "Êtes-vous sûr ?",
+    "deleteNote": "Êtes-vous sûr de vouloir supprimer cette note ?",
+    "deleteEntry": "Êtes-vous sûr de vouloir supprimer cette entrée ?",
+    "sessionCompleted": "Session terminée 🧘‍♀️",
+    "mindCalmer": "Votre esprit est plus calme et centré",
+    "allTasksCompleted": "Toutes vos tâches sont terminées. Vous pouvez vous reposer !",
+    "stretchingCompleted": "Vous avez terminé votre routine de stretching d'aujourd'hui",
+    "completedTasks": "Terminées",
+    "perfectDay": "Parfait ! Vous avez terminé toutes vos tâches du jour 🎉",
+    "startJournal": "Commencer le journal",
+    "firstNote": "Écrivez votre première note pour commencer votre journal personnel.",
+    "createNotes": "Vous pourrez créer autant de notes que vous voulez !",
+    "tasksCompleted": "Tâches terminées",
+    "congratulations": "Félicitations ! Routine de stretching terminée ! 🎉",
+    "taskCompleted": "Tâche terminée ! 🎉",
+    "progressCongrats": "Félicitations pour ce progrès.",
+    "cannotDelete": "Impossible de supprimer la tâche.",
+    "continueJourney": "Commencer mon parcours Premium",
+    "appServices": "L'application propose les services suivants :",
+    "cannotRemoveCriteria": "Ne pas permettre de supprimer si moins de 3 critères",
+    "streakBroken": "Streak cassé, recommencer",
+    "registerReference": "Enregistrer la référence dans la base de données si l'utilisateur est connecté"
   }
 }

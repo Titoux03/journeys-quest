@@ -370,5 +370,31 @@
     "updated": "Updated",
     "deleted": "Deleted",
     "completed": "Completed"
+  },
+  "addiction": {
+    "startNow": "Start now",
+    "cancel": "Cancel",
+    "areYouSure": "Are you sure?",
+    "deleteNote": "Are you sure you want to delete this note?",
+    "deleteEntry": "Are you sure you want to delete this entry?",
+    "sessionCompleted": "Session completed 🧘‍♀️",
+    "mindCalmer": "Your mind is calmer and more centered",
+    "allTasksCompleted": "All your tasks are completed. You can rest!",
+    "stretchingCompleted": "You completed today's stretching routine",
+    "completedTasks": "Completed",
+    "perfectDay": "Perfect! You've completed all your tasks for today 🎉",
+    "startJournal": "Start journal",
+    "firstNote": "Write your first note to start your personal journal.",
+    "createNotes": "You can create as many notes as you want!",
+    "tasksCompleted": "Tasks completed",
+    "congratulations": "Congratulations! Stretching routine completed! 🎉",
+    "taskCompleted": "Task completed! 🎉",
+    "progressCongrats": "Congratulations on your progress.",
+    "cannotDelete": "Unable to delete task.",
+    "continueJourney": "Start my Premium journey",
+    "appServices": "The application offers the following services:",
+    "cannotRemoveCriteria": "Cannot remove if less than 3 criteria",
+    "streakBroken": "Streak broken, restart",
+    "registerReference": "Register reference in database if user is connected"
   }
 }

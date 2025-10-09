@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { AddictionType, UserAddiction } from '@/hooks/useAddictions';
 import { CigaretteSavings } from './CigaretteSavings';
+import { useTranslation } from 'react-i18next';
 
 interface AddictionCardProps {
   addictionType: AddictionType;
@@ -23,22 +24,23 @@ export const AddictionCard: React.FC<AddictionCardProps> = ({
   onDeactivate,
   className = ""
 }) => {
+  const { t } = useTranslation();
   const isActive = !!userAddiction;
   const currentStreak = userAddiction?.current_streak || 0;
   const longestStreak = userAddiction?.longest_streak || 0;
   const hasCigaretteData = userAddiction?.daily_cigarettes && userAddiction?.cigarette_price;
 
   const getTitleAndMessage = (days: number) => {
-    if (days === 0) return { title: "Nouveau départ", emoji: "🌱" };
-    if (days < 3) return { title: "Débutant", emoji: "🌿" };
-    if (days < 7) return { title: "Combattant", emoji: "⚔️" };
-    if (days < 14) return { title: "Persévérant", emoji: "🛡️" };
-    if (days < 30) return { title: "Guerrier", emoji: "🏹" };
-    if (days < 60) return { title: "Champion", emoji: "🏆" };
-    if (days < 90) return { title: "Légende", emoji: "👑" };
-    if (days < 180) return { title: "Maître", emoji: "⚡" };
-    if (days < 365) return { title: "Sage", emoji: "🔮" };
-    return { title: "Immortel", emoji: "💫" };
+    if (days === 0) return { title: t('addictions.status.newStart'), emoji: "🌱" };
+    if (days < 3) return { title: t('addictions.status.beginner'), emoji: "🌿" };
+    if (days < 7) return { title: t('addictions.status.fighter'), emoji: "⚔️" };
+    if (days < 14) return { title: t('addictions.status.perseverant'), emoji: "🛡️" };
+    if (days < 30) return { title: t('addictions.status.warrior'), emoji: "🏹" };
+    if (days < 60) return { title: t('addictions.status.champion'), emoji: "🏆" };
+    if (days < 90) return { title: t('addictions.status.legend'), emoji: "👑" };
+    if (days < 180) return { title: t('addictions.status.master'), emoji: "⚡" };
+    if (days < 365) return { title: t('addictions.status.sage'), emoji: "🔮" };
+    return { title: t('addictions.status.immortal'), emoji: "💫" };
   };
 
   const getProgressPercentage = (days: number) => {
@@ -66,7 +68,7 @@ export const AddictionCard: React.FC<AddictionCardProps> = ({
         </div>
         {isActive && (
           <Badge variant="secondary" className="bg-primary/10 text-primary">
-            Actif
+            {t('addictions.active')}
           </Badge>
         )}
       </div>
@@ -80,7 +82,7 @@ export const AddictionCard: React.FC<AddictionCardProps> = ({
               {currentStreak}
             </div>
             <div className="text-sm text-muted-foreground uppercase tracking-wider mb-3">
-              {currentStreak === 1 ? 'Jour' : 'Jours'}
+              {currentStreak === 1 ? t('addictions.day') : t('addictions.days')}
             </div>
             
             <div className="flex items-center justify-center space-x-2 mb-3">
@@ -95,7 +97,7 @@ export const AddictionCard: React.FC<AddictionCardProps> = ({
                 className="h-2"
               />
               <div className="text-xs text-muted-foreground mt-1">
-                Objectif: 90 jours ({Math.round(getProgressPercentage(currentStreak))}%)
+                {t('addictions.goal')} ({Math.round(getProgressPercentage(currentStreak))}%)
               </div>
             </div>
           </div>
@@ -105,12 +107,12 @@ export const AddictionCard: React.FC<AddictionCardProps> = ({
             <div className="bg-secondary/20 rounded-lg p-3 text-center">
               <Trophy className="w-5 h-5 mx-auto mb-1 text-primary" />
               <div className="text-lg font-semibold">{longestStreak}</div>
-              <div className="text-xs text-muted-foreground">Meilleur streak</div>
+              <div className="text-xs text-muted-foreground">{t('addictions.longestStreak')}</div>
             </div>
             <div className="bg-secondary/20 rounded-lg p-3 text-center">
               <Target className="w-5 h-5 mx-auto mb-1 text-primary" />
               <div className="text-lg font-semibold">{userAddiction.total_relapses}</div>
-              <div className="text-xs text-muted-foreground">Rechutes totales</div>
+              <div className="text-xs text-muted-foreground">{t('addictions.totalRelapses')}</div>
             </div>
           </div>
 
@@ -133,7 +135,7 @@ export const AddictionCard: React.FC<AddictionCardProps> = ({
               size="sm"
             >
               <RotateCcw className="w-4 h-4 mr-2" />
-              Rechute
+              {t('addictions.relapse')}
             </Button>
             {onDeactivate && (
               <Button
@@ -143,7 +145,7 @@ export const AddictionCard: React.FC<AddictionCardProps> = ({
                 size="sm"
               >
                 <Pause className="w-4 h-4 mr-2" />
-                Désactiver
+                {t('addictions.deactivate')}
               </Button>
             )}
           </div>
@@ -166,7 +168,7 @@ export const AddictionCard: React.FC<AddictionCardProps> = ({
               className="journey-button-primary"
             >
               <Calendar className="w-4 h-4 mr-2" />
-              Commencer maintenant
+              {t('addiction.startNow')}
             </Button>
           </div>
         </>

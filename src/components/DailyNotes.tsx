@@ -74,7 +74,7 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
   };
 
   const handleDelete = async (note: DailyNote) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette note ?')) {
+    if (window.confirm(t('addiction.deleteNote'))) {
       const result = await deleteNote(note.id);
       if (result?.success) {
         toast.success('Note supprimée');
@@ -258,8 +258,8 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
             <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">Commencez votre journal</h3>
             <p className="text-muted-foreground">
-              Écrivez votre première note pour commencer votre journal personnel.<br />
-              Vous pourrez créer autant de notes que vous voulez !
+              {t('addiction.firstNote')}<br />
+              {t('addiction.createNotes')}
             </p>
           </div>
         )}

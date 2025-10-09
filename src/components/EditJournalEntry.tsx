@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { X, Save } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface JournalEntry {
   id?: string;
@@ -34,6 +35,7 @@ const commonCategories = [
 ];
 
 export const EditJournalEntry: React.FC<EditJournalEntryProps> = ({ entry, onSave, onCancel }) => {
+  const { t } = useTranslation();
   const [scores, setScores] = useState(entry.scores);
   const [reflection, setReflection] = useState(entry.reflection || '');
   const [mood, setMood] = useState(entry.mood);
@@ -162,11 +164,11 @@ export const EditJournalEntry: React.FC<EditJournalEntryProps> = ({ entry, onSav
         {/* Actions */}
         <div className="flex space-x-3">
           <Button onClick={onCancel} variant="outline" className="flex-1">
-            Annuler
+            {t('common.cancel')}
           </Button>
           <Button onClick={handleSave} className="flex-1">
             <Save className="w-4 h-4 mr-2" />
-            Enregistrer
+            {t('common.save')}
           </Button>
         </div>
       </CardContent>
