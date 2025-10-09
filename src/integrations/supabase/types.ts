@@ -415,12 +415,16 @@ export type Database = {
       user_addictions: {
         Row: {
           addiction_type_id: string
+          cigarette_price: number | null
+          cigarettes_per_pack: number | null
           created_at: string
           current_streak: number
+          daily_cigarettes: number | null
           id: string
           is_active: boolean
           last_relapse_date: string | null
           longest_streak: number
+          pack_price: number | null
           start_date: string
           total_relapses: number
           updated_at: string
@@ -428,12 +432,16 @@ export type Database = {
         }
         Insert: {
           addiction_type_id: string
+          cigarette_price?: number | null
+          cigarettes_per_pack?: number | null
           created_at?: string
           current_streak?: number
+          daily_cigarettes?: number | null
           id?: string
           is_active?: boolean
           last_relapse_date?: string | null
           longest_streak?: number
+          pack_price?: number | null
           start_date: string
           total_relapses?: number
           updated_at?: string
@@ -441,12 +449,16 @@ export type Database = {
         }
         Update: {
           addiction_type_id?: string
+          cigarette_price?: number | null
+          cigarettes_per_pack?: number | null
           created_at?: string
           current_streak?: number
+          daily_cigarettes?: number | null
           id?: string
           is_active?: boolean
           last_relapse_date?: string | null
           longest_streak?: number
+          pack_price?: number | null
           start_date?: string
           total_relapses?: number
           updated_at?: string
@@ -493,7 +505,56 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      addiction_savings: {
+        Row: {
+          addiction_type_id: string | null
+          cigarette_price: number | null
+          current_streak: number | null
+          daily_cigarettes: number | null
+          daily_savings: number | null
+          days_since_start: number | null
+          id: string | null
+          potential_total_savings: number | null
+          start_date: string | null
+          total_savings: number | null
+          user_id: string | null
+        }
+        Insert: {
+          addiction_type_id?: string | null
+          cigarette_price?: number | null
+          current_streak?: number | null
+          daily_cigarettes?: number | null
+          daily_savings?: never
+          days_since_start?: never
+          id?: string | null
+          potential_total_savings?: never
+          start_date?: string | null
+          total_savings?: never
+          user_id?: string | null
+        }
+        Update: {
+          addiction_type_id?: string | null
+          cigarette_price?: number | null
+          current_streak?: number | null
+          daily_cigarettes?: number | null
+          daily_savings?: never
+          days_since_start?: never
+          id?: string | null
+          potential_total_savings?: never
+          start_date?: string | null
+          total_savings?: never
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_addictions_addiction_type_id_fkey"
+            columns: ["addiction_type_id"]
+            isOneToOne: false
+            referencedRelation: "addiction_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       calculate_addiction_streaks: {
