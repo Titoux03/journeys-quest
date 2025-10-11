@@ -161,7 +161,7 @@ export const AddictionCard: React.FC<AddictionCardProps> = ({
               <Play className="w-8 h-8" />
             </div>
             <p className="text-muted-foreground mb-6">
-              Commencez votre parcours vers la liberté
+              {t('addictions.startJourney')}
             </p>
             <Button
               onClick={onStart}

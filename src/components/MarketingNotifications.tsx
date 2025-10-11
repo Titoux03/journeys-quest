@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { usePremium } from '@/hooks/usePremium';
 import { useGongSounds } from '@/hooks/useGongSounds';
+import { useTranslation } from 'react-i18next';
 
 interface NotificationData {
   id: string;
@@ -14,27 +15,28 @@ interface NotificationData {
   triggerCondition?: () => boolean;
 }
 
-const marketingNotifications: NotificationData[] = [
+// Notifications will use translation keys
+const getMarketingNotifications = (t: any): NotificationData[] => [
   {
     id: 'welcome-back',
-    title: 'Bon retour ! 🌟',
-    message: 'Débloque ton historique complet avec Journeys Premium',
+    title: t('marketing.welcomeBack'),
+    message: t('marketing.unlockHistory'),
     type: 'progress',
-    delay: 10000, // 10 secondes après l'arrivée
+    delay: 10000,
   },
   {
     id: 'progress-tease',
-    title: 'Tu progresses ! 📈',
-    message: 'Visualise ton évolution avec le diagramme radar premium',
+    title: t('marketing.youreProgressing'),
+    message: t('marketing.visualizeEvolution'),
     type: 'feature',
-    delay: 30000, // 30 secondes
+    delay: 30000,
   },
   {
     id: 'streak-motivation',
-    title: 'Ne laisse pas ton élan s\'arrêter ! 💪',
-    message: 'Les streaks de connexion premium t\'aident à rester motivé',
+    title: t('marketing.dontStop'),
+    message: t('marketing.streaksHelp'),
     type: 'streak',
-    delay: 60000, // 1 minute
+    delay: 60000,
   }
 ];
 
@@ -47,6 +49,7 @@ const MarketingNotification: React.FC<MarketingNotificationProps> = ({
   onClose, 
   notification 
 }) => {
+  const { t } = useTranslation();
   const { showUpgradeModal } = usePremium();
   const { playPremium } = useGongSounds();
 
@@ -95,7 +98,7 @@ const MarketingNotification: React.FC<MarketingNotificationProps> = ({
                 className="journey-button-primary text-xs px-3 py-1 h-auto"
               >
                 <Crown className="w-3 h-3 mr-1" />
-                Découvrir
+                {t('marketing.discover')}
               </Button>
               <Button
                 onClick={onClose}
@@ -103,7 +106,7 @@ const MarketingNotification: React.FC<MarketingNotificationProps> = ({
                 variant="ghost"
                 className="text-xs px-3 py-1 h-auto"
               >
-                Plus tard
+                {t('marketing.later')}
               </Button>
             </div>
           </div>
@@ -114,6 +117,7 @@ const MarketingNotification: React.FC<MarketingNotificationProps> = ({
 };
 
 export const MarketingNotifications: React.FC = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { isPremium } = usePremium();
   const [activeNotification, setActiveNotification] = useState<NotificationData | null>(null);
@@ -132,6 +136,7 @@ export const MarketingNotifications: React.FC = () => {
 
     // Programmer les notifications
     const timers: NodeJS.Timeout[] = [];
+    const marketingNotifications = getMarketingNotifications(t);
 
     marketingNotifications.forEach(notification => {
       if (todaySet.has(notification.id)) return;

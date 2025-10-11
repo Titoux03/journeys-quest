@@ -9,8 +9,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
 import { TermsOfService } from '@/components/TermsOfService';
+import { useTranslation } from 'react-i18next';
 
 const Auth = () => {
+  const { t } = useTranslation();
   const { user, signUp, signIn, loading } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -47,13 +49,13 @@ const Auth = () => {
     setError(null);
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Les mots de passe ne correspondent pas');
+      setError(t('authPage.passwordsNoMatch'));
       setIsLoading(false);
       return;
     }
 
     if (formData.password.length < 6) {
-      setError('Le mot de passe doit contenir au moins 6 caractères');
+      setError(t('authPage.passwordMinLength'));
       setIsLoading(false);
       return;
     }
@@ -62,7 +64,7 @@ const Auth = () => {
     
     if (error) {
       if (error.message.includes('already registered')) {
-        setError('Cette adresse email est déjà utilisée');
+        setError(t('authPage.emailInUse'));
       } else {
         setError(error.message);
       }
@@ -84,7 +86,7 @@ const Auth = () => {
     
     if (error) {
       if (error.message.includes('Invalid login credentials')) {
-        setError('Email ou mot de passe incorrect');
+        setError(t('authPage.invalidCredentials'));
       } else {
         setError(error.message);
       }
@@ -105,33 +107,33 @@ const Auth = () => {
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-card to-secondary">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gradient-primary mb-2">Journeys</h1>
-          <p className="text-muted-foreground">Votre parcours de développement personnel</p>
+          <h1 className="text-4xl font-bold text-gradient-primary mb-2">{t('authPage.appTitle')}</h1>
+          <p className="text-muted-foreground">{t('authPage.subtitle')}</p>
         </div>
 
         <Card className="journey-card">
           <Tabs defaultValue="signin" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="signin" className="text-sm">Connexion</TabsTrigger>
-              <TabsTrigger value="signup" className="text-sm">Inscription</TabsTrigger>
+              <TabsTrigger value="signin" className="text-sm">{t('authPage.signIn')}</TabsTrigger>
+              <TabsTrigger value="signup" className="text-sm">{t('authPage.signUp')}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="signin">
               <CardHeader className="text-center pb-4">
-                <CardTitle className="text-xl">Connexion</CardTitle>
+                <CardTitle className="text-xl">{t('authPage.signInTitle')}</CardTitle>
                 <CardDescription>
-                  Connectez-vous pour continuer votre parcours
+                  {t('authPage.signInDesc')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSignIn} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signin-email">Email</Label>
+                    <Label htmlFor="signin-email">{t('authPage.email')}</Label>
                     <Input
                       id="signin-email"
                       name="email"
                       type="email"
-                      placeholder="votre@email.com"
+                      placeholder={t('authPage.emailPlaceholder')}
                       value={formData.email}
                       onChange={handleInputChange}
                       required
@@ -139,7 +141,7 @@ const Auth = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signin-password">Mot de passe</Label>
+                    <Label htmlFor="signin-password">{t('authPage.password')}</Label>
                     <div className="relative">
                       <Input
                         id="signin-password"
@@ -175,10 +177,10 @@ const Auth = () => {
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Connexion...
+                        {t('authPage.connectingText')}
                       </>
                     ) : (
-                      'Se connecter'
+                      t('authPage.signInButton')
                     )}
                   </Button>
                 </form>
@@ -187,32 +189,32 @@ const Auth = () => {
 
             <TabsContent value="signup">
               <CardHeader className="text-center pb-4">
-                <CardTitle className="text-xl">Inscription</CardTitle>
+                <CardTitle className="text-xl">{t('authPage.signUpTitle')}</CardTitle>
                 <CardDescription>
-                  Créez votre compte et commencez votre transformation
+                  {t('authPage.signUpDesc')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSignUp} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signup-name">Nom complet (optionnel)</Label>
+                    <Label htmlFor="signup-name">{t('authPage.fullName')}</Label>
                     <Input
                       id="signup-name"
                       name="fullName"
                       type="text"
-                      placeholder="Votre nom"
+                      placeholder={t('authPage.fullNamePlaceholder')}
                       value={formData.fullName}
                       onChange={handleInputChange}
                       className="bg-input border-border"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
+                    <Label htmlFor="signup-email">{t('authPage.email')}</Label>
                     <Input
                       id="signup-email"
                       name="email"
                       type="email"
-                      placeholder="votre@email.com"
+                      placeholder={t('authPage.emailPlaceholder')}
                       value={formData.email}
                       onChange={handleInputChange}
                       required
@@ -220,7 +222,7 @@ const Auth = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-password">Mot de passe</Label>
+                    <Label htmlFor="signup-password">{t('authPage.password')}</Label>
                     <div className="relative">
                       <Input
                         id="signup-password"
@@ -242,7 +244,7 @@ const Auth = () => {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="confirm-password">Confirmer le mot de passe</Label>
+                    <Label htmlFor="confirm-password">{t('authPage.confirmPassword')}</Label>
                     <Input
                       id="confirm-password"
                       name="confirmPassword"
@@ -264,7 +266,7 @@ const Auth = () => {
                   {signUpSuccess && (
                     <Alert className="border-green-500/50 bg-green-500/10">
                       <AlertDescription className="text-green-700 dark:text-green-400 text-sm">
-                        ✅ Compte créé avec succès ! Un email de confirmation a été envoyé à votre adresse. Veuillez vérifier votre boîte de réception.
+                        {t('authPage.accountCreated')}
                       </AlertDescription>
                     </Alert>
                   )}
@@ -276,10 +278,10 @@ const Auth = () => {
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Création...
+                        {t('authPage.creatingText')}
                       </>
                     ) : (
-                      'Créer mon compte'
+                      t('authPage.createAccountButton')
                     )}
                   </Button>
                 </form>
@@ -289,13 +291,13 @@ const Auth = () => {
         </Card>
 
         <div className="text-center mt-6 text-sm text-muted-foreground">
-          En vous inscrivant, vous acceptez nos{' '}
+          {t('authPage.bySigningUp')}{' '}
           <button
             type="button"
             onClick={() => setShowTerms(true)}
             className="text-primary hover:text-primary/80 underline transition-colors"
           >
-            conditions d'utilisation
+            {t('authPage.termsLink')}
           </button>
         </div>
 

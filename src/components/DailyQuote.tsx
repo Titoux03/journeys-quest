@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Sparkles, RefreshCw } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { useTranslation } from 'react-i18next';
 
 interface DailyQuoteProps {}
 
@@ -13,6 +14,7 @@ interface Quote {
 }
 
 export const DailyQuote: React.FC<DailyQuoteProps> = () => {
+  const { t } = useTranslation();
   const [quote, setQuote] = useState<Quote | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -72,11 +74,11 @@ export const DailyQuote: React.FC<DailyQuoteProps> = () => {
         setQuote(data);
         storeQuote(data);
       } else {
-        throw new Error('Aucune citation reçue');
+        throw new Error(t('quote.error'));
       }
     } catch (err) {
       console.error('Erreur lors de la génération de citation:', err);
-      setError('Impossible de générer une nouvelle citation');
+      setError(t('quote.error'));
       // Utiliser une citation de fallback
       const randomFallback = fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
       setQuote(randomFallback);
@@ -108,11 +110,11 @@ export const DailyQuote: React.FC<DailyQuoteProps> = () => {
             <Sparkles className="w-6 h-6 text-primary animate-pulse" />
           </div>
           <div>
-            <h3 className="font-semibold text-card-foreground">Citation du jour</h3>
+            <h3 className="font-semibold text-card-foreground">{t('quote.title')}</h3>
             <p className="text-sm text-muted-foreground">
-              {quote?.source === 'ai' ? 'Générée par IA ✨' : 
-               quote?.source === 'known' ? 'Citation inspirante 📚' : 
-               'Inspiration quotidienne 💫'}
+              {quote?.source === 'ai' ? t('quote.generatedByAI') : 
+               quote?.source === 'known' ? t('quote.inspiringQuote') : 
+               t('quote.dailyInspiration')}
             </p>
           </div>
         </div>
@@ -121,7 +123,7 @@ export const DailyQuote: React.FC<DailyQuoteProps> = () => {
           onClick={handleGenerateClick}
           disabled={loading}
           className="p-2 rounded-xl hover:bg-secondary/50 transition-colors disabled:opacity-50"
-          title="Nouvelle citation"
+          title={t('quote.newQuote')}
         >
           <RefreshCw className={`w-4 h-4 text-muted-foreground ${loading ? 'animate-spin' : ''}`} />
         </button>
