@@ -117,7 +117,7 @@ const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate
       {/* Addictions Grid */}
       <div className="space-y-6 mb-8">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-foreground">Mes Addictions</h2>
+          <h2 className="text-2xl font-bold text-foreground">{t('home.myActiveAddictions')}</h2>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -143,7 +143,7 @@ const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) 
             }`}
           >
             <Heart className="w-6 h-6 mx-auto mb-2" />
-            <div className="text-sm font-medium">Méditation</div>
+            <div className="text-sm font-medium">{t('meditation.modes.meditation')}</div>
           </button>
           <button
             onClick={() => setMode('deepwork')}
@@ -154,7 +154,7 @@ const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) 
             }`}
           >
             <Brain className="w-6 h-6 mx-auto mb-2" />
-            <div className="text-sm font-medium">Deep Work</div>
+            <div className="text-sm font-medium">{t('meditation.modes.deepwork')}</div>
           </button>
         </div>
       </div>
@@ -175,7 +175,7 @@ const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) 
               {getCompletionMessage().message}
             </p>
             <Button onClick={handleReset} className="journey-button-primary">
-              Nouvelle session
+              {t('meditation.start')}
             </Button>
           </div>
         ) : (
@@ -219,7 +219,7 @@ const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) 
                     {formatTime(timeLeft)}
                   </div>
                   <div className="text-sm text-muted-foreground uppercase tracking-wider">
-                    {mode === 'meditation' ? 'Méditation' : 'Deep Work'}
+                    {mode === 'meditation' ? t('meditation.modes.meditation') : t('meditation.modes.deepwork')}
                   </div>
                 </div>
               </div>
@@ -240,12 +240,12 @@ const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) 
               {timerState === 'idle' || timerState === 'paused' ? (
                 <Button onClick={handleStart} className="journey-button-primary px-8">
                   <Play className="w-5 h-5 mr-2" />
-                  {timerState === 'paused' ? 'Reprendre' : 'Commencer'}
+                  {timerState === 'paused' ? t('meditation.resume') : t('meditation.start')}
                 </Button>
               ) : (
                 <Button onClick={handlePause} variant="outline" className="px-8">
                   <Pause className="w-5 h-5 mr-2" />
-                  Pause
+                  {t('meditation.pause')}
                 </Button>
               )}
               
@@ -262,7 +262,7 @@ const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) 
       {/* Duration Selection (only when idle) */}
       {timerState === 'idle' && (
         <div className="journey-card">
-          <h3 className="text-base sm:text-lg font-semibold mb-4 text-foreground">Durée</h3>
+          <h3 className="text-base sm:text-lg font-semibold mb-4 text-foreground">{t('meditation.selectDuration')}</h3>
           <div className="grid grid-cols-2 gap-2 sm:gap-3">
             {presetDurations.map((preset) => (
               <button

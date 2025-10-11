@@ -14,12 +14,12 @@ interface Quote {
 }
 
 export const DailyQuote: React.FC<DailyQuoteProps> = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [quote, setQuote] = useState<Quote | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fallbackQuotes = [
+  const fallbackQuotesFr = [
     {
       text: "Le succès, c'est d'aller d'échec en échec sans perdre son enthousiasme.",
       author: "Winston Churchill",
@@ -42,6 +42,32 @@ export const DailyQuote: React.FC<DailyQuoteProps> = () => {
       source: 'fallback'
     }
   ];
+
+  const fallbackQuotesEn = [
+    {
+      text: "Success is walking from failure to failure with no loss of enthusiasm.",
+      author: "Winston Churchill",
+      theme: "perseverance",
+      date: new Date().toISOString().split('T')[0],
+      source: 'fallback'
+    },
+    {
+      text: "Your only limit is your mind. Believe in yourself and everything becomes possible.",
+      author: "Anonymous",
+      theme: "self-confidence",
+      date: new Date().toISOString().split('T')[0],
+      source: 'fallback'
+    },
+    {
+      text: "Each day is a new opportunity to become the best version of yourself.",
+      author: "Journeys",
+      theme: "personal growth",
+      date: new Date().toISOString().split('T')[0],
+      source: 'fallback'
+    }
+  ];
+
+  const fallbackQuotes = i18n.language === 'fr' ? fallbackQuotesFr : fallbackQuotesEn;
 
   const getStoredQuote = (): Quote | null => {
     const today = new Date().toISOString().split('T')[0];
