@@ -155,19 +155,19 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           </div>
           
           <h1 className="text-3xl font-bold text-gradient-primary mb-3">
-            🚀 Transformez votre vie avec Premium
+            {t('premiumModal.transformYourLife')}
           </h1>
           
           {feature && (
             <p className="text-lg text-muted-foreground mb-4">
-              <span className="text-primary font-semibold">{feature}</span> et 7 autres fonctionnalités exclusives
+              <span className="text-primary font-semibold">{feature}</span> {t('premiumModal.featureAndMore')}
             </p>
           )}
           
           <p className="text-muted-foreground leading-relaxed">
             {!user 
-              ? 'Créez un compte Premium et accédez immédiatement à toutes les fonctionnalités qui transforment votre quotidien'
-              : 'Débloquez instantanément 8 fonctionnalités premium qui vont révolutionner votre développement personnel'
+              ? t('premiumModal.createAccountDesc')
+              : t('premiumModal.unlockDesc')
             }
           </p>
         </div>
@@ -175,7 +175,7 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
         {/* Fonctionnalités Premium - Grid amélioré */}
         <div className="mb-8">
           <h2 className="text-xl font-bold text-center text-foreground mb-6">
-            ✨ Ce que vous débloquez immédiatement
+            {t('premiumModal.whatYouUnlock')}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {premiumFeatures.map((feature, index) => (
@@ -240,37 +240,37 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
         {/* Pricing amélioré avec comparaison */}
         <div className="mb-8">
           <h2 className="text-xl font-bold text-center text-foreground mb-6">
-            💰 Un investissement qui change tout
+            {t('premiumModal.investmentTitle')}
           </h2>
           
           {/* Comparaison Gratuit vs Premium */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div className="p-4 rounded-xl bg-secondary/30 border border-border/50">
-              <h3 className="font-semibold text-muted-foreground mb-3 text-center">Version Gratuite</h3>
+              <h3 className="font-semibold text-muted-foreground mb-3 text-center">{t('premiumModal.freeVersion')}</h3>
               <div className="space-y-2">
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                   <div className="w-4 h-4 rounded-full bg-muted-foreground/30 flex items-center justify-center">
                     <span className="text-xs">✗</span>
                   </div>
-                  <span>Journal basique uniquement</span>
+                  <span>{t('premiumModal.basicJournalOnly')}</span>
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                   <div className="w-4 h-4 rounded-full bg-muted-foreground/30 flex items-center justify-center">
                     <span className="text-xs">✗</span>
                   </div>
-                  <span>Pas de suivi d'addictions</span>
+                  <span>{t('premiumModal.noAddictionTracking')}</span>
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                   <div className="w-4 h-4 rounded-full bg-muted-foreground/30 flex items-center justify-center">
                     <span className="text-xs">✗</span>
                   </div>
-                  <span>Données limitées</span>
+                  <span>{t('premiumModal.limitedData')}</span>
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                   <div className="w-4 h-4 rounded-full bg-muted-foreground/30 flex items-center justify-center">
                     <span className="text-xs">✗</span>
                   </div>
-                  <span>Aucune gamification</span>
+                  <span>{t('premiumModal.noGamification')}</span>
                 </div>
               </div>
               <div className="text-center mt-4">
@@ -354,15 +354,15 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
             />
             <div className="flex-1">
               <label htmlFor="terms" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
-                J'accepte les{' '}
+                {t('premiumModal.acceptTerms')}{' '}
                 <button
                   onClick={() => setShowTerms(true)}
                   className="text-primary hover:text-primary-glow font-medium underline inline-flex items-center"
                 >
-                  Conditions Générales d'Utilisation
+                  {t('premiumModal.termsOfService')}
                   <ExternalLink className="w-3 h-3 ml-1" />
                 </button>
-                {' '}et confirme avoir lu les informations concernant le traitement de mes données personnelles.
+                {' '} {t('premiumModal.confirmDataProcessing')}
               </label>
             </div>
           </div>
@@ -379,7 +379,7 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
                 <UserPlus className="w-5 h-5 mr-2" />
-                Créer un compte Premium
+                {t('premiumModal.createPremiumAccount')}
               </Button>
               
               <div className="text-center space-y-2">
@@ -390,7 +390,7 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
                     disabled={!acceptedTerms}
                     className="text-primary hover:text-primary-glow ml-1 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Débloquer Premium
+                {t('premiumModal.unlockPremium')}
                   </button>
                 </p>
               </div>

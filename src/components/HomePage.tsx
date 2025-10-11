@@ -425,10 +425,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
             {/* Comparaison avant/après */}
             <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
               <div className="bg-secondary/30 rounded-lg p-3">
-                <div className="text-muted-foreground font-medium mb-1">Gratuit</div>
-                <div className="text-xs text-muted-foreground">• Journal de base</div>
-                <div className="text-xs text-muted-foreground">• Fonctions limitées</div>
-                <div className="text-xs text-muted-foreground">• Pas de suivi</div>
+                <div className="text-muted-foreground font-medium mb-1">{t('premiumModal.freeVersion')}</div>
+                <div className="text-xs text-muted-foreground">• {t('premiumModal.basicJournalOnly')}</div>
+                <div className="text-xs text-muted-foreground">• {t('premiumModal.limitedData')}</div>
+                <div className="text-xs text-muted-foreground">• {t('premiumModal.noGamification')}</div>
               </div>
               <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
                 <div className="text-primary font-medium mb-1">Premium</div>
@@ -440,11 +440,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
             
             <div className="inline-flex items-center space-x-2 px-8 py-4 rounded-xl bg-primary text-primary-foreground font-bold text-lg group-hover:scale-105 transition-transform">
               <Crown className="w-6 h-6" />
-              <span>Débloquer Premium (14,99€)</span>
+              <span>{t('premiumModal.unlockPremium')}</span>
             </div>
             
             <p className="text-xs text-muted-foreground mt-3">
-              ⚡ Paiement unique • Accès à vie • Pas d'abonnement
+              ⚡ {t('premiumModal.noSubscription')} • {t('premiumModal.lifetimeAccess')}
             </p>
           </div>
         </button>

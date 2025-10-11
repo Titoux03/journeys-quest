@@ -9,6 +9,7 @@ import { usePremium } from '@/hooks/usePremium';
 import { toast } from 'sonner';
 import { PremiumTeaser } from '@/components/PremiumTeaser';
 import { customCriteriaSchema } from '@/utils/validation';
+import { useTranslation } from 'react-i18next';
 
 interface DailyJournalProps {
   onComplete: (scores: Record<string, number>, totalScore: number) => void;
@@ -97,6 +98,7 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
   const { user } = useAuth();
   const { isPremium } = usePremium();
   const { saveJournalEntry } = useProgress();
+  const { t } = useTranslation();
   const [scores, setScores] = useState<Record<string, number>>(
     defaultCriteria.reduce((acc, criterion) => ({
       ...acc,
@@ -258,8 +260,8 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
                     <IconComponent className={`w-6 h-6 ${criterion.color}`} />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-medium text-card-foreground">{criterion.label}</h3>
-                    <p className="text-sm text-muted-foreground">{criterion.description}</p>
+                    <h3 className="font-medium text-card-foreground">{t(`journal.criteria.${criterion.key}`, { defaultValue: criterion.label })}</h3>
+                    <p className="text-sm text-muted-foreground">{t(`journal.criteria.${criterion.key}Desc`, { defaultValue: criterion.description })}</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="text-2xl font-bold text-primary">

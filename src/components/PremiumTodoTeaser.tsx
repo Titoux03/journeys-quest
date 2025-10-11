@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { usePremium } from '@/hooks/usePremium';
 import { useGongSounds } from '@/hooks/useGongSounds';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 
 interface PremiumTodoTeaserProps {
@@ -14,6 +15,7 @@ interface PremiumTodoTeaserProps {
 export const PremiumTodoTeaser: React.FC<PremiumTodoTeaserProps> = ({ className = "" }) => {
   const { showUpgradeModal } = usePremium();
   const { playPremium } = useGongSounds();
+  const { t } = useTranslation();
 
   const handleUpgrade = () => {
     playPremium();
@@ -38,8 +40,8 @@ export const PremiumTodoTeaser: React.FC<PremiumTodoTeaserProps> = ({ className 
                 <CheckSquare className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gradient-primary">Tâches Matinales</h3>
-                <p className="text-sm text-muted-foreground">Révolutionnez votre productivité</p>
+                <h3 className="text-lg font-bold text-gradient-primary">{t('home.morningTasks')}</h3>
+                <p className="text-sm text-muted-foreground">{t('home.morningTasksDesc')}</p>
               </div>
             </div>
             <Badge className="bg-primary/20 text-primary border-primary/30">
@@ -120,19 +122,19 @@ export const PremiumTodoTeaser: React.FC<PremiumTodoTeaserProps> = ({ className 
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
               <Crown className="w-5 h-5 mr-2" />
-              Débloquer les Tâches Matinales
+              {t('premiumModal.unlockPremium')}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
             
             <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
               <span className="flex items-center gap-1">
-                ⚡ Paiement unique
+                ⚡ {t('premiumModal.noSubscription')}
               </span>
               <span className="flex items-center gap-1">
-                🔒 Accès à vie
+                🔒 {t('premiumModal.lifetimeAccess')}
               </span>
               <span className="flex items-center gap-1">
-                💪 Changez votre vie
+                💪 {t('home.unlockPotential')}
               </span>
             </div>
           </div>

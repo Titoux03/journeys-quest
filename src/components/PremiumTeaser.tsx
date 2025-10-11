@@ -3,6 +3,7 @@ import { Crown, Sparkles, TrendingUp, Eye, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePremium } from '@/hooks/usePremium';
 import { useGongSounds } from '@/hooks/useGongSounds';
+import { useTranslation } from 'react-i18next';
 
 interface PremiumTeaserProps {
   title: string;
@@ -21,6 +22,7 @@ export const PremiumTeaser: React.FC<PremiumTeaserProps> = ({
 }) => {
   const { showUpgradeModal } = usePremium();
   const { playPremium } = useGongSounds();
+  const { t } = useTranslation();
 
   const handleUpgrade = () => {
     playPremium();
@@ -65,10 +67,10 @@ export const PremiumTeaser: React.FC<PremiumTeaserProps> = ({
         >
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
           <Crown className="w-4 h-4 mr-2" />
-          Débloque Journeys Premium
+          {t('premium.cta.unlock')}
         </Button>
         <p className="text-xs text-muted-foreground mt-3">
-          Visualise ton évolution complète ✨
+          {t('marketing.visualizeEvolution')}
         </p>
       </div>
     );
@@ -92,11 +94,11 @@ export const PremiumTeaser: React.FC<PremiumTeaserProps> = ({
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
               <Crown className="w-4 h-4 mr-1" />
-              Découvrir
+              {t('marketing.discover')}
             </Button>
             <div className="flex items-center space-x-1 text-xs text-primary">
               <TrendingUp className="w-3 h-3" />
-              <span>Accès premium requis</span>
+              <span>{t('premiumModal.premiumLabel')} {t('premiumModal.required') ?? 'required'}</span>
             </div>
           </div>
         </div>
