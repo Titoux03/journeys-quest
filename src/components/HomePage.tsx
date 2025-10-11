@@ -11,6 +11,7 @@ import { PremiumTodoTeaser } from '@/components/PremiumTodoTeaser';
 import { JourneyCard } from '@/components/JourneyCard';
 import { PremiumSuccessIndicator } from '@/components/PremiumSuccessIndicator';
 import { useTranslation } from 'react-i18next';
+import { LanguageToggle } from '@/components/LanguageToggle';
 
 interface JournalEntry {
   date: string;
@@ -62,6 +63,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
 
   return (
     <div className="min-h-screen p-4 sm:p-6 pb-24 flex flex-col">
+      {/* Language Toggle */}
+      <div className="flex justify-end mb-4">
+        <LanguageToggle />
+      </div>
+      
       {/* Header avec salutation */}
       <div className="text-center mb-6 sm:mb-8 animate-slide-up">
         <div className="floating-element inline-block">

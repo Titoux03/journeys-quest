@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useGongSounds } from '@/hooks/useGongSounds';
 import { useToast } from '@/hooks/use-toast';
 import { PremiumTeaser, PremiumBadge } from '@/components/PremiumTeaser';
+import { useTranslation } from 'react-i18next';
 
 interface MeditationTimerProps {
   onNavigate: (screen: string) => void;
@@ -26,6 +27,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onNavigate }) 
 };
 
 const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) => {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<TimerMode>('meditation');
   const [duration, setDuration] = useState(15); // minutes
   const [timeLeft, setTimeLeft] = useState(15 * 60); // seconds
@@ -100,13 +102,13 @@ const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) 
   const getCompletionMessage = () => {
     if (mode === 'meditation') {
       return {
-        title: "Session terminée 🧘‍♀️",
-        message: "Votre esprit est plus calme et centré"
+        title: t('meditation.completed'),
+        message: t('meditation.completedMessage.meditation')
       };
     } else {
       return {
-        title: "Objectif atteint 🎯",
-        message: "Votre focus profond porte ses fruits"
+        title: t('meditation.goalAchieved'),
+        message: t('meditation.completedMessage.deepwork')
       };
     }
   };
@@ -119,13 +121,13 @@ const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) 
           onClick={() => onNavigate('home')}
           className="mb-4 text-muted-foreground hover:text-foreground transition-colors"
         >
-          ← Retour
+          ← {t('common.back')}
         </button>
         <h1 className="text-3xl font-bold text-gradient-primary mb-2">
-          Focus & Sérénité
+          {t('meditation.focusAndSerenity')}
         </h1>
         <p className="text-muted-foreground">
-          Cultivez votre concentration et votre paix intérieure
+          {t('meditation.cultivateFocus')}
         </p>
       </div>
 

@@ -112,13 +112,29 @@
   },
   "notes": {
     "title": "Daily Notes",
-    "placeholder": "Write your thoughts, ideas, reflections...",
+    "placeholder": "Write your thoughts, emotions, discoveries... Each note is saved separately.",
     "saveSuccess": "Note saved",
-    "deleteConfirm": "Delete this note?"
+    "deleteConfirm": "Delete this note?",
+    "signInToAccess": "Sign in to access your notes",
+    "createAccountToSave": "Create an account to save and sync your personal notes",
+    "loadingNotes": "Loading your notes...",
+    "editNote": "Edit your note",
+    "editYourNote": "Edit your personal note",
+    "writeAsMany": "Write as many notes as you want, they all stay saved",
+    "newNote": "New note",
+    "characters": "characters",
+    "saving": "Saving...",
+    "allYourNotes": "All your notes ({{count}})",
+    "modified": "Modified",
+    "startJournal": "Start your journal",
+    "writeBeforeSave": "Please write something before saving",
+    "noteModified": "Note modified!"
   },
   "todos": {
     "title": "Today's Tasks",
     "subtitle": "Anti-procrastination system with prioritization",
+    "signInTitle": "Sign in",
+    "signInDesc": "Sign in to access your tasks",
     "addTask": "Add task",
     "taskPlaceholder": "New task...",
     "priority": "Priority",
@@ -142,6 +158,9 @@
   },
   "meditation": {
     "title": "Meditation & Deep Work",
+    "focusAndSerenity": "Focus & Serenity",
+    "cultivateFocus": "Cultivate your concentration and inner peace",
+    "goalAchieved": "Goal achieved 🎯",
     "modes": {
       "meditation": "Meditation",
       "deepwork": "Deep Work"
@@ -152,10 +171,10 @@
     "pause": "Pause",
     "resume": "Resume",
     "reset": "Reset",
-    "completed": "Session completed!",
+    "completed": "Session completed 🧘‍♀️",
     "completedMessage": {
-      "meditation": "🧘 Well done! Your mind is now clear and calm.",
-      "deepwork": "🎯 Excellent work! Your focus was optimal."
+      "meditation": "Your mind is calmer and more centered",
+      "deepwork": "Your deep focus is paying off"
     },
     "stats": {
       "totalSessions": "Total sessions",
@@ -166,6 +185,8 @@
   "addictions": {
     "title": "Multi-Addiction Tracking",
     "subtitle": "Free yourself from dependencies",
+    "loading": "Loading your addictions...",
+    "controlAndFreedom": "Control & Freedom",
     "active": "Active",
     "inactive": "Inactive",
     "start": "Start tracking",
@@ -197,6 +218,10 @@
   "stretching": {
     "title": "Stretching Routine",
     "subtitle": "6 guided exercises",
+    "loadingRoutine": "Loading your routine...",
+    "targetedExercises": "6 targeted exercises to improve your mobility",
+    "todayProgress": "Today's progress",
+    "exercisesCount": "{{completed}} of {{total}} exercises",
     "start": "Start routine",
     "next": "Next exercise",
     "complete": "Complete",

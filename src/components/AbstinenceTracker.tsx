@@ -10,6 +10,7 @@ import { AllBadgesDisplay } from '@/components/AllBadgesDisplay';
 import { ProcrastinationTasks } from '@/components/ProcrastinationTasks';
 import { useAddictions } from '@/hooks/useAddictions';
 import { useGongSounds } from '@/hooks/useGongSounds';
+import { useTranslation } from 'react-i18next';
 
 interface AbstinenceTrackerProps {
   onNavigate: (screen: string) => void;
@@ -24,6 +25,7 @@ export const AbstinenceTracker: React.FC<AbstinenceTrackerProps> = ({ onNavigate
 };
 
 const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate }) => {
+  const { t } = useTranslation();
   const { 
     addictionTypes, 
     userAddictions, 
@@ -85,7 +87,7 @@ const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate
       <div className="min-h-screen p-6 bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Chargement de vos addictions...</p>
+          <p className="text-muted-foreground">{t('addictions.loading')}</p>
         </div>
       </div>
     );
@@ -99,13 +101,13 @@ const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate
           onClick={() => onNavigate('home')}
           className="mb-4 text-muted-foreground hover:text-foreground transition-colors"
         >
-          ← Retour
+          ← {t('common.back')}
         </button>
         <h1 className="text-3xl font-bold text-gradient-primary mb-2">
-          Contrôle & Liberté
+          {t('addictions.controlAndFreedom')}
         </h1>
         <p className="text-muted-foreground mb-3">
-          Surmontez vos addictions, badge par badge
+          {t('addictions.subtitle')}
         </p>
         
         {/* Streak Journeys */}

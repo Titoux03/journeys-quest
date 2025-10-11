@@ -3,6 +3,7 @@ import { Check, Clock, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PremiumLock } from '@/components/PremiumLock';
 import { useStretching } from '@/hooks/useStretching';
+import { useTranslation } from 'react-i18next';
 
 interface StretchingRoutineProps {
   onNavigate: (screen: string) => void;
@@ -17,6 +18,7 @@ export const StretchingRoutine: React.FC<StretchingRoutineProps> = ({ onNavigate
 };
 
 const StretchingRoutineContent: React.FC<StretchingRoutineProps> = ({ onNavigate }) => {
+  const { t } = useTranslation();
   const { 
     exercises, 
     isLoading, 
@@ -32,7 +34,7 @@ const StretchingRoutineContent: React.FC<StretchingRoutineProps> = ({ onNavigate
       <div className="min-h-screen p-6 bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Chargement de votre routine...</p>
+          <p className="text-muted-foreground">{t('stretching.loadingRoutine')}</p>
         </div>
       </div>
     );
@@ -48,13 +50,13 @@ const StretchingRoutineContent: React.FC<StretchingRoutineProps> = ({ onNavigate
           onClick={() => onNavigate('home')}
           className="mb-4 text-muted-foreground hover:text-foreground transition-colors"
         >
-          ← Retour
+          ← {t('common.back')}
         </button>
         <h1 className="text-2xl sm:text-3xl font-bold text-gradient-primary mb-2">
-          Routine Stretching
+          {t('stretching.title')}
         </h1>
         <p className="text-sm sm:text-base text-muted-foreground">
-          6 exercices ciblés pour améliorer votre mobilité
+          {t('stretching.targetedExercises')}
         </p>
       </div>
 
@@ -62,9 +64,9 @@ const StretchingRoutineContent: React.FC<StretchingRoutineProps> = ({ onNavigate
       <div className="journey-card-premium mb-4 sm:mb-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-base sm:text-lg font-semibold text-foreground">Progression du jour</h3>
+            <h3 className="text-base sm:text-lg font-semibold text-foreground">{t('stretching.todayProgress')}</h3>
             <p className="text-xs sm:text-sm text-muted-foreground">
-              {completedCount} sur {totalCount} exercices
+              {t('stretching.exercisesCount', { completed: completedCount, total: totalCount })}
             </p>
           </div>
           <div className="text-xl sm:text-2xl font-bold text-gradient-primary">

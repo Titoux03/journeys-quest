@@ -25,7 +25,7 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
     const validation = dailyNotesSchema.safeParse({ content: noteContent.trim() });
     
     if (!validation.success) {
-      toast.error(validation.error.issues[0]?.message || "Invalid note content");
+      toast.error(validation.error.issues[0]?.message || t('errors.save'));
       return;
     }
 
@@ -35,13 +35,13 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
       const result = await saveNote(noteContent.trim());
 
       if (result?.success) {
-        toast.success('Note sauvegardée !');
+        toast.success(t('notes.saveSuccess'));
         setNoteContent('');
       } else {
-        toast.error(result?.error || 'Erreur lors de la sauvegarde');
+        toast.error(result?.error || t('errors.save'));
       }
     } catch (error) {
-      toast.error('Erreur lors de la sauvegarde');
+      toast.error(t('errors.save'));
     } finally {
       setSaving(false);
     }
@@ -54,7 +54,7 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
 
   const handleUpdate = async () => {
     if (!editingNote || !editContent.trim()) {
-      toast.error('Veuillez écrire quelque chose avant de sauvegarder');
+      toast.error(t('notes.writeBeforeSave'));
       return;
     }
 
@@ -64,14 +64,14 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
       const result = await updateNote(editingNote.id, editContent.trim());
 
       if (result?.success) {
-        toast.success('Note modifiée !');
+        toast.success(t('notes.noteModified'));
         setEditingNote(null);
         setEditContent('');
       } else {
-        toast.error(result?.error || 'Erreur lors de la modification');
+        toast.error(result?.error || t('errors.save'));
       }
     } catch (error) {
-      toast.error('Erreur lors de la modification');
+      toast.error(t('errors.save'));
     } finally {
       setSaving(false);
     }
@@ -81,13 +81,13 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
     if (window.confirm(t('addiction.deleteNote'))) {
       const result = await deleteNote(note.id);
       if (result?.success) {
-        toast.success('Note supprimée');
+        toast.success(t('success.deleted'));
         if (editingNote?.id === note.id) {
           setEditingNote(null);
           setEditContent('');
         }
       } else {
-        toast.error(result?.error || 'Erreur lors de la suppression');
+        toast.error(result?.error || t('errors.generic'));
       }
     }
   };
@@ -102,12 +102,12 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
       <div className="min-h-screen p-6 pb-24">
         <div className="max-w-2xl mx-auto text-center py-12">
           <BookOpen className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-          <h2 className="text-xl font-semibold mb-2">Connectez-vous pour accéder à vos notes</h2>
+          <h2 className="text-xl font-semibold mb-2">{t('notes.signInToAccess')}</h2>
           <p className="text-muted-foreground mb-6">
-            Créez un compte pour sauvegarder et synchroniser vos notes personnelles
+            {t('notes.createAccountToSave')}
           </p>
           <Button onClick={() => onNavigate('home')} variant="outline">
-            Retour à l'accueil
+            {t('common.back')}
           </Button>
         </div>
       </div>
@@ -118,7 +118,7 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
     return (
       <div className="min-h-screen p-6 pb-24">
         <div className="max-w-2xl mx-auto text-center py-12">
-          <p className="text-muted-foreground">Chargement de vos notes...</p>
+          <p className="text-muted-foreground">{t('notes.loadingNotes')}</p>
         </div>
       </div>
     );
@@ -133,19 +133,19 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
             onClick={() => onNavigate('home')}
             className="mb-4 text-muted-foreground hover:text-foreground transition-colors"
           >
-            ← Retour
+            ← {t('common.back')}
           </button>
           <div className="text-center">
             <div className="inline-block mb-4">
               <BookOpen className="w-12 h-12 text-primary mx-auto" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gradient-primary mb-2">
-              {editingNote ? 'Modifier votre note' : 'Vos notes quotidiennes'}
+              {editingNote ? t('notes.editNote') : t('notes.title')}
             </h1>
             <p className="text-muted-foreground">
               {editingNote 
-                ? 'Modifiez votre note personnelle'
-                : 'Écrivez autant de notes que vous voulez, elles restent toutes sauvegardées'
+                ? t('notes.editYourNote')
+                : t('notes.writeAsMany')
               }
             </p>
           </div>
@@ -157,18 +157,18 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
             <div className="flex items-center gap-2 mb-3">
               <Edit3 className="w-5 h-5 text-primary" />
               <h3 className="font-medium">
-                {editingNote ? 'Modifier votre note' : 'Nouvelle note'}
+                {editingNote ? t('notes.editNote') : t('notes.newNote')}
               </h3>
             </div>
             <textarea
               value={editingNote ? editContent : noteContent}
               onChange={(e) => editingNote ? setEditContent(e.target.value) : setNoteContent(e.target.value)}
-              placeholder="Écrivez vos pensées, vos émotions, vos découvertes... Chaque note est sauvegardée séparément."
+              placeholder={t('notes.placeholder')}
               className="w-full h-64 p-4 border border-input rounded-xl bg-background text-foreground placeholder-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary/20"
               style={{ fontSize: '16px', lineHeight: '1.6' }}
             />
             <div className="text-xs text-muted-foreground mt-2">
-              {editingNote ? editContent.length : noteContent.length} caractères
+              {editingNote ? editContent.length : noteContent.length} {t('notes.characters')}
             </div>
           </div>
 
@@ -179,7 +179,7 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
                 variant="outline"
                 className="flex-1"
               >
-                Annuler
+                {t('common.cancel')}
               </Button>
             )}
             <button
@@ -192,7 +192,7 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
               }`}
             >
               <Send className="w-5 h-5" />
-              {saving ? 'Sauvegarde...' : (editingNote ? 'Modifier' : 'Sauvegarder')}
+              {saving ? t('notes.saving') : (editingNote ? t('common.edit') : t('common.save'))}
             </button>
           </div>
         </div>
@@ -202,7 +202,7 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
           <div className="space-y-4">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <BookOpen className="w-5 h-5" />
-              Toutes vos notes ({notes.length})
+              {t('notes.allYourNotes', { count: notes.length })}
             </h2>
             
             <div className="space-y-3">
@@ -222,7 +222,7 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
                         </div>
                         {note.updated_at !== note.created_at && (
                           <span className="px-2 py-1 text-xs bg-accent/10 text-accent rounded-full">
-                            Modifiée
+                            {t('notes.modified')}
                           </span>
                         )}
                       </div>
@@ -260,7 +260,7 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
         {notes.length === 0 && !editingNote && (
           <div className="journey-card text-center py-8">
             <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Commencez votre journal</h3>
+            <h3 className="text-lg font-semibold mb-2">{t('notes.startJournal')}</h3>
             <p className="text-muted-foreground">
               {t('addiction.firstNote')}<br />
               {t('addiction.createNotes')}

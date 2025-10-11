@@ -112,13 +112,29 @@
   },
   "notes": {
     "title": "Notes Quotidiennes",
-    "placeholder": "Écrivez vos pensées, vos idées, vos réflexions...",
+    "placeholder": "Écrivez vos pensées, vos émotions, vos découvertes... Chaque note est sauvegardée séparément.",
     "saveSuccess": "Note sauvegardée",
-    "deleteConfirm": "Supprimer cette note ?"
+    "deleteConfirm": "Supprimer cette note ?",
+    "signInToAccess": "Connectez-vous pour accéder à vos notes",
+    "createAccountToSave": "Créez un compte pour sauvegarder et synchroniser vos notes personnelles",
+    "loadingNotes": "Chargement de vos notes...",
+    "editNote": "Modifier votre note",
+    "editYourNote": "Modifiez votre note personnelle",
+    "writeAsMany": "Écrivez autant de notes que vous voulez, elles restent toutes sauvegardées",
+    "newNote": "Nouvelle note",
+    "characters": "caractères",
+    "saving": "Sauvegarde...",
+    "allYourNotes": "Toutes vos notes ({{count}})",
+    "modified": "Modifiée",
+    "startJournal": "Commencez votre journal",
+    "writeBeforeSave": "Veuillez écrire quelque chose avant de sauvegarder",
+    "noteModified": "Note modifiée !"
   },
   "todos": {
     "title": "Tâches du Jour",
     "subtitle": "Système anti-procrastination avec priorisation",
+    "signInTitle": "Connectez-vous",
+    "signInDesc": "Connectez-vous pour accéder à vos tâches",
     "addTask": "Ajouter une tâche",
     "taskPlaceholder": "Nouvelle tâche...",
     "priority": "Priorité",
@@ -142,6 +158,9 @@
   },
   "meditation": {
     "title": "Méditation & Deep Work",
+    "focusAndSerenity": "Focus & Sérénité",
+    "cultivateFocus": "Cultivez votre concentration et votre paix intérieure",
+    "goalAchieved": "Objectif atteint 🎯",
     "modes": {
       "meditation": "Méditation",
       "deepwork": "Deep Work"
@@ -152,10 +171,10 @@
     "pause": "Pause",
     "resume": "Reprendre",
     "reset": "Réinitialiser",
-    "completed": "Session terminée !",
+    "completed": "Session terminée 🧘‍♀️",
     "completedMessage": {
-      "meditation": "🧘 Bravo ! Votre esprit est maintenant clair et apaisé.",
-      "deepwork": "🎯 Excellent travail ! Votre concentration a été optimale."
+      "meditation": "Votre esprit est plus calme et centré",
+      "deepwork": "Votre focus profond porte ses fruits"
     },
     "stats": {
       "totalSessions": "Sessions totales",
@@ -166,6 +185,8 @@
   "addictions": {
     "title": "Suivi Multi-Addictions",
     "subtitle": "Libérez-vous de vos dépendances",
+    "loading": "Chargement de vos addictions...",
+    "controlAndFreedom": "Contrôle & Liberté",
     "active": "Actif",
     "inactive": "Inactif",
     "start": "Commencer le suivi",
@@ -197,6 +218,10 @@
   "stretching": {
     "title": "Routine Stretching",
     "subtitle": "6 exercices guidés",
+    "loadingRoutine": "Chargement de votre routine...",
+    "targetedExercises": "6 exercices ciblés pour améliorer votre mobilité",
+    "todayProgress": "Progression du jour",
+    "exercisesCount": "{{completed}} sur {{total}} exercices",
     "start": "Commencer la routine",
     "next": "Exercice suivant",
     "complete": "Terminer",

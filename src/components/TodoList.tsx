@@ -9,12 +9,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { usePremium } from '@/hooks/usePremium';
 import { PremiumLock } from '@/components/PremiumLock';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 interface TodoListProps {
   onNavigate: (screen: string) => void;
 }
 
 const TodoList: React.FC<TodoListProps> = ({ onNavigate }) => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { isPremium } = usePremium();
   const [newTodoText, setNewTodoText] = useState('');
@@ -118,15 +120,15 @@ const TodoList: React.FC<TodoListProps> = ({ onNavigate }) => {
         <div className="max-w-md mx-auto">
           <div className="text-center py-12">
             <CheckSquare className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-            <h2 className="text-xl font-bold text-foreground mb-2">Connectez-vous</h2>
+            <h2 className="text-xl font-bold text-foreground mb-2">{t('todos.signInTitle')}</h2>
             <p className="text-muted-foreground mb-6">
-              Connectez-vous pour accéder à vos tâches
+              {t('todos.signInDesc')}
             </p>
             <Button 
               onClick={() => onNavigate('auth')}
               className="journey-button-primary"
             >
-              Se connecter
+              {t('userStatus.signIn')}
             </Button>
           </div>
         </div>
