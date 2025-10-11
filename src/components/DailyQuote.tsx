@@ -88,7 +88,10 @@ export const DailyQuote: React.FC<DailyQuoteProps> = () => {
       console.log('Generating new quote...');
       
       const { data, error } = await supabase.functions.invoke('generate-daily-quote', {
-        body: { forceAI: forceNew }
+        body: { 
+          forceAI: forceNew,
+          language: i18n.language 
+        }
       });
 
       if (error) {
@@ -127,6 +130,11 @@ export const DailyQuote: React.FC<DailyQuoteProps> = () => {
       generateQuote(false);
     }
   }, []);
+
+  // Régénérer la citation lors du changement de langue
+  useEffect(() => {
+    generateQuote(false);
+  }, [i18n.language]);
 
   return (
     <div className="journey-card-premium animate-scale-in">
