@@ -12,6 +12,7 @@ import { DailyQuote } from '@/components/DailyQuote';
 import { PremiumUpgrade } from '@/components/PremiumUpgrade';
 import { MarketingNotifications } from '@/components/MarketingNotifications';
 import { BottomNavigation } from '@/components/BottomNavigation';
+import { DesktopNavigation } from '@/components/DesktopNavigation';
 import { UserStatus } from '@/components/UserStatus';
 import { WelcomeAnimation } from '@/components/WelcomeAnimation';
 import { PremiumProgressInterruptor } from '@/components/PremiumProgressInterruptor';
@@ -253,23 +254,32 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen pb-24">
-      {/* Animation d'accueil */}
-      {showWelcome && <WelcomeAnimation />}
-      
-      {/* Optimisations CSS mobile */}
-      <MobileOptimizations />
-      
-      {/* User Status Header */}
-      <UserStatus />
-      
-      {/* Marketing Notifications */}
-      <MarketingNotifications />
-      
-      {renderScreen()}
+    <div className="min-h-screen pb-24 lg:pb-0">
+      {/* Desktop Navigation */}
+      <DesktopNavigation 
+        currentScreen={currentScreen}
+        onNavigate={setCurrentScreen}
+      />
 
-      {/* Navigation en bas */}
-      <BottomNavigation 
+      {/* Main Content */}
+      <div className="lg:ml-64">
+        {/* Animation d'accueil */}
+        {showWelcome && <WelcomeAnimation />}
+        
+        {/* Optimisations CSS mobile */}
+        <MobileOptimizations />
+        
+        {/* User Status Header */}
+        <UserStatus />
+        
+        {/* Marketing Notifications */}
+        <MarketingNotifications />
+        
+        {renderScreen()}
+      </div>
+
+      {/* Navigation en bas (mobile seulement) */}
+      <BottomNavigation
         currentScreen={currentScreen}
         onNavigate={setCurrentScreen}
       />

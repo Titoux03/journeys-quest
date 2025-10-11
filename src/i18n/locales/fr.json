@@ -72,7 +72,99 @@
     "unlockPremium": "Débloquer Premium",
     "processing": "Traitement en cours...",
     "developmentProfile": "✨ Votre Profil de Développement Personnel",
-    "visualizeSkills": "Visualisez vos 5 compétences de vie avec notre diagramme radar exclusif"
+    "visualizeSkills": "Visualisez vos 5 compétences de vie avec notre diagramme radar exclusif",
+    "features": {
+      "savings": {
+        "title": "💰 Économies Cigarettes",
+        "description": "Compteur intelligent qui calcule vos économies en temps réel",
+        "benefits": [
+          "Calcul quotidien automatique",
+          "Paliers de motivation",
+          "Idées d'utilisation de l'argent économisé"
+        ],
+        "value": "Motivation financière puissante"
+      },
+      "addictions": {
+        "title": "🛡️ Contrôle Multi-Addictions",
+        "description": "Surmontez cigarette, porno, réseaux sociaux, procrastination",
+        "benefits": [
+          "Compteurs motivants",
+          "Badges de progression",
+          "Streaks visuels"
+        ],
+        "value": "Taux de réussite 89%"
+      },
+      "focus": {
+        "title": "🧠 Focus & Deep Work Premium",
+        "description": "Sessions de méditation illimitées avec gongs personnalisés",
+        "benefits": [
+          "Historique complet",
+          "Analyses de progression",
+          "Sons exclusifs"
+        ],
+        "value": "Concentration +300%"
+      },
+      "radar": {
+        "title": "📊 Profil de Développement Radar",
+        "description": "Diagramme radar évolutif de vos 5 compétences de vie",
+        "benefits": [
+          "Historique illimité",
+          "Analyses IA",
+          "Rapports personnalisés"
+        ],
+        "value": "Vision claire progression"
+      },
+      "badges": {
+        "title": "👑 Système de Badges Exclusifs",
+        "description": "Gamification avancée pour maintenir votre motivation",
+        "benefits": [
+          "60+ badges uniques",
+          "Streaks de fidélité",
+          "Récompenses visuelles"
+        ],
+        "value": "Motivation +250%"
+      },
+      "stretching": {
+        "title": "💪 Routines Stretching Guidées",
+        "description": "Programmes d'exercices personnalisés avec suivi",
+        "benefits": [
+          "6 exercices guidés",
+          "Progression trackée",
+          "Rappels intelligents"
+        ],
+        "value": "Bien-être physique optimisé"
+      },
+      "quotes": {
+        "title": "✨ Citations IA Personnalisées",
+        "description": "Citations motivantes générées selon votre humeur du jour",
+        "benefits": [
+          "IA adaptative",
+          "Contenu exclusif",
+          "Inspiration quotidienne"
+        ],
+        "value": "Boost moral quotidien"
+      },
+      "history": {
+        "title": "📅 Historique & Statistiques Avancées",
+        "description": "Sauvegarde illimitée et analyses détaillées",
+        "benefits": [
+          "Données illimitées",
+          "Graphiques évolutifs",
+          "Export possible"
+        ],
+        "value": "Vision long terme"
+      },
+      "support": {
+        "title": "❤️ Support Premium & Mises à Jour",
+        "description": "Accès prioritaire et nouvelles fonctionnalités",
+        "benefits": [
+          "Support prioritaire",
+          "Nouvelles features",
+          "Accès anticipé"
+        ],
+        "value": "Toujours à la pointe"
+      }
+    }
   },
   "authPage": {
     "appTitle": "Journeys",

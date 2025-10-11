@@ -72,7 +72,99 @@
     "unlockPremium": "Unlock Premium",
     "processing": "Processing...",
     "developmentProfile": "✨ Your Personal Development Profile",
-    "visualizeSkills": "Visualize your 5 life skills with our exclusive radar diagram"
+    "visualizeSkills": "Visualize your 5 life skills with our exclusive radar diagram",
+    "features": {
+      "savings": {
+        "title": "💰 Cigarette Savings",
+        "description": "Smart counter that calculates your savings in real-time",
+        "benefits": [
+          "Automatic daily calculation",
+          "Motivation milestones",
+          "Ideas for using saved money"
+        ],
+        "value": "Powerful financial motivation"
+      },
+      "addictions": {
+        "title": "🛡️ Multi-Addiction Control",
+        "description": "Overcome cigarettes, porn, social media, procrastination",
+        "benefits": [
+          "Motivating counters",
+          "Progress badges",
+          "Visual streaks"
+        ],
+        "value": "89% success rate"
+      },
+      "focus": {
+        "title": "🧠 Focus & Deep Work Premium",
+        "description": "Unlimited meditation sessions with custom gongs",
+        "benefits": [
+          "Complete history",
+          "Progress analysis",
+          "Exclusive sounds"
+        ],
+        "value": "Concentration +300%"
+      },
+      "radar": {
+        "title": "📊 Development Profile Radar",
+        "description": "Evolving radar diagram of your 5 life skills",
+        "benefits": [
+          "Unlimited history",
+          "AI analysis",
+          "Personalized reports"
+        ],
+        "value": "Clear progress vision"
+      },
+      "badges": {
+        "title": "👑 Exclusive Badge System",
+        "description": "Advanced gamification to maintain your motivation",
+        "benefits": [
+          "60+ unique badges",
+          "Loyalty streaks",
+          "Visual rewards"
+        ],
+        "value": "Motivation +250%"
+      },
+      "stretching": {
+        "title": "💪 Guided Stretching Routines",
+        "description": "Personalized exercise programs with tracking",
+        "benefits": [
+          "6 guided exercises",
+          "Tracked progression",
+          "Smart reminders"
+        ],
+        "value": "Optimized physical well-being"
+      },
+      "quotes": {
+        "title": "✨ Personalized AI Quotes",
+        "description": "Motivational quotes generated based on your daily mood",
+        "benefits": [
+          "Adaptive AI",
+          "Exclusive content",
+          "Daily inspiration"
+        ],
+        "value": "Daily morale boost"
+      },
+      "history": {
+        "title": "📅 History & Advanced Statistics",
+        "description": "Unlimited backup and detailed analysis",
+        "benefits": [
+          "Unlimited data",
+          "Evolving charts",
+          "Export possible"
+        ],
+        "value": "Long-term vision"
+      },
+      "support": {
+        "title": "❤️ Premium Support & Updates",
+        "description": "Priority access and new features",
+        "benefits": [
+          "Priority support",
+          "New features",
+          "Early access"
+        ],
+        "value": "Always cutting-edge"
+      }
+    }
   },
   "authPage": {
     "appTitle": "Journeys",

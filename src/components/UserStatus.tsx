@@ -16,7 +16,7 @@ export const UserStatus: React.FC = () => {
   } = usePremium();
   const navigate = useNavigate();
   if (!user) {
-    return <div className="flex items-center justify-between p-4 bg-card/50 backdrop-blur-sm border-b border-border/30">
+    return <div className="flex items-center justify-between p-4 bg-card/50 backdrop-blur-sm border-b border-border/30 lg:hidden">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
             <User className="w-4 h-4 text-muted-foreground" />
@@ -36,7 +36,7 @@ export const UserStatus: React.FC = () => {
         </div>
       </div>;
   }
-  return <div className="flex items-center justify-between p-4 bg-card/50 backdrop-blur-sm border-b border-border/30">
+  return <div className="flex items-center justify-between p-4 bg-card/50 backdrop-blur-sm border-b border-border/30 lg:hidden">
       <div className="flex items-center space-x-3">
         <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
           {isPremium ? <Crown className="w-4 h-4 text-primary" /> : <User className="w-4 h-4 text-primary" />}

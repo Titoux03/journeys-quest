@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Crown, Sparkles, TrendingUp, Shield, Dumbbell, Brain, Heart, Calendar, Loader2, UserPlus, ExternalLink } from 'lucide-react';
+import { X, Crown, Sparkles, TrendingUp, Shield, Dumbbell, Brain, Heart, Calendar, Loader2, UserPlus, ExternalLink, Coins } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { usePremium } from '@/hooks/usePremium';
@@ -56,67 +56,111 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
 
   const premiumFeatures = [
     {
-      icon: <Brain className="w-6 h-6" />,
-      title: "Focus & Deep Work Premium",
-      description: "Sessions de méditation illimitées avec gongs personnalisés",
-      benefits: ["Historique complet", "Analyses de progression", "Sons exclusifs"],
-      value: "Améliore concentration +300%",
+      icon: <Coins className="w-6 h-6" />,
+      title: t('premiumModal.features.savings.title'),
+      description: t('premiumModal.features.savings.description'),
+      benefits: [
+        t('premiumModal.features.savings.benefits.0'),
+        t('premiumModal.features.savings.benefits.1'),
+        t('premiumModal.features.savings.benefits.2')
+      ],
+      value: t('premiumModal.features.savings.value'),
       highlight: true
     },
     {
       icon: <Shield className="w-6 h-6" />,
-      title: "Contrôle Multi-Addictions",
-      description: "Surmontez cigarette, porno, réseaux sociaux, procrastination",
-      benefits: ["Compteurs motivants", "Badges de progression", "Streaks visuels"],
-      value: "Taux de réussite 89%",
+      title: t('premiumModal.features.addictions.title'),
+      description: t('premiumModal.features.addictions.description'),
+      benefits: [
+        t('premiumModal.features.addictions.benefits.0'),
+        t('premiumModal.features.addictions.benefits.1'),
+        t('premiumModal.features.addictions.benefits.2')
+      ],
+      value: t('premiumModal.features.addictions.value'),
+      highlight: true
+    },
+    {
+      icon: <Brain className="w-6 h-6" />,
+      title: t('premiumModal.features.focus.title'),
+      description: t('premiumModal.features.focus.description'),
+      benefits: [
+        t('premiumModal.features.focus.benefits.0'),
+        t('premiumModal.features.focus.benefits.1'),
+        t('premiumModal.features.focus.benefits.2')
+      ],
+      value: t('premiumModal.features.focus.value'),
       highlight: true
     },
     {
       icon: <TrendingUp className="w-6 h-6" />,
-      title: "Profil de Développement Radar",
-      description: "Diagramme radar évolutif de vos 5 compétences de vie",
-      benefits: ["Historique illimité", "Analyses IA", "Rapports personnalisés"],
-      value: "Vision claire progression",
-      highlight: true
+      title: t('premiumModal.features.radar.title'),
+      description: t('premiumModal.features.radar.description'),
+      benefits: [
+        t('premiumModal.features.radar.benefits.0'),
+        t('premiumModal.features.radar.benefits.1'),
+        t('premiumModal.features.radar.benefits.2')
+      ],
+      value: t('premiumModal.features.radar.value'),
+      highlight: false
     },
     {
       icon: <Crown className="w-6 h-6" />,
-      title: "Système de Badges Exclusifs",
-      description: "Gamification avancée pour maintenir votre motivation",
-      benefits: ["60+ badges uniques", "Streaks de fidélité", "Récompenses visuelles"],
-      value: "Motivation +250%",
+      title: t('premiumModal.features.badges.title'),
+      description: t('premiumModal.features.badges.description'),
+      benefits: [
+        t('premiumModal.features.badges.benefits.0'),
+        t('premiumModal.features.badges.benefits.1'),
+        t('premiumModal.features.badges.benefits.2')
+      ],
+      value: t('premiumModal.features.badges.value'),
       highlight: false
     },
     {
       icon: <Dumbbell className="w-6 h-6" />,
-      title: "Routines Stretching Guidées",
-      description: "Programmes d'exercices personnalisés avec suivi",
-      benefits: ["6 exercices guidés", "Progression trackée", "Rappels intelligents"],
-      value: "Bien-être physique optimisé",
+      title: t('premiumModal.features.stretching.title'),
+      description: t('premiumModal.features.stretching.description'),
+      benefits: [
+        t('premiumModal.features.stretching.benefits.0'),
+        t('premiumModal.features.stretching.benefits.1'),
+        t('premiumModal.features.stretching.benefits.2')
+      ],
+      value: t('premiumModal.features.stretching.value'),
       highlight: false
     },
     {
       icon: <Sparkles className="w-6 h-6" />,
-      title: "Citations IA Personnalisées",
-      description: "Citations motivantes générées selon votre humeur du jour",
-      benefits: ["IA adaptative", "Contenu exclusif", "Inspiration quotidienne"],
-      value: "Boost moral quotidien",
+      title: t('premiumModal.features.quotes.title'),
+      description: t('premiumModal.features.quotes.description'),
+      benefits: [
+        t('premiumModal.features.quotes.benefits.0'),
+        t('premiumModal.features.quotes.benefits.1'),
+        t('premiumModal.features.quotes.benefits.2')
+      ],
+      value: t('premiumModal.features.quotes.value'),
       highlight: false
     },
     {
       icon: <Calendar className="w-6 h-6" />,
-      title: "Historique & Statistiques Avancées",
-      description: "Sauvegarde illimitée et analyses détaillées",
-      benefits: ["Données illimitées", "Graphiques évolutifs", "Export possible"],
-      value: "Vision long terme",
+      title: t('premiumModal.features.history.title'),
+      description: t('premiumModal.features.history.description'),
+      benefits: [
+        t('premiumModal.features.history.benefits.0'),
+        t('premiumModal.features.history.benefits.1'),
+        t('premiumModal.features.history.benefits.2')
+      ],
+      value: t('premiumModal.features.history.value'),
       highlight: false
     },
     {
       icon: <Heart className="w-6 h-6" />,
-      title: "Support Premium & Mises à Jour",
-      description: "Accès prioritaire et nouvelles fonctionnalités",
-      benefits: ["Support prioritaire", "Nouvelles features", "Accès anticipé"],
-      value: "Toujours à la pointe",
+      title: t('premiumModal.features.support.title'),
+      description: t('premiumModal.features.support.description'),
+      benefits: [
+        t('premiumModal.features.support.benefits.0'),
+        t('premiumModal.features.support.benefits.1'),
+        t('premiumModal.features.support.benefits.2')
+      ],
+      value: t('premiumModal.features.support.value'),
       highlight: false
     }
   ];
