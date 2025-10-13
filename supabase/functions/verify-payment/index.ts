@@ -13,6 +13,15 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Authenticate the caller
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 401,
+    });
+  }
+
   const supabaseClient = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
@@ -20,6 +29,20 @@ serve(async (req) => {
   );
 
   try {
+    // Verify the authenticated user
+    const token = authHeader.replace("Bearer ", "");
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser(token);
+    
+    if (authError || !user) {
+      console.error('[VERIFY-PAYMENT] Authentication failed:', authError);
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401,
+      });
+    }
+
+    console.log('[VERIFY-PAYMENT] Authenticated user:', user.id);
+
     const { session_id } = await req.json();
     
     if (!session_id) {
@@ -42,6 +65,15 @@ serve(async (req) => {
 
     const userId = session.metadata.user_id;
     console.log('[VERIFY-PAYMENT] Session found for user:', userId);
+
+    // Verify the authenticated user owns this session
+    if (userId !== user.id) {
+      console.error('[VERIFY-PAYMENT] User mismatch - session belongs to:', userId, 'but caller is:', user.id);
+      return new Response(JSON.stringify({ error: "Unauthorized - session does not belong to you" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 403,
+      });
+    }
 
     if (session.payment_status === 'paid') {
       // Check if we already recorded this purchase

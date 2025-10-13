@@ -49,7 +49,7 @@ port = 54321
 policy = "oneshot"
 
 [functions.verify-payment]
-verify_jwt = false
+verify_jwt = true
 
 [functions.generate-daily-quote]
 verify_jwt = false

@@ -20,6 +20,62 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     logStep("Function started");
 
+    // SECURITY: Only allow calls from cron jobs (internal Supabase calls)
+    // Cron jobs don't have Authorization headers, but direct HTTP calls would
+    const authHeader = req.headers.get("Authorization");
+    const userAgent = req.headers.get("User-Agent");
+    
+    // If there's an auth header, verify it's from an admin
+    if (authHeader) {
+      const supabaseAuthClient = createClient(
+        Deno.env.get("SUPABASE_URL") ?? "",
+        Deno.env.get("SUPABASE_ANON_KEY") ?? ""
+      );
+      
+      const token = authHeader.replace("Bearer ", "");
+      const { data: { user }, error: authError } = await supabaseAuthClient.auth.getUser(token);
+      
+      if (authError || !user) {
+        logStep("Unauthorized access attempt");
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // Check if user has admin role
+      const { data: hasAdminRole } = await supabaseAuthClient.rpc('has_role', {
+        _user_id: user.id,
+        _role: 'admin'
+      });
+
+      if (!hasAdminRole) {
+        logStep("Non-admin user attempted to trigger marketing email");
+        return new Response(JSON.stringify({ error: "Forbidden - admin access required" }), {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      logStep("Admin user authenticated", { userId: user.id });
+    } else {
+      // No auth header - check if it's from Supabase cron (pg_cron or pg_net)
+      // These internal calls have specific user agents
+      const isInternalCall = userAgent?.includes('pg_net') || userAgent?.includes('PostgREST');
+      
+      if (!isInternalCall) {
+        logStep("Unauthorized: Not from cron job or admin");
+        return new Response(JSON.stringify({ 
+          error: "This function should only be called via scheduled job or by admins" 
+        }), {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      
+      logStep("Internal cron job detected");
+    }
+
     // Initialize Supabase client with service role key
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
