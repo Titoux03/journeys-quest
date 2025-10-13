@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Lottie from 'lottie-react';
+import moonAnimation from '@/assets/animations/moon-animation.json';
 
 export const WelcomeAnimation: React.FC = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -20,10 +22,10 @@ export const WelcomeAnimation: React.FC = () => {
     >
       <div className="text-center">
         <div 
-          className="text-8xl mb-4 animate-scale-in moon-float"
+          className="w-32 h-32 mx-auto mb-4 animate-scale-in"
           style={{ animationDuration: '800ms' }}
         >
-          🌙
+          <Lottie animationData={moonAnimation} loop={true} />
         </div>
         <div 
           className="text-2xl font-bold text-gradient-primary animate-fade-in"

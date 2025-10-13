@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { X, Crown, Sparkles, TrendingUp, Shield, Dumbbell, Brain, Heart, Calendar, Loader2, UserPlus, ExternalLink, Coins } from 'lucide-react';
+import Lottie from 'lottie-react';
+import crownAnimation from '@/assets/animations/crown-animation.json';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { usePremium } from '@/hooks/usePremium';
@@ -194,8 +196,8 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
 
         {/* Header */}
         <div className="text-center mb-8 pt-4">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center pulse-glow">
-            <Crown className="w-10 h-10 text-primary-foreground" />
+          <div className="w-20 h-20 mx-auto mb-6">
+            <Lottie animationData={crownAnimation} loop={true} />
           </div>
           
           <h1 className="text-3xl font-bold text-gradient-primary mb-3">

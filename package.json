@@ -54,6 +54,7 @@
     "framer-motion": "^12.23.22",
     "i18next": "^25.5.2",
     "input-otp": "^1.4.2",
+    "lottie-react": "^2.4.1",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",
     "react": "^18.3.1",

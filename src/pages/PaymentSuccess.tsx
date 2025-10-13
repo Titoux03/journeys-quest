@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import Lottie from 'lottie-react';
+import successAnimation from '@/assets/animations/success-animation.json';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Crown, CheckCircle, Loader2 } from 'lucide-react';
@@ -99,8 +101,8 @@ export const PaymentSuccess: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-card to-secondary">
       <Card className="max-w-md w-full mx-4">
         <CardHeader className="text-center">
-          <div className="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle className="h-8 w-8 text-green-600" />
+          <div className="h-24 w-24 mx-auto mb-4">
+            <Lottie animationData={successAnimation} loop={false} />
           </div>
           <CardTitle className="text-2xl flex items-center justify-center gap-2">
             <Crown className="h-6 w-6 text-yellow-500" />
