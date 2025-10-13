@@ -39,10 +39,16 @@
     "later": "Later"
   },
   "premiumModal": {
-    "transformYourLife": "🚀 Transform your life with Premium",
+    "transformYourLife": "✨ Continue your growth",
+    "socialProof": "+5,000 users have already unlocked their transformation",
+    "lossAversion": "Don't lose your progress streaks — stay consistent with Premium",
+    "progressToUnlock": "Your progress to Premium",
+    "authorityBadge": "Recommended by Journeys mentors",
     "featureAndMore": "and 7 other exclusive features",
     "createAccountDesc": "Create a Premium account and immediately access all features that transform your daily life",
     "unlockDesc": "Instantly unlock 8 premium features that will revolutionize your personal development",
+    "ctaCreate": "✨ Unlock your next chapter — Start Premium today",
+    "ctaUnlock": "✨ Continue your growth — Activate Premium",
     "whatYouUnlock": "✨ What you unlock immediately",
     "investmentTitle": "💰 An investment that changes everything",
     "freeVersion": "Free Version",

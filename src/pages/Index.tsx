@@ -33,7 +33,7 @@ interface JournalEntry {
 
 const Index = () => {
   const { user, signOut, loading } = useAuth();
-  const { upgradeModalVisible, hideUpgradeModal, isPremium } = usePremium();
+  const { upgradeModalVisible, hideUpgradeModal, showUpgradeModal, isPremium } = usePremium();
   const { journalEntries, saveJournalEntry, deleteJournalEntry } = useProgress();
   const { playWelcome } = useGongSounds();
   const navigate = useNavigate();
@@ -62,6 +62,20 @@ const Index = () => {
       setLocalJournalEntries([]);
     }
   }, [user]);
+
+  // Auto-show premium modal on first load (with delay)
+  useEffect(() => {
+    const hasSeenAutoModal = sessionStorage.getItem('hasSeenPremiumAutoModal');
+    
+    if (!hasSeenAutoModal && !isPremium) {
+      const timer = setTimeout(() => {
+        showUpgradeModal();
+        sessionStorage.setItem('hasSeenPremiumAutoModal', 'true');
+      }, 2000); // 2 second delay
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isPremium, showUpgradeModal]);
 
   // Gérer l'animation de bienvenue et le gong
   useEffect(() => {

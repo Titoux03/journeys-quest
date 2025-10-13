@@ -160,6 +160,11 @@ const TodoList: React.FC<TodoListProps> = ({ onNavigate }) => {
                     <Crown className="w-3 h-3 mr-1" />
                     Premium
                   </Badge>
+                  {!isPremium && (
+                    <span className="text-xs text-warning animate-pulse">
+                      🔥 Imaginez vos progrès avec Premium Insights
+                    </span>
+                  )}
                   <p className="text-sm text-muted-foreground">
                     {new Date().toLocaleDateString('fr-FR', { 
                       weekday: 'long', 

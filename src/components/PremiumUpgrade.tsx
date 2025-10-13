@@ -201,6 +201,14 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           <h1 className="text-3xl font-bold text-gradient-primary mb-3">
             {t('premiumModal.transformYourLife')}
           </h1>
+
+          {/* Social Proof Badge */}
+          <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-success/10 border border-success/20">
+            <UserPlus className="w-4 h-4 text-success" />
+            <span className="text-sm font-medium text-success">
+              {t('premiumModal.socialProof')}
+            </span>
+          </div>
           
           {feature && (
             <p className="text-lg text-muted-foreground mb-4">
@@ -214,6 +222,13 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
               : t('premiumModal.unlockDesc')
             }
           </p>
+
+          {/* Loss Aversion Badge */}
+          <div className="mt-4 p-3 rounded-lg bg-warning/10 border border-warning/20">
+            <p className="text-sm text-warning font-medium">
+              ⚠️ {t('premiumModal.lossAversion')}
+            </p>
+          </div>
         </div>
 
         {/* Fonctionnalités Premium - Grid amélioré */}
@@ -412,6 +427,20 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           </div>
         </div>
 
+        {/* Authority & Commitment Progress */}
+        <div className="mb-6 space-y-3">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">{t('premiumModal.progressToUnlock')}</span>
+            <span className="font-semibold text-primary">80%</span>
+          </div>
+          <div className="h-2 bg-secondary rounded-full overflow-hidden">
+            <div className="h-full w-4/5 bg-gradient-to-r from-primary to-primary-glow animate-pulse"></div>
+          </div>
+          <p className="text-xs text-center text-muted-foreground">
+            💡 {t('premiumModal.authorityBadge')}
+          </p>
+        </div>
+
         {/* CTA amélioré */}
         <div className="space-y-4">
           {!user ? (
@@ -419,11 +448,11 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
               <Button
                 onClick={() => { navigate('/auth'); onClose(); }}
                 disabled={!acceptedTerms}
-                className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
+                className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed animate-pulse"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                <UserPlus className="w-5 h-5 mr-2" />
-                {t('premiumModal.createPremiumAccount')}
+                <Sparkles className="w-5 h-5 mr-2" />
+                {t('premiumModal.ctaCreate')}
               </Button>
               
               <div className="text-center space-y-2">
@@ -443,18 +472,18 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
             <Button
               onClick={handleUpgrade}
               disabled={loading || !acceptedTerms}
-              className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
+              className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed animate-pulse"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
               {loading ? (
                 <>
                   <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Redirection vers le paiement...
+                  {t('premiumModal.processing')}
                 </>
               ) : (
                 <>
-                  <Crown className="w-5 h-5 mr-2" />
-                  🚀 Débloquer mes 8 fonctionnalités (14,99€)
+                  <Sparkles className="w-5 h-5 mr-2" />
+                  {t('premiumModal.ctaUnlock')}
                 </>
               )}
             </Button>

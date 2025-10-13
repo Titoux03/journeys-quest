@@ -65,6 +65,10 @@ export const PremiumLock: React.FC<PremiumLockProps> = ({
           <p className="text-sm text-muted-foreground mb-6">
             {feature} transforme votre parcours de développement personnel
           </p>
+          
+          <p className="text-xs text-warning mb-6 animate-pulse">
+            ✨ Disponible en Premium
+          </p>
 
           {/* Action Buttons */}
           <div className="space-y-3">
