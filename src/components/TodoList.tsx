@@ -8,6 +8,8 @@ import { useTodos } from '@/hooks/useTodos';
 import { useAuth } from '@/hooks/useAuth';
 import { usePremium } from '@/hooks/usePremium';
 import { PremiumLock } from '@/components/PremiumLock';
+import { TodoCompletionCelebration } from '@/components/TodoCompletionCelebration';
+import { useAIOptimization } from '@/hooks/useAIOptimization';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
@@ -18,11 +20,14 @@ interface TodoListProps {
 const TodoList: React.FC<TodoListProps> = ({ onNavigate }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { isPremium } = usePremium();
+  const { isPremium, showUpgradeModal } = usePremium();
+  const { trackBehavior } = useAIOptimization();
   const [newTodoText, setNewTodoText] = useState('');
   const [newTodoPriority, setNewTodoPriority] = useState(0);
   const [isAdding, setIsAdding] = useState(false);
   const [showCompleted, setShowCompleted] = useState(false);
+  const [celebration, setCelebration] = useState<{ text: string } | null>(null);
+  const [completionCount, setCompletionCount] = useState(0);
 
   const {
     todos,
@@ -39,6 +44,40 @@ const TodoList: React.FC<TodoListProps> = ({ onNavigate }) => {
       carryImportantTodosFromYesterday();
     }
   }, [user, isPremium]);
+
+  // AI Optimization: Celebrate completions and track behavior
+  const handleToggleTodo = async (todoId: string) => {
+    const todo = todos.find(t => t.id === todoId);
+    if (!todo) return;
+
+    // If completing a todo (not un-completing)
+    if (!todo.is_completed) {
+      trackBehavior('todo_completed', { 
+        todoText: todo.text, 
+        priorityLevel: todo.priority_level 
+      });
+      
+      // Show celebration
+      setCelebration({ text: todo.text });
+      
+      // Increment completion count
+      const newCount = completionCount + 1;
+      setCompletionCount(newCount);
+      
+      // AI Optimization: Show premium modal after 3 completions (motivation peak)
+      if (!isPremium && newCount === 3) {
+        setTimeout(() => {
+          trackBehavior('premium_modal_triggered_after_accomplishment', {
+            completionCount: newCount,
+          });
+          showUpgradeModal();
+        }, 3000); // After celebration
+      }
+    }
+
+    // Toggle the todo
+    await toggleTodo(todoId);
+  };
 
   // Fonction pour reporter les tâches importantes de la veille
   const carryImportantTodosFromYesterday = async () => {
@@ -278,7 +317,7 @@ const TodoList: React.FC<TodoListProps> = ({ onNavigate }) => {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => toggleTodo(todo.id)}
+                                onClick={() => handleToggleTodo(todo.id)}
                                 className="p-1 hover:bg-success/20"
                               >
                                 <CheckSquare className="w-4 h-4 text-muted-foreground hover:text-success" />
@@ -354,7 +393,7 @@ const TodoList: React.FC<TodoListProps> = ({ onNavigate }) => {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => toggleTodo(todo.id)}
+                                onClick={() => handleToggleTodo(todo.id)}
                                 className="p-1"
                               >
                                 <CheckSquare className="w-4 h-4 text-success" fill="currentColor" />
@@ -424,6 +463,14 @@ const TodoList: React.FC<TodoListProps> = ({ onNavigate }) => {
           )}
         </div>
       </div>
+      
+      {/* AI Optimization: Celebration on completion */}
+      {celebration && (
+        <TodoCompletionCelebration
+          todoText={celebration.text}
+          onComplete={() => setCelebration(null)}
+        />
+      )}
     </PremiumLock>
   );
 };

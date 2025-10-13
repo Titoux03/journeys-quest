@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PremiumProvider } from "./hooks/usePremium";
 import { AuthProvider } from "./hooks/useAuth";
+import { AIOptimizationLog } from "./components/AIOptimizationLog";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import { PaymentSuccess } from "./pages/PaymentSuccess";
@@ -38,6 +39,7 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
+          <AIOptimizationLog />
           <AppContent />
         </TooltipProvider>
       </PremiumProvider>
