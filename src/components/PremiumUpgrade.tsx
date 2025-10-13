@@ -448,11 +448,13 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
               <Button
                 onClick={() => { navigate('/auth'); onClose(); }}
                 disabled={!acceptedTerms}
-                className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed animate-pulse"
+                className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed animate-pulse flex items-center justify-center"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                <Sparkles className="w-5 h-5 mr-2" />
-                {t('premiumModal.ctaCreate')}
+                <span className="flex items-center justify-center gap-2">
+                  <Sparkles className="w-5 h-5" />
+                  <span>{t('premiumModal.ctaCreate')}</span>
+                </span>
               </Button>
               
               <div className="text-center space-y-2">
@@ -472,19 +474,19 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
             <Button
               onClick={handleUpgrade}
               disabled={loading || !acceptedTerms}
-              className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed animate-pulse"
+              className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed animate-pulse flex items-center justify-center"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
               {loading ? (
-                <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  {t('premiumModal.processing')}
-                </>
+                <span className="flex items-center justify-center gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>{t('premiumModal.processing')}</span>
+                </span>
               ) : (
-                <>
-                  <Sparkles className="w-5 h-5 mr-2" />
-                  {t('premiumModal.ctaUnlock')}
-                </>
+                <span className="flex items-center justify-center gap-2">
+                  <Sparkles className="w-5 h-5" />
+                  <span>{t('premiumModal.ctaUnlock')}</span>
+                </span>
               )}
             </Button>
           )}
