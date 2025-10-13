@@ -3,6 +3,7 @@ import { Brain, TrendingUp, AlertCircle, CheckCircle, Clock } from 'lucide-react
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useTranslation } from 'react-i18next';
 
 interface OptimizationEntry {
   id: string;
@@ -21,6 +22,7 @@ interface OptimizationEntry {
 }
 
 export const AIOptimizationLog: React.FC = () => {
+  const { t } = useTranslation();
   const [entries, setEntries] = useState<OptimizationEntry[]>([]);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -42,53 +44,53 @@ export const AIOptimizationLog: React.FC = () => {
         timestamp: new Date(),
         category: 'emotional',
         severity: 'medium',
-        observation: 'Skills Radar Chart interaction shows high engagement but lacks emotional feedback',
-        hypothesis: 'Adding empathetic micro-copy when users view their progress could increase emotional connection',
+        observation: t('aiOptimizationLog.baseline.obs1.observation'),
+        hypothesis: t('aiOptimizationLog.baseline.obs1.hypothesis'),
         status: 'observed',
-        psychologyPrinciple: 'Self-Determination Theory (Competence)',
+        psychologyPrinciple: t('aiOptimizationLog.baseline.obs1.principle'),
       },
       {
         id: 'obs-002',
         timestamp: new Date(),
         category: 'engagement',
         severity: 'low',
-        observation: 'Quote of the Day generates interest but refresh action lacks motivational context',
-        hypothesis: 'Contextual encouragement during quote refresh could maintain engagement momentum',
+        observation: t('aiOptimizationLog.baseline.obs2.observation'),
+        hypothesis: t('aiOptimizationLog.baseline.obs2.hypothesis'),
         status: 'observed',
-        psychologyPrinciple: 'Positive Reinforcement',
+        psychologyPrinciple: t('aiOptimizationLog.baseline.obs2.principle'),
       },
       {
         id: 'obs-003',
         timestamp: new Date(),
         category: 'conversion',
         severity: 'high',
-        observation: 'Premium modal auto-displays but may feel interruptive without emotional priming',
-        hypothesis: 'Timing the modal after achievement moments increases receptiveness (Fogg Behavior Model)',
+        observation: t('aiOptimizationLog.baseline.obs3.observation'),
+        hypothesis: t('aiOptimizationLog.baseline.obs3.hypothesis'),
         status: 'proposed',
-        intervention: 'Trigger premium modal after completing journal entry or reaching streak milestone',
-        psychologyPrinciple: 'Fogg Behavior Model (Motivation Peak)',
+        intervention: t('aiOptimizationLog.baseline.obs3.intervention'),
+        psychologyPrinciple: t('aiOptimizationLog.baseline.obs3.principle'),
       },
       {
         id: 'obs-004',
         timestamp: new Date(),
         category: 'friction',
         severity: 'medium',
-        observation: 'No contextual help when users explore locked premium features',
-        hypothesis: 'Providing "why this matters" micro-tooltips reduces cognitive friction and increases perceived value',
+        observation: t('aiOptimizationLog.baseline.obs4.observation'),
+        hypothesis: t('aiOptimizationLog.baseline.obs4.hypothesis'),
         status: 'proposed',
-        intervention: 'Add empathetic tooltips explaining emotional benefits of premium features',
-        psychologyPrinciple: 'Value Perception Enhancement',
+        intervention: t('aiOptimizationLog.baseline.obs4.intervention'),
+        psychologyPrinciple: t('aiOptimizationLog.baseline.obs4.principle'),
       },
       {
         id: 'obs-005',
         timestamp: new Date(),
         category: 'emotional',
         severity: 'high',
-        observation: 'Todo completion lacks celebration or emotional acknowledgment',
-        hypothesis: 'Micro-celebrations on task completion boost dopamine and habit formation',
+        observation: t('aiOptimizationLog.baseline.obs5.observation'),
+        hypothesis: t('aiOptimizationLog.baseline.obs5.hypothesis'),
         status: 'proposed',
-        intervention: 'Add subtle confetti animation and affirming message on todo completion',
-        psychologyPrinciple: 'Operant Conditioning (Positive Reinforcement)',
+        intervention: t('aiOptimizationLog.baseline.obs5.intervention'),
+        psychologyPrinciple: t('aiOptimizationLog.baseline.obs5.principle'),
       },
     ];
 
@@ -159,7 +161,7 @@ export const AIOptimizationLog: React.FC = () => {
       <button
         onClick={() => setIsVisible(true)}
         className="fixed bottom-4 right-4 w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full shadow-lg flex items-center justify-center z-50 hover:scale-110 transition-transform"
-        title="AI Optimization Log (Ctrl+Alt+O)"
+        title={t('aiOptimizationLog.tooltip')}
       >
         <Brain className="w-6 h-6 text-white" />
       </button>
@@ -173,9 +175,9 @@ export const AIOptimizationLog: React.FC = () => {
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-3">
               <Brain className="w-6 h-6 text-purple-500" />
-              AI Optimization Log
+              {t('aiOptimizationLog.title')}
               <Badge variant="outline" className="bg-purple-500/10 text-purple-700 border-purple-500/30">
-                Behavioral UX Analysis
+                {t('aiOptimizationLog.behavioralAnalysis')}
               </Badge>
             </CardTitle>
             <button
@@ -186,7 +188,7 @@ export const AIOptimizationLog: React.FC = () => {
             </button>
           </div>
           <p className="text-sm text-muted-foreground mt-2">
-            Observing user experience patterns and proposing evidence-based improvements
+            {t('aiOptimizationLog.description')}
           </p>
         </CardHeader>
 
@@ -221,7 +223,7 @@ export const AIOptimizationLog: React.FC = () => {
                   <div className="mb-3">
                     <div className="flex items-center gap-2 mb-1">
                       <AlertCircle className="w-4 h-4 text-blue-500" />
-                      <span className="text-sm font-semibold text-blue-700">Observation</span>
+                      <span className="text-sm font-semibold text-blue-700">{t('aiOptimizationLog.observation')}</span>
                     </div>
                     <p className="text-sm text-foreground ml-6">{entry.observation}</p>
                   </div>
@@ -230,7 +232,7 @@ export const AIOptimizationLog: React.FC = () => {
                   <div className="mb-3">
                     <div className="flex items-center gap-2 mb-1">
                       <Brain className="w-4 h-4 text-purple-500" />
-                      <span className="text-sm font-semibold text-purple-700">Hypothesis</span>
+                      <span className="text-sm font-semibold text-purple-700">{t('aiOptimizationLog.hypothesis')}</span>
                     </div>
                     <p className="text-sm text-foreground ml-6">{entry.hypothesis}</p>
                   </div>
@@ -240,7 +242,7 @@ export const AIOptimizationLog: React.FC = () => {
                     <div className="mb-3">
                       <div className="flex items-center gap-2 mb-1">
                         <CheckCircle className="w-4 h-4 text-green-500" />
-                        <span className="text-sm font-semibold text-green-700">Proposed Intervention</span>
+                        <span className="text-sm font-semibold text-green-700">{t('aiOptimizationLog.intervention')}</span>
                       </div>
                       <p className="text-sm text-foreground ml-6 italic">{entry.intervention}</p>
                     </div>
@@ -252,7 +254,7 @@ export const AIOptimizationLog: React.FC = () => {
                       <div className="flex items-center gap-2">
                         <TrendingUp className="w-3 h-3 text-accent-foreground" />
                         <span className="text-xs font-medium text-accent-foreground">
-                          Psychology Principle:
+                          {t('aiOptimizationLog.psychologyPrinciple')}
                         </span>
                         <span className="text-xs text-muted-foreground">{entry.psychologyPrinciple}</span>
                       </div>
@@ -264,7 +266,7 @@ export const AIOptimizationLog: React.FC = () => {
                     <div className="mt-3 grid grid-cols-2 gap-2">
                       {entry.metrics.before && (
                         <div className="p-2 bg-red-500/10 rounded border border-red-500/20">
-                          <span className="text-xs font-medium text-red-700">Before:</span>
+                          <span className="text-xs font-medium text-red-700">{t('aiOptimizationLog.before')}</span>
                           <div className="text-xs text-muted-foreground mt-1">
                             {Object.entries(entry.metrics.before).map(([key, value]) => (
                               <div key={key}>
@@ -276,7 +278,7 @@ export const AIOptimizationLog: React.FC = () => {
                       )}
                       {entry.metrics.after && (
                         <div className="p-2 bg-green-500/10 rounded border border-green-500/20">
-                          <span className="text-xs font-medium text-green-700">After:</span>
+                          <span className="text-xs font-medium text-green-700">{t('aiOptimizationLog.after')}</span>
                           <div className="text-xs text-muted-foreground mt-1">
                             {Object.entries(entry.metrics.after).map(([key, value]) => (
                               <div key={key}>
@@ -299,25 +301,25 @@ export const AIOptimizationLog: React.FC = () => {
               <div className="text-2xl font-bold text-blue-600">
                 {entries.filter((e) => e.status === 'observed').length}
               </div>
-              <div className="text-xs text-muted-foreground">Observed</div>
+              <div className="text-xs text-muted-foreground">{t('aiOptimizationLog.status.observed')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-yellow-600">
                 {entries.filter((e) => e.status === 'proposed').length}
               </div>
-              <div className="text-xs text-muted-foreground">Proposed</div>
+              <div className="text-xs text-muted-foreground">{t('aiOptimizationLog.status.proposed')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600">
                 {entries.filter((e) => e.status === 'implemented').length}
               </div>
-              <div className="text-xs text-muted-foreground">Implemented</div>
+              <div className="text-xs text-muted-foreground">{t('aiOptimizationLog.status.implemented')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">
                 {entries.filter((e) => e.status === 'validated').length}
               </div>
-              <div className="text-xs text-muted-foreground">Validated</div>
+              <div className="text-xs text-muted-foreground">{t('aiOptimizationLog.status.validated')}</div>
             </div>
           </div>
         </CardContent>

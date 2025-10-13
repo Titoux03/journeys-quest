@@ -631,5 +631,59 @@
     "cannotRemoveCriteria": "Cannot remove if less than 3 criteria",
     "streakBroken": "Streak broken, restart",
     "registerReference": "Register reference in database if user is connected"
+  },
+  "aiOptimizationLog": {
+    "title": "AI Optimization Log",
+    "behavioralAnalysis": "Behavioral UX Analysis",
+    "description": "Observing user experience patterns and proposing evidence-based improvements",
+    "tooltip": "AI Optimization Log (Ctrl+Alt+O)",
+    "status": {
+      "observed": "Observed",
+      "proposed": "Proposed",
+      "implemented": "Implemented",
+      "validated": "Validated"
+    },
+    "severity": {
+      "low": "low",
+      "medium": "medium",
+      "high": "high"
+    },
+    "priority": "PRIORITY",
+    "observation": "Observation",
+    "hypothesis": "Hypothesis",
+    "intervention": "Proposed Intervention",
+    "psychologyPrinciple": "Psychology Principle:",
+    "before": "Before:",
+    "after": "After:",
+    "baseline": {
+      "obs1": {
+        "observation": "Skills Radar Chart interaction shows high engagement but lacks emotional feedback",
+        "hypothesis": "Adding empathetic micro-copy when users view their progress could increase emotional connection",
+        "principle": "Self-Determination Theory (Competence)"
+      },
+      "obs2": {
+        "observation": "Quote of the Day generates interest but refresh action lacks motivational context",
+        "hypothesis": "Contextual encouragement during quote refresh could maintain engagement momentum",
+        "principle": "Positive Reinforcement"
+      },
+      "obs3": {
+        "observation": "Premium modal auto-displays but may feel interruptive without emotional priming",
+        "hypothesis": "Timing the modal after achievement moments increases receptiveness (Fogg Behavior Model)",
+        "intervention": "Trigger premium modal after completing journal entry or reaching streak milestone",
+        "principle": "Fogg Behavior Model (Motivation Peak)"
+      },
+      "obs4": {
+        "observation": "No contextual help when users explore locked premium features",
+        "hypothesis": "Providing 'why this matters' micro-tooltips reduces cognitive friction and increases perceived value",
+        "intervention": "Add empathetic tooltips explaining emotional benefits of premium features",
+        "principle": "Value Perception Enhancement"
+      },
+      "obs5": {
+        "observation": "Todo completion lacks celebration or emotional acknowledgment",
+        "hypothesis": "Micro-celebrations on task completion boost dopamine and habit formation",
+        "intervention": "Add subtle confetti animation and affirming message on todo completion",
+        "principle": "Operant Conditioning (Positive Reinforcement)"
+      }
+    }
   }
 }

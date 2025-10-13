@@ -631,5 +631,59 @@
     "cannotRemoveCriteria": "Ne pas permettre de supprimer si moins de 3 critères",
     "streakBroken": "Streak cassé, recommencer",
     "registerReference": "Enregistrer la référence dans la base de données si l'utilisateur est connecté"
+  },
+  "aiOptimizationLog": {
+    "title": "Journal d'Optimisation IA",
+    "behavioralAnalysis": "Analyse UX Comportementale",
+    "description": "Observer les schémas d'expérience utilisateur et proposer des améliorations basées sur des preuves",
+    "tooltip": "Journal d'Optimisation IA (Ctrl+Alt+O)",
+    "status": {
+      "observed": "Observé",
+      "proposed": "Proposé",
+      "implemented": "Implémenté",
+      "validated": "Validé"
+    },
+    "severity": {
+      "low": "faible",
+      "medium": "moyenne",
+      "high": "élevée"
+    },
+    "priority": "PRIORITÉ",
+    "observation": "Observation",
+    "hypothesis": "Hypothèse",
+    "intervention": "Intervention Proposée",
+    "psychologyPrinciple": "Principe Psychologique :",
+    "before": "Avant :",
+    "after": "Après :",
+    "baseline": {
+      "obs1": {
+        "observation": "L'interaction avec le graphique radar des compétences montre un fort engagement mais manque de retour émotionnel",
+        "hypothesis": "Ajouter des micro-textes empathiques lorsque les utilisateurs consultent leurs progrès pourrait augmenter la connexion émotionnelle",
+        "principle": "Théorie de l'Autodétermination (Compétence)"
+      },
+      "obs2": {
+        "observation": "La citation du jour génère de l'intérêt mais l'action de rafraîchissement manque de contexte motivationnel",
+        "hypothesis": "Un encouragement contextuel lors du rafraîchissement pourrait maintenir l'élan d'engagement",
+        "principle": "Renforcement Positif"
+      },
+      "obs3": {
+        "observation": "La modal Premium s'affiche automatiquement mais peut sembler intrusive sans préparation émotionnelle",
+        "hypothesis": "Planifier la modal après des moments de réussite augmente la réceptivité (Modèle de Comportement de Fogg)",
+        "intervention": "Déclencher la modal premium après la complétion d'une entrée de journal ou l'atteinte d'un jalon de série",
+        "principle": "Modèle de Comportement de Fogg (Pic de Motivation)"
+      },
+      "obs4": {
+        "observation": "Aucune aide contextuelle lorsque les utilisateurs explorent les fonctionnalités premium verrouillées",
+        "hypothesis": "Fournir des micro-tooltips 'pourquoi c'est important' réduit la friction cognitive et augmente la valeur perçue",
+        "intervention": "Ajouter des tooltips empathiques expliquant les bénéfices émotionnels des fonctionnalités premium",
+        "principle": "Amélioration de la Perception de Valeur"
+      },
+      "obs5": {
+        "observation": "La complétion de tâche manque de célébration ou de reconnaissance émotionnelle",
+        "hypothesis": "Les micro-célébrations lors de la complétion de tâches stimulent la dopamine et la formation d'habitudes",
+        "intervention": "Ajouter une animation de confettis subtile et un message affirmant lors de la complétion de tâche",
+        "principle": "Conditionnement Opérant (Renforcement Positif)"
+      }
+    }
   }
 }
