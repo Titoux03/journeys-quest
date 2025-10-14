@@ -14,7 +14,8 @@
     "continue": "Continuer",
     "skip": "Passer",
     "yes": "Oui",
-    "no": "Non"
+    "no": "Non",
+    "locale": "fr-FR"
   },
   "greeting": {
     "morning": "Bonjour !",
@@ -251,6 +252,19 @@
     "dailyNotesDesc": "Écrivez librement vos pensées et réflexions",
     "morningTasks": "Tâches Matinales",
     "morningTasksDesc": "Système révolutionnaire anti-procrastination",
+    "morningTasksTitle": "Transformez chaque matin en victoire",
+    "morningTasksStrong": "Fini la procrastination !",
+    "morningTasksDescription": "Notre système de tâches matinales révolutionnaire vous aide à structurer vos journées et atteindre vos objectifs. Notez vos tâches chaque matin avec Journeys et changez vraiment votre vie.",
+    "smartPriorities": "Priorités intelligentes",
+    "levelSystem": "Système 1-3 niveaux",
+    "motivatingTracking": "Suivi motivant",
+    "progressGamification": "Progress & gamification",
+    "automaticRollover": "Report automatique",
+    "importantTasks": "Tâches importantes",
+    "playfulFeedback": "Feedback ludique",
+    "animationsEncouragement": "Animations & encouragements",
+    "testimonial": "\"Depuis que j'utilise les tâches matinales de Journeys, ma productivité a explosé ! Fini les journées perdues, chaque matin j'ai un plan clair.\"",
+    "testimonialAuthor": "Utilisateur Journeys Premium",
     "focusDeepWork": "Focus & Deep Work",
     "focusDeepWorkDesc": "Méditation et minuteurs premium",
     "addictionTracking": "Suivi Multi-Addictions",
@@ -685,5 +699,20 @@
         "principle": "Conditionnement Opérant (Renforcement Positif)"
       }
     }
+  },
+  "streak": {
+    "title": "Streak Journeys",
+    "loginDaily": "Connectez-vous quotidiennement pour construire votre streak !",
+    "consecutiveDay": "Jour consécutif",
+    "consecutiveDays": "Jours consécutifs",
+    "bestStreak": "Meilleur streak",
+    "streakStart": "Début du streak",
+    "eternalLegend": "Légende Éternelle",
+    "masterJourneyer": "Maître Journeyer",
+    "passionate": "Passionné",
+    "devoted": "Dévoué",
+    "perseverant": "Persévérant",
+    "faithfulJourneyer": "Fidèle Journeyer",
+    "beginner": "Débutant"
   }
 }

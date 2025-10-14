@@ -14,7 +14,8 @@
     "continue": "Continue",
     "skip": "Skip",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "locale": "en-US"
   },
   "greeting": {
     "morning": "Good morning!",
@@ -251,6 +252,19 @@
     "dailyNotesDesc": "Write freely your thoughts and reflections",
     "morningTasks": "Morning Tasks",
     "morningTasksDesc": "Revolutionary anti-procrastination system",
+    "morningTasksTitle": "Transform every morning into a victory",
+    "morningTasksStrong": "No more procrastination!",
+    "morningTasksDescription": "Our revolutionary morning tasks system helps you structure your days and achieve your goals. Write your tasks every morning with Journeys and truly change your life.",
+    "smartPriorities": "Smart priorities",
+    "levelSystem": "1-3 level system",
+    "motivatingTracking": "Motivating tracking",
+    "progressGamification": "Progress & gamification",
+    "automaticRollover": "Automatic rollover",
+    "importantTasks": "Important tasks",
+    "playfulFeedback": "Playful feedback",
+    "animationsEncouragement": "Animations & encouragement",
+    "testimonial": "\"Since I started using Journeys' morning tasks, my productivity has skyrocketed! No more wasted days, every morning I have a clear plan.\"",
+    "testimonialAuthor": "Journeys Premium User",
     "focusDeepWork": "Focus & Deep Work",
     "focusDeepWorkDesc": "Premium meditation and timers",
     "addictionTracking": "Multi-Addiction Tracking",
@@ -685,5 +699,20 @@
         "principle": "Operant Conditioning (Positive Reinforcement)"
       }
     }
+  },
+  "streak": {
+    "title": "Streak Journeys",
+    "loginDaily": "Log in daily to build your streak!",
+    "consecutiveDay": "Consecutive day",
+    "consecutiveDays": "Consecutive days",
+    "bestStreak": "Best streak",
+    "streakStart": "Streak start",
+    "eternalLegend": "Eternal Legend",
+    "masterJourneyer": "Master Journeyer",
+    "passionate": "Passionate",
+    "devoted": "Devoted",
+    "perseverant": "Perseverant",
+    "faithfulJourneyer": "Faithful Journeyer",
+    "beginner": "Beginner"
   }
 }

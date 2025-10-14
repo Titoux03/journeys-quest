@@ -53,11 +53,10 @@ export const PremiumTodoTeaser: React.FC<PremiumTodoTeaserProps> = ({ className 
           {/* Message d'accroche puissant */}
           <div className="mb-6">
             <h4 className="text-xl font-bold text-foreground mb-3">
-              🌅 Transformez chaque matin en victoire
+              🌅 {t('home.morningTasksTitle')}
             </h4>
             <p className="text-muted-foreground mb-4 leading-relaxed">
-              <strong>Fini la procrastination !</strong> Notre système de tâches matinales révolutionnaire vous aide à structurer vos journées et atteindre vos objectifs. 
-              Notez vos tâches chaque matin avec Journeys et changez vraiment votre vie.
+              <strong>{t('home.morningTasksStrong')}</strong> {t('home.morningTasksDescription')}
             </p>
           </div>
 
@@ -68,8 +67,8 @@ export const PremiumTodoTeaser: React.FC<PremiumTodoTeaserProps> = ({ className 
                 <Target className="w-4 h-4 text-primary" />
               </div>
               <div>
-                <p className="font-medium text-sm">Priorités intelligentes</p>
-                <p className="text-xs text-muted-foreground">Système 1-3 niveaux</p>
+                <p className="font-medium text-sm">{t('home.smartPriorities')}</p>
+                <p className="text-xs text-muted-foreground">{t('home.levelSystem')}</p>
               </div>
             </div>
             
@@ -78,8 +77,8 @@ export const PremiumTodoTeaser: React.FC<PremiumTodoTeaserProps> = ({ className 
                 <TrendingUp className="w-4 h-4 text-primary" />
               </div>
               <div>
-                <p className="font-medium text-sm">Suivi motivant</p>
-                <p className="text-xs text-muted-foreground">Progress & gamification</p>
+                <p className="font-medium text-sm">{t('home.motivatingTracking')}</p>
+                <p className="text-xs text-muted-foreground">{t('home.progressGamification')}</p>
               </div>
             </div>
             
@@ -88,8 +87,8 @@ export const PremiumTodoTeaser: React.FC<PremiumTodoTeaserProps> = ({ className 
                 <ArrowRight className="w-4 h-4 text-primary" />
               </div>
               <div>
-                <p className="font-medium text-sm">Report automatique</p>
-                <p className="text-xs text-muted-foreground">Tâches importantes</p>
+                <p className="font-medium text-sm">{t('home.automaticRollover')}</p>
+                <p className="text-xs text-muted-foreground">{t('home.importantTasks')}</p>
               </div>
             </div>
             
@@ -98,8 +97,8 @@ export const PremiumTodoTeaser: React.FC<PremiumTodoTeaserProps> = ({ className 
                 <Sparkles className="w-4 h-4 text-primary" />
               </div>
               <div>
-                <p className="font-medium text-sm">Feedback ludique</p>
-                <p className="text-xs text-muted-foreground">Animations & encouragements</p>
+                <p className="font-medium text-sm">{t('home.playfulFeedback')}</p>
+                <p className="text-xs text-muted-foreground">{t('home.animationsEncouragement')}</p>
               </div>
             </div>
           </div>
@@ -107,10 +106,9 @@ export const PremiumTodoTeaser: React.FC<PremiumTodoTeaserProps> = ({ className 
           {/* Témoignage court */}
           <div className="bg-gradient-to-r from-success/10 to-primary/10 rounded-lg p-4 mb-6 border border-success/20">
             <p className="text-sm italic text-foreground">
-              "Depuis que j'utilise les tâches matinales de Journeys, ma productivité a explosé ! 
-              Fini les journées perdues, chaque matin j'ai un plan clair." ⭐⭐⭐⭐⭐
+              {t('home.testimonial')} ⭐⭐⭐⭐⭐
             </p>
-            <p className="text-xs text-muted-foreground mt-2">- Utilisateur Journeys Premium</p>
+            <p className="text-xs text-muted-foreground mt-2">- {t('home.testimonialAuthor')}</p>
           </div>
 
           {/* Call to action */}
