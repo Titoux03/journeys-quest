@@ -2,6 +2,7 @@ import React from 'react';
 import { TrendingUp, Crown, Star, Target } from 'lucide-react';
 import { usePremium } from '@/hooks/usePremium';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslation } from 'react-i18next';
 
 interface PremiumSuccessIndicatorProps {
   className?: string;
@@ -12,6 +13,7 @@ export const PremiumSuccessIndicator: React.FC<PremiumSuccessIndicatorProps> = (
 }) => {
   const { isPremium, showUpgradeModal } = usePremium();
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   if (isPremium || !user) return null;
 
@@ -21,29 +23,29 @@ export const PremiumSuccessIndicator: React.FC<PremiumSuccessIndicatorProps> = (
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
           <TrendingUp className="w-5 h-5 text-primary" />
-          <span className="font-semibold text-foreground">Fonctionnalités Premium</span>
+          <span className="font-semibold text-foreground">{t('premium.features.title')}</span>
         </div>
         <div className="bg-primary/20 text-primary px-2 py-1 rounded-full text-xs font-bold">
-          Disponible
+          {t('premium.features.available')}
         </div>
       </div>
 
       {/* Comparaison fonctionnalités */}
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div className="text-center">
-          <div className="text-xl font-bold text-muted-foreground mb-2">Gratuit</div>
+          <div className="text-xl font-bold text-muted-foreground mb-2">{t('premium.features.free')}</div>
           <div className="space-y-2 text-xs text-muted-foreground">
-            <div>• Journal de base</div>
-            <div>• Notes simples</div>
-            <div>• Fonctions limitées</div>
+            <div>• {t('premium.features.basicJournal')}</div>
+            <div>• {t('premium.features.simpleNotes')}</div>
+            <div>• {t('premium.features.limitedFeatures')}</div>
           </div>
         </div>
         <div className="text-center">
-          <div className="text-xl font-bold text-primary mb-2">Premium</div>
+          <div className="text-xl font-bold text-primary mb-2">{t('premium.features.premium')}</div>
           <div className="space-y-2 text-xs text-foreground">
-            <div className="text-success">✓ Suivi multi-addictions</div>
-            <div className="text-success">✓ Historique complet</div>
-            <div className="text-success">✓ Badges et gamification</div>
+            <div className="text-success">✓ {t('premium.features.multiAddictionTracking')}</div>
+            <div className="text-success">✓ {t('premium.features.fullHistory')}</div>
+            <div className="text-success">✓ {t('premium.features.badgesGamification')}</div>
           </div>
         </div>
       </div>
@@ -52,10 +54,10 @@ export const PremiumSuccessIndicator: React.FC<PremiumSuccessIndicatorProps> = (
       <div className="bg-warning/10 border border-warning/20 rounded-lg p-4 mb-4">
         <div className="flex items-center space-x-2 mb-2">
           <Target className="w-4 h-4 text-warning" />
-          <span className="text-sm font-medium text-warning">Potentiel inexploité</span>
+          <span className="text-sm font-medium text-warning">{t('premium.features.untappedPotential')}</span>
         </div>
         <p className="text-xs text-muted-foreground">
-          Développez tout votre potentiel avec les outils avancés de suivi et de motivation.
+          {t('premium.features.untappedPotentialDesc')}
         </p>
       </div>
 
@@ -67,11 +69,11 @@ export const PremiumSuccessIndicator: React.FC<PremiumSuccessIndicatorProps> = (
         <div className="flex items-center justify-between">
           <div>
             <div className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
-              Débloquer toutes les fonctionnalités
+              {t('premium.features.unlockAll')}
             </div>
             <div className="text-xs text-muted-foreground">
-              <span className="line-through opacity-60 mr-1">29,99€</span>
-              Accès complet pour 14,99€
+              <span className="line-through opacity-60 mr-1">{t('premium.oldPrice')}</span>
+              {t('premium.features.fullAccess')}
             </div>
           </div>
           <Star className="w-5 h-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />

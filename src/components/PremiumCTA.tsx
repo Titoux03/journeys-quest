@@ -57,10 +57,10 @@ export const PremiumCTA: React.FC<PremiumCTAProps> = ({
             <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
               <Zap className="w-3 h-3 text-primary-foreground" />
             </div>
-            <span className="text-sm font-medium text-foreground">Débloquez tout le potentiel</span>
+            <span className="text-sm font-medium text-foreground">{t('premium.features.unlockPotential')}</span>
           </div>
           <p className="text-xs text-muted-foreground mb-4">
-            Accès illimité • Suivi complet • Gamification
+            {t('premium.features.unlimitedAccess')}
           </p>
         <Button 
           onClick={handleUpgrade}
@@ -84,29 +84,29 @@ export const PremiumCTA: React.FC<PremiumCTAProps> = ({
       </div>
       
       <h3 className="text-xl font-bold text-gradient-primary mb-2">
-        Développez tout votre potentiel 📈
+        {t('premium.features.developPotential')}
       </h3>
       
       <p className="text-muted-foreground mb-6">
-        Débloquez l'historique complet, les routines premium et la gamification avancée pour transformer chaque jour en victoire.
+        {t('premium.features.developPotentialDesc')}
       </p>
       
       <div className="grid grid-cols-2 gap-3 mb-6 text-xs">
         <div className="flex items-center space-x-2 p-2 bg-secondary/30 rounded-lg">
           <div className="w-2 h-2 bg-success rounded-full"></div>
-          <span>Historique illimité</span>
+          <span>{t('premium.features.unlimitedHistory')}</span>
         </div>
         <div className="flex items-center space-x-2 p-2 bg-secondary/30 rounded-lg">
           <div className="w-2 h-2 bg-success rounded-full"></div>
-          <span>Suivi d'abstinence</span>
+          <span>{t('premium.features.abstinenceTracking')}</span>
         </div>
         <div className="flex items-center space-x-2 p-2 bg-secondary/30 rounded-lg">
           <div className="w-2 h-2 bg-success rounded-full"></div>
-          <span>Tâches matinales</span>
+          <span>{t('premium.features.morningTasks')}</span>
         </div>
         <div className="flex items-center space-x-2 p-2 bg-secondary/30 rounded-lg">
           <div className="w-2 h-2 bg-success rounded-full"></div>
-          <span>Routines premium</span>
+          <span>{t('premium.features.premiumRoutines')}</span>
         </div>
       </div>
       

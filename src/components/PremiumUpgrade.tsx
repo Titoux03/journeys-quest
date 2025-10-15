@@ -287,10 +287,10 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
         <div className="mb-8">
           <div className="journey-card-premium p-6 text-center">
             <h2 className="text-2xl font-bold text-gradient-primary mb-2">
-              ✨ Votre Profil de Développement Personnel
+              ✨ {t('premiumModal.developmentProfile')}
             </h2>
             <p className="text-muted-foreground mb-6">
-              Visualisez vos 5 compétences de vie avec notre diagramme radar exclusif
+              {t('premiumModal.visualizeSkills')}
             </p>
             <div className="relative max-w-md mx-auto">
               <SkillsRadarChart entries={mockJournalEntries} />
@@ -342,7 +342,7 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
 
             <div className="p-4 rounded-xl bg-gradient-to-br from-primary/20 to-primary-glow/10 border-2 border-primary/30 relative">
               <div className="absolute top-2 right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">
-                PREMIUM
+                {t('premiumModal.premiumLabel')}
               </div>
               <h3 className="font-semibold text-primary mb-3 text-center">Journeys Premium</h3>
               <div className="space-y-2">
@@ -350,25 +350,25 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
                   <div className="w-4 h-4 rounded-full bg-success flex items-center justify-center">
                     <span className="text-xs text-success-foreground">✓</span>
                   </div>
-                  <span>8 fonctionnalités exclusives</span>
+                  <span>{t('premiumModal.premiumFeatures')}</span>
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-foreground">
                   <div className="w-4 h-4 rounded-full bg-success flex items-center justify-center">
                     <span className="text-xs text-success-foreground">✓</span>
                   </div>
-                  <span>Suivi multi-addictions complet</span>
+                  <span>{t('premiumModal.multiAddictionTracking')}</span>
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-foreground">
                   <div className="w-4 h-4 rounded-full bg-success flex items-center justify-center">
                     <span className="text-xs text-success-foreground">✓</span>
                   </div>
-                  <span>Historique illimité + analyses</span>
+                  <span>{t('premiumModal.unlimitedHistory')}</span>
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-foreground">
                   <div className="w-4 h-4 rounded-full bg-success flex items-center justify-center">
                     <span className="text-xs text-success-foreground">✓</span>
                   </div>
-                  <span>Système de badges motivant</span>
+                  <span>{t('premiumModal.motivatingBadges')}</span>
                 </div>
               </div>
               <div className="text-center mt-4">
@@ -376,8 +376,8 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
                   <span className="text-xl text-muted-foreground line-through opacity-60">29,99€</span>
                   <div className="text-3xl font-bold text-gradient-primary">14,99€</div>
                 </div>
-                <div className="text-sm font-bold text-success">Accès à vie</div>
-                <div className="text-xs text-muted-foreground">Aucun abonnement</div>
+                <div className="text-sm font-bold text-success">{t('premiumModal.lifetimeAccess')}</div>
+                <div className="text-xs text-muted-foreground">{t('premiumModal.noSubscription')}</div>
               </div>
             </div>
           </div>
@@ -385,21 +385,21 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           {/* Calcul de valeur */}
           <div className="bg-accent/10 border border-accent/20 rounded-lg p-4 text-center">
             <p className="text-sm text-muted-foreground mb-2">
-              💡 <strong>Calcul intelligent</strong> : Si vous utilisez l'app 1 an
+              💡 <strong>{t('premiumModal.smartCalculation')}</strong> : {t('premiumModal.oneYearUsage')}
             </p>
             <div className="flex items-center justify-center space-x-4 text-sm">
               <div>
-                <div className="font-bold text-foreground">14,99€ ÷ 365 jours</div>
-                <div className="text-xs text-success">= 0,04€ par jour</div>
+                <div className="font-bold text-foreground">{t('premiumModal.pricePerDay')}</div>
+                <div className="text-xs text-success">= 0,04€ {t('premiumModal.perDay')}</div>
               </div>
-              <div className="text-muted-foreground">vs</div>
+              <div className="text-muted-foreground">{t('premiumModal.vs')}</div>
               <div>
-                <div className="font-bold text-muted-foreground">Un café</div>
-                <div className="text-xs text-muted-foreground">= 2,50€</div>
+                <div className="font-bold text-muted-foreground">{t('premiumModal.coffee')}</div>
+                <div className="text-xs text-muted-foreground">{t('premiumModal.coffeePrice')}</div>
               </div>
             </div>
             <p className="text-xs text-accent mt-2 font-medium">
-              Un investissement 62x moins cher qu'un café pour transformer votre vie
+              {t('premiumModal.investmentComparison')}
             </p>
           </div>
         </div>

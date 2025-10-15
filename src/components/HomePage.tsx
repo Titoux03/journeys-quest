@@ -426,10 +426,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
                 <div className="text-xs text-muted-foreground">• {t('premiumModal.noGamification')}</div>
               </div>
               <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
-                <div className="text-primary font-medium mb-1">Premium</div>
-                <div className="text-xs text-success">✅ Suivi complet</div>
-                <div className="text-xs text-success">✅ Badges exclusifs</div>
-                <div className="text-xs text-success">✅ Historique illimité</div>
+                <div className="text-primary font-medium mb-1">{t('premium.features.premium')}</div>
+                <div className="text-xs text-success">✅ {t('premiumModal.fullTracking')}</div>
+                <div className="text-xs text-success">✅ {t('premiumModal.exclusiveBadges')}</div>
+                <div className="text-xs text-success">✅ {t('premiumModal.unlimitedHistoryShort')}</div>
               </div>
             </div>
             
