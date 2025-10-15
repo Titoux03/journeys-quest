@@ -1,7 +1,8 @@
-import React from 'react';
-import { Flame, Calendar, Trophy } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Flame, Calendar, Trophy, Plus } from 'lucide-react';
 import { LoginStreak } from '@/hooks/useAddictions';
 import { useTranslation } from 'react-i18next';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface LoginStreakDisplayProps {
   loginStreak: LoginStreak | null;
@@ -13,6 +14,19 @@ export const LoginStreakDisplay: React.FC<LoginStreakDisplayProps> = ({
   className = "" 
 }) => {
   const { t } = useTranslation();
+  const [previousStreak, setPreviousStreak] = useState<number | null>(null);
+  const [showIncrement, setShowIncrement] = useState(false);
+
+  // Detect streak increment and show animation
+  useEffect(() => {
+    if (loginStreak && previousStreak !== null && loginStreak.current_streak > previousStreak) {
+      setShowIncrement(true);
+      setTimeout(() => setShowIncrement(false), 2000);
+    }
+    if (loginStreak) {
+      setPreviousStreak(loginStreak.current_streak);
+    }
+  }, [loginStreak?.current_streak]);
 
   if (!loginStreak) {
     return (
@@ -56,15 +70,45 @@ export const LoginStreakDisplay: React.FC<LoginStreakDisplayProps> = ({
         
         <div className="mb-4">
           <div className="text-4xl mb-2">{getStreakEmoji(loginStreak.current_streak)}</div>
-          <div className="text-3xl font-bold text-gradient-primary mb-1">
-            {loginStreak.current_streak}
+          <div className="relative">
+            <div className="text-3xl font-bold text-gradient-primary mb-1">
+              {loginStreak.current_streak}
+            </div>
+            
+            {/* +1 Pulse Animation */}
+            <AnimatePresence>
+              {showIncrement && (
+                <motion.div
+                  initial={{ opacity: 0, y: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, y: -20, scale: 1.2 }}
+                  exit={{ opacity: 0, y: -40, scale: 0.8 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
+                >
+                  <div className="flex items-center text-success font-bold text-2xl drop-shadow-lg">
+                    <Plus className="w-6 h-6" />
+                    <span>1</span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
+          
           <div className="text-sm text-muted-foreground uppercase tracking-wider mb-2">
             {loginStreak.current_streak === 1 ? t('streak.consecutiveDay') : t('streak.consecutiveDays')}
           </div>
           <div className="text-lg font-semibold text-primary">
             {getStreakTitle(loginStreak.current_streak)}
           </div>
+          
+          {/* Motivational message about growth */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-3 text-xs text-muted-foreground italic"
+          >
+            🔥 {t('streak.growingDaily')}
+          </motion.div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
