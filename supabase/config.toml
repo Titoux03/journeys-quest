@@ -56,3 +56,6 @@ verify_jwt = false
 
 [functions.marketing-email]
 verify_jwt = false
+
+[functions.daily-streak-update]
+verify_jwt = false

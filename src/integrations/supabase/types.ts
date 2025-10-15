@@ -113,6 +113,51 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_optimization_applications: {
+        Row: {
+          after_state: Json | null
+          applied_at: string | null
+          before_state: Json | null
+          category: string
+          created_at: string
+          description: string
+          error_message: string | null
+          id: string
+          optimization_id: string
+          rolled_back_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          after_state?: Json | null
+          applied_at?: string | null
+          before_state?: Json | null
+          category: string
+          created_at?: string
+          description: string
+          error_message?: string | null
+          id?: string
+          optimization_id: string
+          rolled_back_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          after_state?: Json | null
+          applied_at?: string | null
+          before_state?: Json | null
+          category?: string
+          created_at?: string
+          description?: string
+          error_message?: string | null
+          id?: string
+          optimization_id?: string
+          rolled_back_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       badges: {
         Row: {
           addiction_type_id: string | null
@@ -619,6 +664,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      update_all_daily_streaks: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
       update_user_streaks_on_login: {
         Args: { user_id_param: string }
