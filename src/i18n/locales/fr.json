@@ -390,16 +390,20 @@
       "title": "Journeys Premium",
       "subtitle": "Débloque tout ton potentiel",
       "feature1": {
-        "title": "💎 Coaching AI Bien-Être",
-        "desc": "Reçois des conseils personnalisés selon ton humeur"
+        "title": "💊 Contrôle des Addictions",
+        "desc": "Suis ta progression, mesure tes économies, et reprends le contrôle sur tes habitudes"
       },
       "feature2": {
-        "title": "🌙 Journal Guidé Premium",
-        "desc": "Accède à des exercices introspectifs exclusifs"
+        "title": "💎 Coaching AI Bien-Être",
+        "desc": "Reçois des conseils personnalisés selon ton humeur et ton parcours"
       },
       "feature3": {
+        "title": "🌙 Journal Guidé Premium",
+        "desc": "Écris ton journal intime chaque jour pour faire le point et avancer"
+      },
+      "feature4": {
         "title": "🔔 Rappels & Statistiques",
-        "desc": "Suis ton évolution sur le long terme"
+        "desc": "Visualise ton évolution sur le long terme avec des données détaillées"
       },
       "motivational": "✨ Débloque tout ton potentiel avec Journeys Premium",
       "cta": {

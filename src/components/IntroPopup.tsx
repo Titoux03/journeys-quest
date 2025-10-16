@@ -239,17 +239,17 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                     className="relative flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/30 overflow-hidden"
                   >
                     <div className="shrink-0 w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-                      <Brain size={24} className="text-primary" />
+                      <Lock size={24} className="text-primary" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-base">
-                          {t('intro.step3.feature1.title', '💎 Coaching AI Bien-Être')}
+                          {t('intro.step3.feature1.title', '💊 Contrôle des Addictions')}
                         </h3>
                         <Lock size={14} className="text-primary" />
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {t('intro.step3.feature1.desc', 'Reçois des conseils personnalisés selon ton humeur')}
+                        {t('intro.step3.feature1.desc', 'Suis ta progression, mesure tes économies, et reprends le contrôle sur tes habitudes')}
                       </p>
                     </div>
                   </motion.div>
@@ -261,17 +261,17 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                     className="relative flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/30 overflow-hidden"
                   >
                     <div className="shrink-0 w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-                      <Moon size={24} className="text-primary" />
+                      <Brain size={24} className="text-primary" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-base">
-                          {t('intro.step3.feature2.title', '🌙 Journal Guidé Premium')}
+                          {t('intro.step3.feature2.title', '💎 Coaching AI Bien-Être')}
                         </h3>
                         <Lock size={14} className="text-primary" />
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {t('intro.step3.feature2.desc', 'Accède à des exercices introspectifs exclusifs')}
+                        {t('intro.step3.feature2.desc', 'Reçois des conseils personnalisés selon ton humeur et ton parcours')}
                       </p>
                     </div>
                   </motion.div>
@@ -283,17 +283,39 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                     className="relative flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/30 overflow-hidden"
                   >
                     <div className="shrink-0 w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                      <Moon size={24} className="text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-semibold text-base">
+                          {t('intro.step3.feature3.title', '🌙 Journal Guidé Premium')}
+                        </h3>
+                        <Lock size={14} className="text-primary" />
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {t('intro.step3.feature3.desc', 'Écris ton journal intime chaque jour pour faire le point et avancer')}
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.4 }}
+                    className="relative flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/30 overflow-hidden"
+                  >
+                    <div className="shrink-0 w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
                       <Bell size={24} className="text-primary" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-base">
-                          {t('intro.step3.feature3.title', '🔔 Rappels & Statistiques')}
+                          {t('intro.step3.feature4.title', '🔔 Rappels & Statistiques')}
                         </h3>
                         <Lock size={14} className="text-primary" />
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {t('intro.step3.feature3.desc', 'Suis ton évolution sur le long terme')}
+                        {t('intro.step3.feature4.desc', 'Visualise ton évolution sur le long terme avec des données détaillées')}
                       </p>
                     </div>
                   </motion.div>

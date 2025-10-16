@@ -390,16 +390,20 @@
       "title": "Journeys Premium",
       "subtitle": "Unlock your full potential",
       "feature1": {
-        "title": "💎 AI Wellness Coaching",
-        "desc": "Receive personalized advice based on your mood"
+        "title": "💊 Addiction Control",
+        "desc": "Track your progress, measure your savings, and regain control of your habits"
       },
       "feature2": {
-        "title": "🌙 Premium Guided Journal",
-        "desc": "Access exclusive introspective exercises"
+        "title": "💎 AI Wellness Coaching",
+        "desc": "Receive personalized advice based on your mood and journey"
       },
       "feature3": {
+        "title": "🌙 Premium Guided Journal",
+        "desc": "Write your journal every day to reflect and move forward"
+      },
+      "feature4": {
         "title": "🔔 Reminders & Statistics",
-        "desc": "Track your long-term evolution"
+        "desc": "Visualize your long-term evolution with detailed data"
       },
       "motivational": "✨ Unlock your full potential with Journeys Premium",
       "cta": {
