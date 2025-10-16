@@ -342,6 +342,46 @@
     "signIn": "Connexion",
     "signOut": "Déconnexion"
   },
+  "welcome": {
+    "title": "Bienvenue dans Journeys",
+    "subtitle": "Ton journal intime gamifié pour progresser chaque jour",
+    "feature1": {
+      "title": "Note ton humeur et tes pensées",
+      "desc": "Suivi quotidien de ton bien-être avec un journal visuel et intuitif"
+    },
+    "feature2": {
+      "title": "Garde ta streak et vois tes progrès",
+      "desc": "Débloque des badges et maintiens ta motivation jour après jour"
+    },
+    "feature3": {
+      "title": "Débloque plus avec Journeys Premium",
+      "desc": "Suivi multi-addictions, historique complet, badges exclusifs"
+    },
+    "cta": {
+      "start": "Commencer mon Journal",
+      "premium": "Découvrir Premium"
+    },
+    "users": "+15 000 utilisateurs tiennent déjà leur journal chaque jour"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Ton journal personnel",
+      "desc": "Écris et visualise ton humeur chaque jour. Exprime-toi librement et suis ton évolution émotionnelle."
+    },
+    "step2": {
+      "title": "Tes streaks et badges",
+      "desc": "Garde la motivation en maintenant ta streak quotidienne. Débloque des badges uniques à chaque étape franchie."
+    },
+    "step3": {
+      "title": "Journeys Premium",
+      "desc": "Débloque le suivi multi-addictions, un historique illimité et des fonctionnalités exclusives pour progresser encore plus."
+    },
+    "cta": {
+      "next": "Suivant",
+      "premium": "Découvrir Premium",
+      "later": "Plus tard"
+    }
+  },
   "journal": {
     "title": "Journal Quotidien",
     "subtitle": "Évaluez votre journée sur 5 critères de vie",

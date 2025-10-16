@@ -14,7 +14,8 @@ import { MarketingNotifications } from '@/components/MarketingNotifications';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { DesktopNavigation } from '@/components/DesktopNavigation';
 import { UserStatus } from '@/components/UserStatus';
-import { WelcomeAnimation } from '@/components/WelcomeAnimation';
+import { WelcomeModal } from '@/components/WelcomeModal';
+import { OnboardingModal } from '@/components/OnboardingModal';
 import { PremiumProgressInterruptor } from '@/components/PremiumProgressInterruptor';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -43,7 +44,6 @@ const Index = () => {
     scores: Record<string, number>;
     totalScore: number;
   } | null>(null);
-  const [showWelcome, setShowWelcome] = useState(true);
   const [showProgressInterruptor, setShowProgressInterruptor] = useState(false);
 
   // Charger les données locales si l'utilisateur n'est pas connecté
@@ -77,29 +77,16 @@ const Index = () => {
     }
   }, [isPremium, showUpgradeModal]);
 
-  // Gérer l'animation de bienvenue et le gong
+  // Jouer le gong de bienvenue
   useEffect(() => {
-    const hasSeenWelcome = sessionStorage.getItem('hasSeenWelcome');
-    if (!hasSeenWelcome) {
-      setShowWelcome(true);
-      
-      // Masquer l'animation après 1.2s et jouer le gong
-      const welcomeTimer = setTimeout(() => {
-        setShowWelcome(false);
-        sessionStorage.setItem('hasSeenWelcome', 'true');
-      }, 1200);
-      
-      // Jouer le gong après l'animation
+    const hasPlayedGong = sessionStorage.getItem('hasPlayedGong');
+    if (!hasPlayedGong) {
       const gongTimer = setTimeout(() => {
         playWelcome();
-      }, 1400);
+        sessionStorage.setItem('hasPlayedGong', 'true');
+      }, 1200);
       
-      return () => {
-        clearTimeout(welcomeTimer);
-        clearTimeout(gongTimer);
-      };
-    } else {
-      setShowWelcome(false);
+      return () => clearTimeout(gongTimer);
     }
   }, [playWelcome]);
 
@@ -277,8 +264,9 @@ const Index = () => {
 
       {/* Main Content */}
       <div className="lg:ml-64">
-        {/* Animation d'accueil */}
-        {showWelcome && <WelcomeAnimation />}
+        {/* Modals de bienvenue et onboarding */}
+        <WelcomeModal />
+        <OnboardingModal />
         
         {/* Optimisations CSS mobile */}
         <MobileOptimizations />

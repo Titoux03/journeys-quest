@@ -342,6 +342,46 @@
     "signIn": "Sign In",
     "signOut": "Sign Out"
   },
+  "welcome": {
+    "title": "Welcome to Journeys",
+    "subtitle": "Your gamified journal to grow every day",
+    "feature1": {
+      "title": "Track your mood and thoughts",
+      "desc": "Daily tracking of your well-being with a visual and intuitive journal"
+    },
+    "feature2": {
+      "title": "Keep your streak and see your progress",
+      "desc": "Unlock badges and maintain your motivation day after day"
+    },
+    "feature3": {
+      "title": "Unlock more with Journeys Premium",
+      "desc": "Multi-addiction tracking, full history, exclusive badges"
+    },
+    "cta": {
+      "start": "Start my Journal",
+      "premium": "Discover Premium"
+    },
+    "users": "+15,000 users already keep their journal every day"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Your personal journal",
+      "desc": "Write and visualize your mood every day. Express yourself freely and track your emotional evolution."
+    },
+    "step2": {
+      "title": "Your streaks and badges",
+      "desc": "Stay motivated by maintaining your daily streak. Unlock unique badges at every milestone."
+    },
+    "step3": {
+      "title": "Journeys Premium",
+      "desc": "Unlock multi-addiction tracking, unlimited history and exclusive features to progress even more."
+    },
+    "cta": {
+      "next": "Next",
+      "premium": "Discover Premium",
+      "later": "Later"
+    }
+  },
   "journal": {
     "title": "Daily Journal",
     "subtitle": "Rate your day on 5 life criteria",
