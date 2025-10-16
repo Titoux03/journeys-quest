@@ -84,30 +84,30 @@ export const OnboardingModal: React.FC = () => {
             animate={{ scale: 1, opacity: 1, x: 0 }}
             exit={{ scale: 0.9, opacity: 0, x: -50 }}
             transition={{ type: "spring", duration: 0.6 }}
-            className="relative bg-card border border-border rounded-2xl shadow-2xl max-w-md w-full p-8"
+            className="relative bg-card border border-border rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 max-h-[90vh] overflow-y-auto"
           >
             <Button
               variant="ghost"
               size="icon"
-              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 text-muted-foreground hover:text-foreground"
               onClick={handleClose}
             >
               <X size={18} />
             </Button>
 
-            <div className="text-center mb-8">
+            <div className="text-center mb-6 sm:mb-8">
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ type: "spring", duration: 0.8 }}
-                className={`inline-flex w-20 h-20 rounded-full ${currentStep.bg} items-center justify-center mb-4`}
+                className={`inline-flex w-16 h-16 sm:w-20 sm:h-20 rounded-full ${currentStep.bg} items-center justify-center mb-4`}
               >
-                <Icon size={40} className={currentStep.color} />
+                <Icon size={32} className={`${currentStep.color} sm:w-10 sm:h-10`} />
               </motion.div>
-              <h2 className="text-2xl font-bold mb-2">
+              <h2 className="text-xl sm:text-2xl font-bold mb-2">
                 {currentStep.title}
               </h2>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed px-2">
                 {currentStep.description}
               </p>
             </div>
@@ -127,14 +127,14 @@ export const OnboardingModal: React.FC = () => {
               {step === 2 ? (
                 <>
                   <Button
-                    className="w-full bg-gradient-to-r from-primary to-primary/80"
+                    className="w-full bg-gradient-to-r from-primary to-primary/80 text-sm"
                     onClick={handlePremium}
                   >
                     {t('onboarding.cta.premium', 'Découvrir Premium')}
                   </Button>
                   <Button
                     variant="ghost"
-                    className="w-full"
+                    className="w-full text-sm"
                     onClick={handleClose}
                   >
                     {t('onboarding.cta.later', 'Plus tard')}
@@ -142,7 +142,7 @@ export const OnboardingModal: React.FC = () => {
                 </>
               ) : (
                 <Button
-                  className="w-full"
+                  className="w-full text-sm"
                   onClick={handleNext}
                 >
                   {t('onboarding.cta.next', 'Suivant')}

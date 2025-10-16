@@ -42,13 +42,13 @@ export const WelcomeModal: React.FC = () => {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ type: "spring", duration: 0.5 }}
-            className="relative bg-card border border-border rounded-2xl shadow-2xl max-w-lg w-full p-8"
+            className="relative bg-card border border-border rounded-2xl shadow-2xl max-w-lg w-full p-6 sm:p-8 max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <Button
               variant="ghost"
               size="icon"
-              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 text-muted-foreground hover:text-foreground"
               onClick={handleClose}
             >
               <X size={20} />
@@ -61,17 +61,17 @@ export const WelcomeModal: React.FC = () => {
                 transition={{ delay: 0.2, type: "spring" }}
                 className="inline-block mb-4"
               >
-                <Sparkles size={48} className="text-primary" />
+                <Sparkles size={40} className="text-primary sm:w-12 sm:h-12" />
               </motion.div>
-              <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                 {t('welcome.title', 'Bienvenue dans Journeys')}
               </h2>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-xs sm:text-sm">
                 {t('welcome.subtitle', 'Ton journal intime gamifié pour progresser chaque jour')}
               </p>
             </div>
 
-            <div className="space-y-4 mb-6">
+            <div className="space-y-3 sm:space-y-4 mb-6">
               <motion.div
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -81,7 +81,7 @@ export const WelcomeModal: React.FC = () => {
                 <div className="shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                   <TrendingUp size={20} className="text-primary" />
                 </div>
-                <div>
+                <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-sm mb-1">
                     {t('welcome.feature1.title', 'Note ton humeur et tes pensées')}
                   </h3>
@@ -100,7 +100,7 @@ export const WelcomeModal: React.FC = () => {
                 <div className="shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                   <Zap size={20} className="text-primary" />
                 </div>
-                <div>
+                <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-sm mb-1">
                     {t('welcome.feature2.title', 'Garde ta streak et vois tes progrès')}
                   </h3>
@@ -119,7 +119,7 @@ export const WelcomeModal: React.FC = () => {
                 <div className="shrink-0 w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
                   <Sparkles size={20} className="text-primary" />
                 </div>
-                <div>
+                <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-sm mb-1">
                     {t('welcome.feature3.title', 'Débloque plus avec Journeys Premium')}
                   </h3>
@@ -130,16 +130,16 @@ export const WelcomeModal: React.FC = () => {
               </motion.div>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <Button
                 variant="outline"
-                className="flex-1"
+                className="flex-1 text-sm"
                 onClick={handleClose}
               >
                 {t('welcome.cta.start', 'Commencer mon Journal')}
               </Button>
               <Button
-                className="flex-1 bg-gradient-to-r from-primary to-primary/80"
+                className="flex-1 bg-gradient-to-r from-primary to-primary/80 text-sm"
                 onClick={handlePremium}
               >
                 {t('welcome.cta.premium', 'Découvrir Premium')}

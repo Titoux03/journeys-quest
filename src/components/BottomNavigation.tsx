@@ -59,7 +59,8 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="bg-card/95 backdrop-blur-md border border-border/50 rounded-2xl shadow-lg p-3"
+            transition={{ type: "spring", damping: 25 }}
+            className="bg-card/95 backdrop-blur-md border border-border/50 rounded-2xl shadow-lg p-3 mb-2"
           >
             <div className="grid grid-cols-2 gap-2 mb-3">
               {navItems.map((item) => {
@@ -76,11 +77,11 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                     }}
                     className="h-auto py-3 flex flex-col items-start gap-1 text-left"
                   >
-                    <div className="flex items-center gap-2">
-                      <Icon size={18} />
+                    <div className="flex items-center gap-2 w-full">
+                      <Icon size={18} className="shrink-0" />
                       <span className="font-medium text-sm">{item.label}</span>
                     </div>
-                    <span className="text-xs text-muted-foreground">{item.desc}</span>
+                    <span className="text-xs text-muted-foreground line-clamp-1">{item.desc}</span>
                   </Button>
                 );
               })}
@@ -118,6 +119,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: "spring", damping: 20 }}
           className="bg-card/95 backdrop-blur-md border border-border/50 rounded-full shadow-lg"
         >
           <Button
@@ -125,7 +127,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
             onClick={() => setIsExpanded(true)}
             className="w-full py-4 flex items-center justify-center gap-2 hover:bg-accent/50 rounded-full"
           >
-            <ChevronUp size={20} />
+            <ChevronUp size={20} className="shrink-0" />
             <span className="text-sm font-medium">Menu</span>
           </Button>
         </motion.div>
