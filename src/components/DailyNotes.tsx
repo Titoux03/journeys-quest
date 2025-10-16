@@ -192,7 +192,7 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
               }`}
             >
               <Send className="w-5 h-5" />
-              {saving ? t('notes.saving') : (editingNote ? t('common.edit') : t('common.save'))}
+              {saving ? t('notes.saving') : (editingNote ? 'Modifier' : 'Enregistrer')}
             </button>
           </div>
         </div>
