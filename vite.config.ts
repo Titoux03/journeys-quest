@@ -14,81 +14,39 @@ export default defineConfig(({ mode }) => ({
     react(), 
     mode === "development" && componentTagger(),
     VitePWA({
-      registerType: 'autoUpdate',
-      includeAssets: ['icon-192.png', 'icon-512.png', 'robots.txt'],
+      registerType: 'prompt',
+      injectRegister: 'auto',
+      includeAssets: ['icon-192.png', 'robots.txt'],
       manifest: {
-        name: 'Journeys - Votre Journal Gamifié',
+        name: 'Journeys',
         short_name: 'Journeys',
-        description: 'Transformez votre quotidien en aventure personnelle avec Journeys, le journal intime gamifié qui vous aide à cultiver votre bien-être.',
+        description: 'Votre journal intime gamifié pour cultiver votre bien-être',
         theme_color: '#0f172a',
         background_color: '#0f172a',
         display: 'standalone',
         scope: '/',
-        start_url: '/',
+        start_url: '/?source=pwa',
         orientation: 'portrait-primary',
+        categories: ['lifestyle', 'health'],
+        prefer_related_applications: false,
         icons: [
           {
             src: '/icon-192.png',
             sizes: '192x192',
             type: 'image/png',
-            purpose: 'any'
-          },
-          {
-            src: '/icon-192.png',
-            sizes: '192x192',
-            type: 'image/png',
-            purpose: 'maskable'
-          },
-          {
-            src: '/icon-512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any'
-          },
-          {
-            src: '/icon-512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable'
+            purpose: 'any maskable'
           }
         ]
       },
       workbox: {
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MB
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
-          },
-          {
-            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'gstatic-fonts-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
-          }
-        ]
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+        globPatterns: ['**/*.{js,css,html,png,svg,woff2}'],
+        cleanupOutdatedCaches: true,
+        skipWaiting: true,
+        clientsClaim: true
       },
       devOptions: {
-        enabled: true
+        enabled: false
       }
     })
   ].filter(Boolean),
