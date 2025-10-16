@@ -654,6 +654,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      check_and_award_streak_badges: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       cleanup_old_entries: {
         Args: Record<PropertyKey, never>
         Returns: undefined

@@ -6,6 +6,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { LogOut, TrendingUp, Users, DollarSign, BarChart3, AlertCircle, Brain } from "lucide-react";
 import { AffiliateLinkGenerator } from "@/components/AffiliateLinkGenerator";
 import { AdminOptimizationConsole } from "@/components/AdminOptimizationConsole";
+import { StreakAnalytics } from "@/components/StreakAnalytics";
 import { generateAffiliateReport, formatCurrency, formatConversionRate } from "@/utils/affiliateReport";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -159,7 +160,7 @@ const AffiliateAdmin = () => {
 
       <div className="container mx-auto px-4 py-8">
         <Tabs defaultValue="generator" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="generator">
               <Users className="w-4 h-4 mr-2" />
               Link Generator
@@ -167,6 +168,10 @@ const AffiliateAdmin = () => {
             <TabsTrigger value="reports">
               <BarChart3 className="w-4 h-4 mr-2" />
               Reports
+            </TabsTrigger>
+            <TabsTrigger value="streaks">
+              <TrendingUp className="w-4 h-4 mr-2" />
+              Streak Analytics
             </TabsTrigger>
             <TabsTrigger value="optimization">
               <Brain className="w-4 h-4 mr-2" />
@@ -176,6 +181,10 @@ const AffiliateAdmin = () => {
 
           <TabsContent value="generator">
             <AffiliateLinkGenerator />
+          </TabsContent>
+
+          <TabsContent value="streaks">
+            <StreakAnalytics />
           </TabsContent>
 
           <TabsContent value="optimization">

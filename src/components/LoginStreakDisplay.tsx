@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Flame, Calendar, Trophy, Plus } from 'lucide-react';
+import { Flame, Calendar, Trophy, Plus, Sparkles } from 'lucide-react';
 import { LoginStreak } from '@/hooks/useAddictions';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '@/hooks/useAuth';
+import { useStreakBadges } from '@/hooks/useStreakBadges';
 
 interface LoginStreakDisplayProps {
   loginStreak: LoginStreak | null;
@@ -14,14 +16,25 @@ export const LoginStreakDisplay: React.FC<LoginStreakDisplayProps> = ({
   className = "" 
 }) => {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [previousStreak, setPreviousStreak] = useState<number | null>(null);
   const [showIncrement, setShowIncrement] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
+
+  const currentStreak = loginStreak?.current_streak || 0;
+  useStreakBadges(user?.id, currentStreak);
 
   // Detect streak increment and show animation
   useEffect(() => {
     if (loginStreak && previousStreak !== null && loginStreak.current_streak > previousStreak) {
       setShowIncrement(true);
-      setTimeout(() => setShowIncrement(false), 2000);
+      setShowCelebration(true);
+      const incrementTimer = setTimeout(() => setShowIncrement(false), 2000);
+      const celebrationTimer = setTimeout(() => setShowCelebration(false), 3000);
+      return () => {
+        clearTimeout(incrementTimer);
+        clearTimeout(celebrationTimer);
+      };
     }
     if (loginStreak) {
       setPreviousStreak(loginStreak.current_streak);
@@ -61,19 +74,62 @@ export const LoginStreakDisplay: React.FC<LoginStreakDisplayProps> = ({
   };
 
   return (
-    <div className={`journey-card-glow p-6 ${className}`}>
-      <div className="text-center">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={`relative journey-card-glow p-6 overflow-hidden ${className}`}
+    >
+      {/* Celebration sparkles */}
+      <AnimatePresence>
+        {showCelebration && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0 }}
+            className="absolute inset-0 pointer-events-none flex items-center justify-center"
+          >
+            {[...Array(12)].map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ x: 0, y: 0, opacity: 1 }}
+                animate={{
+                  x: Math.cos((i * Math.PI * 2) / 12) * 100,
+                  y: Math.sin((i * Math.PI * 2) / 12) * 100,
+                  opacity: 0,
+                }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="absolute"
+              >
+                <Sparkles className="h-4 w-4 text-primary" />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="text-center relative z-10">
         <div className="flex items-center justify-center space-x-2 mb-4">
-          <Flame className="w-6 h-6 text-primary" />
+          <motion.div
+            animate={showIncrement ? { scale: [1, 1.2, 1] } : {}}
+            transition={{ duration: 0.5 }}
+          >
+            <Flame className="w-6 h-6 text-primary" />
+          </motion.div>
           <h3 className="text-lg font-semibold">{t('streak.title')}</h3>
         </div>
         
         <div className="mb-4">
           <div className="text-4xl mb-2">{getStreakEmoji(loginStreak.current_streak)}</div>
           <div className="relative">
-            <div className="text-3xl font-bold text-gradient-primary mb-1">
+            <motion.div
+              className="text-5xl font-bold text-primary"
+              style={{
+                textShadow: '0 0 6px rgba(0, 191, 255, 0.4)'
+              }}
+              animate={showIncrement ? { scale: [1, 1.1, 1] } : {}}
+            >
               {loginStreak.current_streak}
-            </div>
+            </motion.div>
             
             {/* +1 Pulse Animation */}
             <AnimatePresence>
@@ -107,7 +163,7 @@ export const LoginStreakDisplay: React.FC<LoginStreakDisplayProps> = ({
             animate={{ opacity: 1 }}
             className="mt-3 text-xs text-muted-foreground italic"
           >
-            🔥 {t('streak.growingDaily')}
+            Every day counts. Keep growing your momentum 🌿
           </motion.div>
         </div>
 
@@ -126,6 +182,6 @@ export const LoginStreakDisplay: React.FC<LoginStreakDisplayProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

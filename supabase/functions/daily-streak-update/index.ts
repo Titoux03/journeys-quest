@@ -29,14 +29,14 @@ serve(async (req) => {
     console.log('[DAILY-STREAK-UPDATE] Calling update_all_daily_streaks function');
 
     // Call the database function to update all streaks automatically
-    const { error } = await supabase.rpc('update_all_daily_streaks');
+    const { error: streakError } = await supabase.rpc('update_all_daily_streaks');
 
-    if (error) {
-      console.error('[DAILY-STREAK-UPDATE] Error updating streaks:', error);
+    if (streakError) {
+      console.error('[DAILY-STREAK-UPDATE] Error updating streaks:', streakError);
       return new Response(
         JSON.stringify({ 
           error: 'Failed to update streaks',
-          details: error.message 
+          details: streakError.message 
         }),
         {
           status: 500,
@@ -46,6 +46,16 @@ serve(async (req) => {
     }
 
     console.log('[DAILY-STREAK-UPDATE] Successfully updated all user streaks');
+
+    // Check and award streak badges
+    const { error: badgeError } = await supabase.rpc('check_and_award_streak_badges');
+
+    if (badgeError) {
+      console.error('[DAILY-STREAK-UPDATE] Error awarding badges:', badgeError);
+      // Don't fail the whole operation, just log the error
+    } else {
+      console.log('[DAILY-STREAK-UPDATE] Successfully checked and awarded badges');
+    }
 
     return new Response(
       JSON.stringify({ 
