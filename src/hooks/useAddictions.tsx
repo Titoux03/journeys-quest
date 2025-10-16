@@ -154,9 +154,9 @@ export const useAddictions = () => {
         .from('login_streaks')
         .select('*')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') throw error; // PGRST116 = no rows found
+      if (error) throw error;
       setLoginStreak(data);
     } catch (error) {
       console.error('Error loading login streak:', error);
@@ -348,10 +348,10 @@ export const useAddictions = () => {
             streak_start_date: today
           })
           .select()
-          .single();
+          .maybeSingle();
 
         if (error) throw error;
-        setLoginStreak(data);
+        if (data) setLoginStreak(data);
       } else {
         const lastLogin = new Date(loginStreak.last_login_date);
         const todayDate = new Date(today);
@@ -371,11 +371,11 @@ export const useAddictions = () => {
             })
             .eq('user_id', user.id)
             .select()
-            .single();
+            .maybeSingle();
 
           if (error) throw error;
 
-          setLoginStreak(data);
+          if (data) setLoginStreak(data);
         } else if (daysDiff > 1) {
           // Streak cassé, recommencer
           const { data, error } = await supabase
@@ -387,11 +387,11 @@ export const useAddictions = () => {
             })
             .eq('user_id', user.id)
             .select()
-            .single();
+            .maybeSingle();
 
           if (error) throw error;
 
-          setLoginStreak(data);
+          if (data) setLoginStreak(data);
         }
         // Si daysDiff === 0, l'utilisateur s'est déjà connecté aujourd'hui
       }

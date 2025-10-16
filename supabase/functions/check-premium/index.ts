@@ -29,12 +29,29 @@ serve(async (req) => {
     console.log('[CHECK-PREMIUM] Function started');
 
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader) throw new Error("No authorization header provided");
+    if (!authHeader) {
+      console.log('[CHECK-PREMIUM] No auth header - returning not premium');
+      return new Response(JSON.stringify({
+        isPremium: false,
+        purchaseDate: null,
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      });
+    }
 
     const token = authHeader.replace("Bearer ", "");
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser(token);
-    if (userError) throw new Error(`Authentication error: ${userError.message}`);
-    if (!user?.id) throw new Error("User not authenticated");
+    if (userError || !user?.id) {
+      console.log('[CHECK-PREMIUM] Auth failed - returning not premium');
+      return new Response(JSON.stringify({
+        isPremium: false,
+        purchaseDate: null,
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      });
+    }
 
     console.log('[CHECK-PREMIUM] User authenticated:', { userId: user.id });
 
