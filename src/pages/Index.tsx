@@ -202,8 +202,8 @@ const Index = () => {
     setCurrentScreen('home');
   };
 
-  // Ne rien afficher pendant le chargement initial de l'auth
-  if (loading || popupLoading) {
+  // Ne rien afficher pendant le chargement initial de l'auth (ignorer les popups)
+  if (loading) {
     return null;
   }
 
@@ -279,17 +279,21 @@ const Index = () => {
         onNavigate={setCurrentScreen}
       />
 
-      {/* Premium Upgrade Modal */}
-      <PremiumUpgrade 
-        isVisible={upgradeModalVisible}
-        onClose={hideUpgradeModal}
-      />
+      {/* Premium Upgrade Modal - disabled for authenticated users */}
+      {!user && (
+        <PremiumUpgrade 
+          isVisible={upgradeModalVisible}
+          onClose={hideUpgradeModal}
+        />
+      )}
 
-      {/* Progress Interruptor Modal */}
-      <PremiumProgressInterruptor
-        journalDay={user ? journalEntries.length : localJournalEntries.length}
-        onClose={() => setShowProgressInterruptor(false)}
-      />
+      {/* Progress Interruptor Modal - disabled for authenticated users */}
+      {!user && (
+        <PremiumProgressInterruptor
+          journalDay={localJournalEntries.length}
+          onClose={() => setShowProgressInterruptor(false)}
+        />
+      )}
     </div>
   );
 };
