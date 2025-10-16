@@ -202,14 +202,11 @@ const Index = () => {
     setCurrentScreen('home');
   };
 
-  // Afficher un loader pendant le chargement de l'authentification
+  // Afficher rien pendant le micro-chargement d'auth pour éviter l'écran bleu
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-card to-secondary">
-        <div className="w-8 h-8 animate-spin border-2 border-primary border-t-transparent rounded-full"></div>
-      </div>
-    );
+    return null;
   }
+
 
   const renderScreen = () => {
     switch (currentScreen) {
@@ -259,8 +256,10 @@ const Index = () => {
 
       {/* Main Content */}
       <div className="lg:ml-64">
-        {/* Pop-up d'introduction (première visite) */}
-        {!popupLoading && !user && shouldShowIntro && <IntroPopup onClose={markIntroSeen} />}
+        {/* Pop-up d'introduction (première visite, jamais quand connecté) */}
+        {!popupLoading && !loading && !user && shouldShowIntro && (
+          <IntroPopup onClose={markIntroSeen} />
+        )}
         
         {/* Pop-up tutoriel (après création de compte) */}
         {!popupLoading && shouldShowTutorial && (

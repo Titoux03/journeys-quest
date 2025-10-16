@@ -40,6 +40,16 @@ export const usePopupManager = () => {
 
         // Une fois connecté, ne jamais ré-afficher l'intro sur cet appareil
         try { localStorage.setItem('hasSeenIntroPopup', 'true'); } catch {}
+        // Et s'assurer côté serveur que le flag est activé
+        if (!data.has_seen_intro_popup) {
+          try {
+            // Ne plus jamais ré-afficher l'intro côté serveur pour cet utilisateur
+            void supabase
+              .from('profiles')
+              .update({ has_seen_intro_popup: true })
+              .eq('user_id', user.id);
+          } catch {}
+        }
 
         // Détecter si c'est un nouvel utilisateur (compte créé il y a moins de 2 minutes)
         const createdAt = new Date(data.created_at);
