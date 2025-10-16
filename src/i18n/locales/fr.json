@@ -363,6 +363,24 @@
     },
     "users": "+15 000 utilisateurs tiennent déjà leur journal chaque jour"
   },
+  "intro": {
+    "title": "Bienvenue sur Journeys",
+    "subtitle": "Ton journal intime gamifié.",
+    "feature1": {
+      "title": "Écris ton humeur",
+      "desc": "Note ton humeur quotidienne et vois ton évolution"
+    },
+    "feature2": {
+      "title": "Garde ta streak",
+      "desc": "Maintiens ta progression jour après jour"
+    },
+    "feature3": {
+      "title": "Vois ton évolution",
+      "desc": "Découvre ton espace bien-être et progresse chaque jour"
+    },
+    "cta": "Commencer mon journal",
+    "footer": "✨ Rejoins des milliers d'utilisateurs"
+  },
   "onboarding": {
     "step1": {
       "title": "Ton journal personnel",

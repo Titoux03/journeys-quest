@@ -363,6 +363,24 @@
     },
     "users": "+15,000 users already keep their journal every day"
   },
+  "intro": {
+    "title": "Welcome to Journeys",
+    "subtitle": "Your gamified personal journal.",
+    "feature1": {
+      "title": "Write your mood",
+      "desc": "Record your daily mood and see your evolution"
+    },
+    "feature2": {
+      "title": "Keep your streak",
+      "desc": "Maintain your progress day after day"
+    },
+    "feature3": {
+      "title": "See your evolution",
+      "desc": "Discover your wellness space and grow every day"
+    },
+    "cta": "Start my journal",
+    "footer": "✨ Join thousands of users"
+  },
   "onboarding": {
     "step1": {
       "title": "Your personal journal",

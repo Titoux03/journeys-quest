@@ -14,7 +14,7 @@ import { MarketingNotifications } from '@/components/MarketingNotifications';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { DesktopNavigation } from '@/components/DesktopNavigation';
 import { UserStatus } from '@/components/UserStatus';
-import { WelcomeModal } from '@/components/WelcomeModal';
+import { IntroPopup } from '@/components/IntroPopup';
 import { OnboardingModal } from '@/components/OnboardingModal';
 import { PremiumProgressInterruptor } from '@/components/PremiumProgressInterruptor';
 import { useAuth } from '@/hooks/useAuth';
@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { usePremium } from '@/hooks/usePremium';
 import { useProgress } from '@/hooks/useProgress';
 import { useGongSounds } from '@/hooks/useGongSounds';
+import { usePopupManager } from '@/hooks/usePopupManager';
 import { MobileOptimizations } from '@/components/MobileOptimizations';
 
 interface JournalEntry {
@@ -34,10 +35,17 @@ interface JournalEntry {
 
 const Index = () => {
   const { user, signOut, loading } = useAuth();
-  const { upgradeModalVisible, hideUpgradeModal, showUpgradeModal, isPremium } = usePremium();
+  const { upgradeModalVisible, hideUpgradeModal, isPremium } = usePremium();
   const { journalEntries, saveJournalEntry, deleteJournalEntry } = useProgress();
   const { playWelcome } = useGongSounds();
   const navigate = useNavigate();
+  const { 
+    shouldShowIntro, 
+    shouldShowTutorial, 
+    markIntroSeen, 
+    markTutorialSeen,
+    loading: popupLoading 
+  } = usePopupManager();
   const [currentScreen, setCurrentScreen] = useState('home');
   const [localJournalEntries, setLocalJournalEntries] = useState<JournalEntry[]>([]);
   const [currentJournalData, setCurrentJournalData] = useState<{
@@ -63,19 +71,7 @@ const Index = () => {
     }
   }, [user]);
 
-  // Auto-show premium modal on first load (with delay)
-  useEffect(() => {
-    const hasSeenAutoModal = sessionStorage.getItem('hasSeenPremiumAutoModal');
-    
-    if (!hasSeenAutoModal && !isPremium) {
-      const timer = setTimeout(() => {
-        showUpgradeModal();
-        sessionStorage.setItem('hasSeenPremiumAutoModal', 'true');
-      }, 2000); // 2 second delay
-      
-      return () => clearTimeout(timer);
-    }
-  }, [isPremium, showUpgradeModal]);
+  // Plus d'auto-affichage du modal Premium - supprimé
 
   // Jouer le gong de bienvenue
   useEffect(() => {
@@ -264,9 +260,16 @@ const Index = () => {
 
       {/* Main Content */}
       <div className="lg:ml-64">
-        {/* Modals de bienvenue et onboarding */}
-        <WelcomeModal />
-        <OnboardingModal />
+        {/* Pop-up d'introduction (première visite) */}
+        {!popupLoading && shouldShowIntro && <IntroPopup onClose={markIntroSeen} />}
+        
+        {/* Pop-up tutoriel (après création de compte) */}
+        {!popupLoading && shouldShowTutorial && (
+          <OnboardingModal 
+            isVisible={true} 
+            onClose={markTutorialSeen} 
+          />
+        )}
         
         {/* Optimisations CSS mobile */}
         <MobileOptimizations />

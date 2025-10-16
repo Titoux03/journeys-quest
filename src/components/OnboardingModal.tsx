@@ -6,27 +6,18 @@ import { usePremium } from '@/hooks/usePremium';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 
-export const OnboardingModal: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(false);
+interface OnboardingModalProps {
+  isVisible: boolean;
+  onClose: () => void;
+}
+
+export const OnboardingModal: React.FC<OnboardingModalProps> = ({ isVisible, onClose }) => {
   const [step, setStep] = useState(0);
-  const { user } = useAuth();
   const { showUpgradeModal } = usePremium();
   const { t } = useTranslation();
 
-  useEffect(() => {
-    if (user) {
-      const hasSeenOnboarding = localStorage.getItem(`onboarding_${user.id}`);
-      if (!hasSeenOnboarding) {
-        setTimeout(() => setIsVisible(true), 1500);
-      }
-    }
-  }, [user]);
-
   const handleClose = () => {
-    setIsVisible(false);
-    if (user) {
-      localStorage.setItem(`onboarding_${user.id}`, 'true');
-    }
+    onClose();
   };
 
   const handleNext = () => {
