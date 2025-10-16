@@ -235,7 +235,6 @@ const Index = () => {
       case 'progress':
         return <ProgressScreen entries={entries} onNavigate={setCurrentScreen} onUpdateEntry={handleUpdateEntry} />;
       case 'notes':
-      case 'notes':
         return <DailyNotes onNavigate={setCurrentScreen} />;
       case 'abstinence':
         return <AbstinenceTracker onNavigate={setCurrentScreen} />;
