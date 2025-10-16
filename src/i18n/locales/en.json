@@ -364,22 +364,49 @@
     "users": "+15,000 users already keep their journal every day"
   },
   "intro": {
-    "title": "Welcome to Journeys",
-    "subtitle": "Your gamified personal journal.",
-    "feature1": {
-      "title": "Write your mood",
-      "desc": "Record your daily mood and see your evolution"
+    "step1": {
+      "title": "Welcome to Journeys 👋",
+      "subtitle": "The next-generation personal journal to boost your well-being and track your evolution.",
+      "cta": "Discover features"
     },
-    "feature2": {
-      "title": "Keep your streak",
-      "desc": "Maintain your progress day after day"
+    "step2": {
+      "title": "Free Features",
+      "subtitle": "Everything you need to get started",
+      "feature1": {
+        "title": "📝 Your Journal",
+        "desc": "Write your thoughts, keep track of your mood"
+      },
+      "feature2": {
+        "title": "🔥 Your Streaks",
+        "desc": "Progress day after day without stopping"
+      },
+      "feature3": {
+        "title": "🎯 Habit Tracking",
+        "desc": "Stay motivated and visualize your journey"
+      },
+      "cta": "See Premium ✨"
     },
-    "feature3": {
-      "title": "See your evolution",
-      "desc": "Discover your wellness space and grow every day"
-    },
-    "cta": "Start my journal",
-    "footer": "✨ Join thousands of users"
+    "step3": {
+      "title": "Journeys Premium",
+      "subtitle": "Unlock your full potential",
+      "feature1": {
+        "title": "💎 AI Wellness Coaching",
+        "desc": "Receive personalized advice based on your mood"
+      },
+      "feature2": {
+        "title": "🌙 Premium Guided Journal",
+        "desc": "Access exclusive introspective exercises"
+      },
+      "feature3": {
+        "title": "🔔 Reminders & Statistics",
+        "desc": "Track your long-term evolution"
+      },
+      "motivational": "✨ Unlock your full potential with Journeys Premium",
+      "cta": {
+        "premium": "Discover Journeys Premium",
+        "free": "Continue for free"
+      }
+    }
   },
   "onboarding": {
     "step1": {

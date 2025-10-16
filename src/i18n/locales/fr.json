@@ -364,22 +364,52 @@
     "users": "+15 000 utilisateurs tiennent déjà leur journal chaque jour"
   },
   "intro": {
-    "title": "Bienvenue sur Journeys",
-    "subtitle": "Ton journal intime gamifié.",
-    "feature1": {
-      "title": "Écris ton humeur",
-      "desc": "Note ton humeur quotidienne et vois ton évolution"
+    "step1": {
+      "title": "Bienvenue sur Journeys 👋",
+      "subtitle": "Le journal intime nouvelle génération pour booster ton bien-être et suivre ton évolution.",
+      "cta": "Découvrir les fonctionnalités"
     },
-    "feature2": {
-      "title": "Garde ta streak",
-      "desc": "Maintiens ta progression jour après jour"
+    "step2": {
+      "title": "Fonctionnalités Gratuites",
+      "subtitle": "Tout ce dont tu as besoin pour commencer",
+      "feature1": {
+        "title": "📝 Ton Journal",
+        "desc": "Écris tes pensées, garde une trace de ton humeur"
+      },
+      "feature2": {
+        "title": "🔥 Tes Streaks",
+        "desc": "Progresse jour après jour sans t'arrêter"
+      },
+      "feature3": {
+        "title": "🎯 Suivi de tes habitudes",
+        "desc": "Reste motivé et visualise ton parcours"
+      },
+      "cta": "Voir Premium ✨"
     },
-    "feature3": {
-      "title": "Vois ton évolution",
-      "desc": "Découvre ton espace bien-être et progresse chaque jour"
-    },
-    "cta": "Commencer mon journal",
-    "footer": "✨ Rejoins des milliers d'utilisateurs"
+    "step3": {
+      "title": "Journeys Premium",
+      "subtitle": "Débloque tout ton potentiel",
+      "feature1": {
+        "title": "💎 Coaching AI Bien-Être",
+        "desc": "Reçois des conseils personnalisés selon ton humeur"
+      },
+      "feature2": {
+        "title": "🌙 Journal Guidé Premium",
+        "desc": "Accède à des exercices introspectifs exclusifs"
+      },
+      "feature3": {
+        "title": "🔔 Rappels & Statistiques",
+        "desc": "Suis ton évolution sur le long terme"
+      },
+      "motivational": "✨ Débloque tout ton potentiel avec Journeys Premium",
+      "cta": {
+        "premium": "Découvrir Journeys Premium",
+        "free": "Continuer gratuitement"
+      }
+    }
+  },
+  "common": {
+    "back": "Retour"
   },
   "onboarding": {
     "step1": {
