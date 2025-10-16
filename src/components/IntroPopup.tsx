@@ -54,7 +54,10 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
             animate={{ scale: 1, opacity: 1, x: 0 }}
             exit={{ scale: 0.9, opacity: 0, x: -50 }}
             transition={{ type: "spring", duration: 0.5 }}
-            className="relative bg-card border border-border rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 max-h-[90vh] overflow-y-auto"
+            className="relative bg-card/95 backdrop-blur-xl border border-border/50 rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 max-h-[90vh] overflow-y-auto"
+            style={{
+              boxShadow: '0 20px 60px -15px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05)'
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             <Button
@@ -92,11 +95,13 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                 </div>
 
                 <Button
-                  className="w-full bg-gradient-to-r from-primary to-primary/80 text-base py-6"
+                  className="w-full bg-gradient-to-r from-primary to-primary/80 text-base py-6 flex items-center justify-center"
                   onClick={handleNext}
                 >
-                  {t('intro.step1.cta', 'Découvrir les fonctionnalités')}
-                  <ChevronRight size={20} className="ml-2" />
+                  <span className="flex items-center justify-center gap-2">
+                    {t('intro.step1.cta', 'Découvrir les fonctionnalités')}
+                    <ChevronRight size={20} />
+                  </span>
                 </Button>
               </motion.div>
             )}
@@ -180,18 +185,22 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                 <div className="flex gap-3">
                   <Button
                     variant="outline"
-                    className="flex-1"
+                    className="flex-1 flex items-center justify-center"
                     onClick={handleBack}
                   >
-                    <ChevronLeft size={18} className="mr-2" />
-                    {t('common.back', 'Retour')}
+                    <span className="flex items-center justify-center gap-2">
+                      <ChevronLeft size={18} />
+                      {t('common.back', 'Retour')}
+                    </span>
                   </Button>
                   <Button
-                    className="flex-1 bg-gradient-to-r from-primary to-primary/80"
+                    className="flex-1 bg-gradient-to-r from-primary to-primary/80 flex items-center justify-center"
                     onClick={handleNext}
                   >
-                    {t('intro.step2.cta', 'Voir Premium ✨')}
-                    <ChevronRight size={18} className="ml-2" />
+                    <span className="flex items-center justify-center gap-2">
+                      {t('intro.step2.cta', 'Voir Premium ✨')}
+                      <ChevronRight size={18} />
+                    </span>
                   </Button>
                 </div>
               </motion.div>
@@ -296,15 +305,17 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
 
                 <div className="space-y-3">
                   <Button
-                    className="w-full bg-gradient-to-r from-primary to-primary/80 text-base py-6"
+                    className="w-full bg-gradient-to-r from-primary to-primary/80 text-base py-6 flex items-center justify-center"
                     onClick={handlePremiumCTA}
                   >
-                    {t('intro.step3.cta.premium', isPremium ? 'Accéder à Premium' : 'Découvrir Journeys Premium')}
-                    <Crown size={18} className="ml-2" />
+                    <span className="flex items-center justify-center gap-2">
+                      {t('intro.step3.cta.premium', isPremium ? 'Accéder à Premium' : 'Découvrir Journeys Premium')}
+                      <Crown size={18} />
+                    </span>
                   </Button>
                   <Button
                     variant="ghost"
-                    className="w-full"
+                    className="w-full flex items-center justify-center"
                     onClick={handleClose}
                   >
                     {t('intro.step3.cta.free', 'Continuer gratuitement')}
@@ -312,11 +323,13 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full"
+                    className="w-full flex items-center justify-center"
                     onClick={handleBack}
                   >
-                    <ChevronLeft size={16} className="mr-2" />
-                    {t('common.back', 'Retour')}
+                    <span className="flex items-center justify-center gap-2">
+                      <ChevronLeft size={16} />
+                      {t('common.back', 'Retour')}
+                    </span>
                   </Button>
                 </div>
               </motion.div>

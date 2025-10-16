@@ -52,15 +52,20 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 px-2 pb-2 safe-area-inset-bottom lg:hidden">
+    <div className="fixed bottom-4 left-0 right-0 z-50 px-4 safe-area-inset-bottom lg:hidden">
       <AnimatePresence>
         {isExpanded && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            transition={{ type: "spring", damping: 25 }}
-            className="bg-card/95 backdrop-blur-md border border-border/50 rounded-2xl shadow-lg p-3 mb-2"
+            transition={{ 
+              type: "spring", 
+              damping: 25,
+              duration: 0.25,
+              ease: [0.4, 0, 0.2, 1]
+            }}
+            className="bg-card/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-xl p-3 mb-2"
           >
             <div className="grid grid-cols-2 gap-2 mb-3">
               {navItems.map((item) => {
@@ -119,8 +124,13 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: "spring", damping: 20 }}
-          className="bg-card/95 backdrop-blur-md border border-border/50 rounded-full shadow-lg"
+          transition={{ 
+            type: "spring", 
+            damping: 20,
+            duration: 0.25,
+            ease: [0.4, 0, 0.2, 1]
+          }}
+          className="bg-card/95 backdrop-blur-xl border border-border/50 rounded-full shadow-xl"
         >
           <Button
             variant="ghost"
