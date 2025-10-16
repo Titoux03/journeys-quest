@@ -158,7 +158,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
       )}
 
       {/* Daily Quote */}
-      <DailyQuote />
+      <div className="mb-10">
+        <DailyQuote />
+      </div>
 
       {/* Quick Actions Grid */}
       <div className="grid grid-cols-2 gap-4 mb-8">
