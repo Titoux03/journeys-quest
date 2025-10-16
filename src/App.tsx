@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PremiumProvider } from "./hooks/usePremium";
-import { AuthProvider } from "./hooks/useAuth";
+import { AuthProvider, useAuth } from "./hooks/useAuth";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import { PaymentSuccess } from "./pages/PaymentSuccess";
@@ -17,6 +17,16 @@ const queryClient = new QueryClient();
 const AppContent = () => {
   // Initialiser le système d'affiliation
   useAffiliation();
+  // Attendre que l'auth soit prête pour éviter tout écran vide/bleu
+  const { loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-card to-secondary">
+        <div className="w-8 h-8 animate-spin border-2 border-primary border-t-transparent rounded-full"></div>
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>
