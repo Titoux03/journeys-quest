@@ -748,7 +748,15 @@
     "unlocked": "Débloqué",
     "locked": "Verrouillé",
     "progress": "Progression",
-    "viewAll": "Voir tous les badges"
+    "viewAll": "Voir tous les badges",
+    "yourBadges": "Vos Badges Journeys",
+    "earned": "Badges Obtenus",
+    "inProgress": "En Cours",
+    "totalAvailable": "Total Disponible",
+    "loyaltyBadges": "Badges de Fidélité Journeys",
+    "badgesFor": "Badges",
+    "days": "jour",
+    "days_plural": "jours"
   },
   "errors": {
     "generic": "Une erreur est survenue",

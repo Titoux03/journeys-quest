@@ -745,7 +745,15 @@
     "unlocked": "Unlocked",
     "locked": "Locked",
     "progress": "Progress",
-    "viewAll": "View all badges"
+    "viewAll": "View all badges",
+    "yourBadges": "Your Journeys Badges",
+    "earned": "Earned Badges",
+    "inProgress": "In Progress",
+    "totalAvailable": "Total Available",
+    "loyaltyBadges": "Journeys Loyalty Badges",
+    "badgesFor": "Badges for",
+    "days": "day",
+    "days_plural": "days"
   },
   "errors": {
     "generic": "An error occurred",

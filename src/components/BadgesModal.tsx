@@ -3,6 +3,7 @@ import { X, Lock, CheckCircle, Star, Trophy } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { AddictionType, Badge as BadgeType, UserBadge } from '@/hooks/useAddictions';
+import { useTranslation } from 'react-i18next';
 
 interface BadgesModalProps {
   isOpen: boolean;
@@ -23,6 +24,8 @@ export const BadgesModal: React.FC<BadgesModalProps> = ({
   currentStreaks = {},
   loginStreak = 0
 }) => {
+  const { t } = useTranslation();
+  
   if (!isOpen) return null;
 
   const earnedBadgeIds = userBadges.map(ub => ub.badge_id);
@@ -59,7 +62,7 @@ export const BadgesModal: React.FC<BadgesModalProps> = ({
         <div className="sticky top-0 bg-card/95 backdrop-blur-sm border-b border-border/50 p-6 flex items-center justify-between z-10">
           <div className="flex items-center space-x-3">
             <Trophy className="w-6 h-6 text-primary" />
-            <h2 className="text-2xl font-bold text-foreground">Vos Badges Journeys</h2>
+            <h2 className="text-2xl font-bold text-foreground">{t('badges.yourBadges')}</h2>
           </div>
           <button
             onClick={onClose}
@@ -74,17 +77,17 @@ export const BadgesModal: React.FC<BadgesModalProps> = ({
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center p-4 rounded-xl bg-gradient-to-br from-success/20 to-success/10 border border-success/30">
               <div className="text-3xl font-bold text-success">{earnedBadgeIds.length}</div>
-              <div className="text-xs text-muted-foreground mt-1">Badges Obtenus</div>
+              <div className="text-xs text-muted-foreground mt-1">{t('badges.earned')}</div>
             </div>
             <div className="text-center p-4 rounded-xl bg-gradient-to-br from-warning/20 to-warning/10 border border-warning/30">
               <div className="text-3xl font-bold text-warning">
                 {badges.filter(b => getBadgeStatus(b) === 'in-progress').length}
               </div>
-              <div className="text-xs text-muted-foreground mt-1">En Cours</div>
+              <div className="text-xs text-muted-foreground mt-1">{t('badges.inProgress')}</div>
             </div>
             <div className="text-center p-4 rounded-xl bg-gradient-to-br from-muted/20 to-muted/10 border border-border">
               <div className="text-3xl font-bold text-muted-foreground">{badges.length}</div>
-              <div className="text-xs text-muted-foreground mt-1">Total Disponible</div>
+              <div className="text-xs text-muted-foreground mt-1">{t('badges.totalAvailable')}</div>
             </div>
           </div>
         </div>
@@ -93,7 +96,7 @@ export const BadgesModal: React.FC<BadgesModalProps> = ({
         <div className="p-6 border-b border-border/30">
           <h3 className="text-lg font-semibold mb-4 flex items-center text-accent">
             <Star className="w-5 h-5 mr-2" />
-            🌟 Badges de Fidélité Journeys
+            🌟 {t('badges.loyaltyBadges')}
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {loginStreakBadges.map((badge) => {
@@ -122,7 +125,7 @@ export const BadgesModal: React.FC<BadgesModalProps> = ({
                     </div>
                     <div className="text-sm font-medium text-foreground mb-1">{badge.name}</div>
                     <div className="text-xs text-muted-foreground mb-2">
-                      {badge.requirement_value} jour{badge.requirement_value > 1 ? 's' : ''}
+                      {badge.requirement_value} {badge.requirement_value > 1 ? t('badges.days_plural') : t('badges.days')}
                     </div>
                     
                     {inProgress && !earned && (
@@ -153,7 +156,7 @@ export const BadgesModal: React.FC<BadgesModalProps> = ({
             <div key={addictionType.id} className="p-6 border-b border-border/30 last:border-0">
               <h3 className="text-lg font-semibold mb-4 flex items-center">
                 <span className="text-2xl mr-2">{addictionType.icon}</span>
-                Badges {addictionType.name}
+                {t('badges.badgesFor')} {addictionType.name}
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {typeBadges.map((badge) => {
@@ -183,7 +186,7 @@ export const BadgesModal: React.FC<BadgesModalProps> = ({
                         </div>
                         <div className="text-sm font-medium text-foreground mb-1">{badge.name}</div>
                         <div className="text-xs text-muted-foreground mb-1">
-                          {badge.requirement_value} jour{badge.requirement_value > 1 ? 's' : ''}
+                          {badge.requirement_value} {badge.requirement_value > 1 ? t('badges.days_plural') : t('badges.days')}
                         </div>
                         <div className="text-xs text-muted-foreground mb-2 line-clamp-2">
                           {badge.description}
