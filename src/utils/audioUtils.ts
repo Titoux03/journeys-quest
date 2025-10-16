@@ -1,7 +1,28 @@
+// AudioContext global réutilisable pour éviter les erreurs de navigateur
+let globalAudioContext: AudioContext | null = null;
+
+const getAudioContext = async (): Promise<AudioContext> => {
+  if (!globalAudioContext) {
+    globalAudioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+  }
+  
+  // Reprendre le contexte si suspendu (nécessite une interaction utilisateur)
+  if (globalAudioContext.state === 'suspended') {
+    try {
+      await globalAudioContext.resume();
+    } catch (error) {
+      console.warn('Could not resume AudioContext:', error);
+    }
+  }
+  
+  return globalAudioContext;
+};
+
 // Génère un son de bol tibétain synthétique
-export const createMeditationSound = (frequency: number = 440, duration: number = 2): Promise<void> => {
-  return new Promise((resolve) => {
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+export const createMeditationSound = async (frequency: number = 440, duration: number = 2): Promise<void> => {
+  return new Promise(async (resolve) => {
+    try {
+      const audioContext = await getAudioContext();
     
     // Oscillateur principal (ton fondamental)
     const oscillator = audioContext.createOscillator();
@@ -35,22 +56,27 @@ export const createMeditationSound = (frequency: number = 440, duration: number 
       gains.push(gain);
     });
     
-    // Résoudre la promesse quand le son se termine
-    setTimeout(() => {
+      // Résoudre la promesse quand le son se termine
+      setTimeout(() => {
+        resolve();
+      }, duration * 1000);
+    } catch (error) {
+      console.warn('Audio playback error:', error);
       resolve();
-    }, duration * 1000);
+    }
   });
 };
 
 // Génère un son de gong profond et résonnant avec variations
-export const createGongSound = (
+export const createGongSound = async (
   baseFrequency: number = 120, 
   duration: number = 3,
   volume: number = 0.4,
   variation: number = 0
 ): Promise<void> => {
-  return new Promise((resolve) => {
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+  return new Promise(async (resolve) => {
+    try {
+      const audioContext = await getAudioContext();
     
     // Variations aléatoires légères basées sur l'interaction
     const frequencyVariation = 1 + (Math.random() - 0.5) * 0.1 + variation;
@@ -149,10 +175,14 @@ export const createGongSound = (
       }
     });
     
-    // Résoudre quand le son se termine
-    setTimeout(() => {
+      // Résoudre quand le son se termine
+      setTimeout(() => {
+        resolve();
+      }, duration * durationVariation * 1000);
+    } catch (error) {
+      console.warn('Audio playback error:', error);
       resolve();
-    }, duration * durationVariation * 1000);
+    }
   });
 };
 
