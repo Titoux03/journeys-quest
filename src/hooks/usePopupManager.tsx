@@ -38,6 +38,9 @@ export const usePopupManager = () => {
           hasSeenTutorial: data.has_seen_tutorial || false,
         });
 
+        // Une fois connecté, ne jamais ré-afficher l'intro sur cet appareil
+        try { localStorage.setItem('hasSeenIntroPopup', 'true'); } catch {}
+
         // Détecter si c'est un nouvel utilisateur (compte créé il y a moins de 2 minutes)
         const createdAt = new Date(data.created_at);
         const now = new Date();

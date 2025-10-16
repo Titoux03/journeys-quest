@@ -260,7 +260,7 @@ const Index = () => {
       {/* Main Content */}
       <div className="lg:ml-64">
         {/* Pop-up d'introduction (première visite) */}
-        {!popupLoading && shouldShowIntro && <IntroPopup onClose={markIntroSeen} />}
+        {!popupLoading && !user && shouldShowIntro && <IntroPopup onClose={markIntroSeen} />}
         
         {/* Pop-up tutoriel (après création de compte) */}
         {!popupLoading && shouldShowTutorial && (
