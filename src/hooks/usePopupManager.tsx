@@ -25,47 +25,35 @@ export const usePopupManager = () => {
     setLoading(true);
     
     if (user) {
-      // Si connecté, récupérer depuis le serveur
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('has_seen_intro_popup, has_seen_tutorial, created_at')
-        .eq('user_id', user.id)
-        .single();
-
-      if (!error && data) {
-        setPreferences({
-          hasSeenIntroPopup: data.has_seen_intro_popup || false,
-          hasSeenTutorial: data.has_seen_tutorial || false,
-        });
-
-        // Une fois connecté, ne jamais ré-afficher l'intro sur cet appareil
-        try { localStorage.setItem('hasSeenIntroPopup', 'true'); } catch {}
-        // Et s'assurer côté serveur que le flag est activé
-        if (!data.has_seen_intro_popup) {
-          try {
-            // Ne plus jamais ré-afficher l'intro côté serveur pour cet utilisateur
-            void supabase
-              .from('profiles')
-              .update({ has_seen_intro_popup: true })
-              .eq('user_id', user.id);
-          } catch {}
-        }
-
-        // Détecter si c'est un nouvel utilisateur (compte créé il y a moins de 2 minutes)
-        const createdAt = new Date(data.created_at);
-        const now = new Date();
-        const diffMinutes = (now.getTime() - createdAt.getTime()) / (1000 * 60);
-        
-        setIsNewUser(diffMinutes < 2 && !data.has_seen_tutorial);
-      }
+      // Si connecté, forcer tous les flags à true - pas de pop-up
+      setPreferences({
+        hasSeenIntroPopup: true,
+        hasSeenTutorial: true,
+      });
+      
+      // Marquer localement aussi
+      localStorage.setItem('hasSeenIntroPopup', 'true');
+      localStorage.setItem('hasSeenTutorial', 'true');
+      
+      // Mettre à jour en base si nécessaire
+      try {
+        void supabase
+          .from('profiles')
+          .update({ 
+            has_seen_intro_popup: true,
+            has_seen_tutorial: true 
+          })
+          .eq('user_id', user.id);
+      } catch {}
+      
+      setIsNewUser(false);
     } else {
       // Si non connecté, utiliser localStorage
       const localIntro = localStorage.getItem('hasSeenIntroPopup') === 'true';
-      const localTutorial = localStorage.getItem('hasSeenTutorial') === 'true';
       
       setPreferences({
         hasSeenIntroPopup: localIntro,
-        hasSeenTutorial: localTutorial,
+        hasSeenTutorial: true,
       });
       setIsNewUser(false);
     }
@@ -96,7 +84,7 @@ export const usePopupManager = () => {
   const markTutorialSeen = () => updatePreference('hasSeenTutorial', true);
 
   const shouldShowIntro = !preferences.hasSeenIntroPopup && !user;
-  const shouldShowTutorial = user && isNewUser && !preferences.hasSeenTutorial;
+  const shouldShowTutorial = false; // Désactivé complètement - pas de pop-up après connexion
 
   return {
     preferences,

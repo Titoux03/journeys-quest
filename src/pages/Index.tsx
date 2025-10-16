@@ -202,8 +202,8 @@ const Index = () => {
     setCurrentScreen('home');
   };
 
-  // Afficher rien pendant le micro-chargement d'auth pour éviter l'écran bleu
-  if (loading) {
+  // Ne rien afficher pendant le chargement initial de l'auth
+  if (loading || popupLoading) {
     return null;
   }
 
@@ -256,17 +256,9 @@ const Index = () => {
 
       {/* Main Content */}
       <div className="lg:ml-64">
-        {/* Pop-up d'introduction (première visite, jamais quand connecté) */}
-        {!popupLoading && !loading && !user && shouldShowIntro && (
+        {/* Pop-up d'introduction (SEULEMENT pour les visiteurs non connectés) */}
+        {!user && shouldShowIntro && (
           <IntroPopup onClose={markIntroSeen} />
-        )}
-        
-        {/* Pop-up tutoriel (après création de compte) */}
-        {!popupLoading && shouldShowTutorial && (
-          <OnboardingModal 
-            isVisible={true} 
-            onClose={markTutorialSeen} 
-          />
         )}
         
         {/* Optimisations CSS mobile */}
