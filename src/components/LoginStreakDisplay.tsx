@@ -15,7 +15,7 @@ export const LoginStreakDisplay: React.FC<LoginStreakDisplayProps> = ({
   loginStreak, 
   className = "" 
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const [previousStreak, setPreviousStreak] = useState<number | null>(null);
   const [showIncrement, setShowIncrement] = useState(false);
@@ -176,7 +176,7 @@ export const LoginStreakDisplay: React.FC<LoginStreakDisplayProps> = ({
           <div className="bg-secondary/20 rounded-lg p-3">
             <Calendar className="w-4 h-4 mx-auto mb-1 text-accent" />
             <div className="text-lg font-semibold">
-              {new Date(loginStreak.streak_start_date).toLocaleDateString(t('common.locale'))}
+              {new Date(loginStreak.streak_start_date).toLocaleDateString(i18n.language || 'fr')}
             </div>
             <div className="text-xs text-muted-foreground">{t('streak.streakStart')}</div>
           </div>
