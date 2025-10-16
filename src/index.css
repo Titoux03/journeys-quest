@@ -109,15 +109,27 @@ All colors MUST be HSL. */
     @apply border-border;
   }
 
+  /* Safari Mobile Fixes */
+  html {
+    scroll-behavior: smooth;
+    height: -webkit-fill-available;
+  }
+
   body {
     @apply bg-background text-foreground font-nunito;
     font-feature-settings: "kern" 1, "liga" 1;
     background: var(--gradient-premium);
     min-height: 100vh;
+    min-height: -webkit-fill-available;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  html {
-    scroll-behavior: smooth;
+  /* Safari Button Reset */
+  button, input, select, textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
   }
 }
 
@@ -128,6 +140,7 @@ All colors MUST be HSL. */
     background: var(--gradient-card);
     box-shadow: var(--shadow-card), inset 0 1px 0 hsl(var(--primary) / 0.1);
     backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     transition: var(--transition-premium);
   }
 
@@ -217,6 +230,21 @@ All colors MUST be HSL. */
 
   .pulse-glow {
     animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  /* Safari Modal Fixes */
+  .modal-container {
+    max-height: calc(100vh - 20px);
+    max-height: calc(-webkit-fill-available - 20px);
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  /* Safari Flexbox Fixes */
+  .safari-flex-fix {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
 }
 

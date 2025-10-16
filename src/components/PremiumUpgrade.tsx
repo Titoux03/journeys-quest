@@ -185,7 +185,7 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-lg">
-      <div className="journey-card-premium max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
+      <div className="journey-card-premium max-w-2xl w-full modal-container overflow-y-auto relative">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -450,11 +450,11 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
               <Button
                 onClick={() => { navigate('/auth'); onClose(); }}
                 disabled={!acceptedTerms}
-                className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed animate-pulse flex items-center justify-center"
+                className="journey-button-primary w-full text-base sm:text-lg py-6 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed animate-pulse flex items-center justify-center whitespace-normal leading-tight"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                <span className="flex items-center justify-center gap-2">
-                  <Sparkles className="w-5 h-5" />
+                <span className="flex items-center justify-center gap-2 break-words">
+                  <Sparkles className="w-5 h-5 flex-shrink-0" />
                   <span>{t('premiumModal.ctaCreate')}</span>
                 </span>
               </Button>
@@ -476,17 +476,17 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
             <Button
               onClick={handleUpgrade}
               disabled={loading || !acceptedTerms}
-              className="journey-button-primary w-full text-lg py-6 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed animate-pulse flex items-center justify-center"
+              className="journey-button-primary w-full text-base sm:text-lg py-6 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed animate-pulse flex items-center justify-center whitespace-normal leading-tight"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
               {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                <span className="flex items-center justify-center gap-2 break-words">
+                  <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
                   <span>{t('premiumModal.processing')}</span>
                 </span>
               ) : (
-                <span className="flex items-center justify-center gap-2">
-                  <Sparkles className="w-5 h-5" />
+                <span className="flex items-center justify-center gap-2 break-words">
+                  <Sparkles className="w-5 h-5 flex-shrink-0" />
                   <span>{t('premiumModal.ctaUnlock')}</span>
                 </span>
               )}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { DailyQuote } from '@/components/DailyQuote';
 import { LoginStreakDisplay } from '@/components/LoginStreakDisplay';
 import { AddictionCard } from '@/components/AddictionCard';
+import { BadgesModal } from '@/components/BadgesModal';
 import { Sparkles, TrendingUp, Target, Brain, Shield, Dumbbell, Crown, Star, Flame, Timer, BarChart3, Leaf, PenTool, CheckSquare } from 'lucide-react';
 import { usePremium } from '@/hooks/usePremium';
 import { useAuth } from '@/hooks/useAuth';
@@ -28,11 +29,13 @@ interface HomePageProps {
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
   const [currentQuote, setCurrentQuote] = useState<string>('');
+  const [showBadgesModal, setShowBadgesModal] = useState(false);
   const { isPremium, showUpgradeModal } = usePremium();
   const { user } = useAuth();
   const { t } = useTranslation();
   const { 
     addictionTypes, 
+    badges,
     userAddictions, 
     userBadges, 
     loginStreak,
@@ -131,7 +134,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
               {t('home.lastBadges')}
             </h2>
             <button
-              onClick={() => onNavigate('abstinence')}
+              onClick={() => setShowBadgesModal(true)}
               className="text-accent hover:text-accent-glow transition-colors text-sm font-medium"
             >
               {t('home.viewAllBadges')}
@@ -140,9 +143,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {userBadges.slice(0, 4).map((userBadge) => (
-              <div
+              <button
                 key={userBadge.id}
-                className="flex items-center space-x-3 p-3 rounded-xl bg-gradient-to-r from-accent/10 to-accent-glow/5 border border-accent/20"
+                onClick={() => setShowBadgesModal(true)}
+                className="flex items-center space-x-3 p-3 rounded-xl bg-gradient-to-r from-accent/10 to-accent-glow/5 border border-accent/20 hover:scale-[1.02] transition-transform cursor-pointer text-left"
               >
                 <div className="text-2xl">{userBadge.badge.icon}</div>
                 <div className="flex-1">
@@ -151,11 +155,30 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
                     {userBadge.badge.description}
                   </div>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </div>
       )}
+
+      {/* Badges Modal */}
+      <BadgesModal
+        isOpen={showBadgesModal}
+        onClose={() => setShowBadgesModal(false)}
+        addictionTypes={addictionTypes}
+        badges={badges}
+        userBadges={userBadges}
+        currentStreaks={
+          userAddictions.reduce((acc, ua) => {
+            const daysSinceStart = Math.floor(
+              (new Date().getTime() - new Date(ua.start_date).getTime()) / (1000 * 60 * 60 * 24)
+            );
+            acc[ua.addiction_type_id] = daysSinceStart;
+            return acc;
+          }, {} as Record<string, number>)
+        }
+        loginStreak={loginStreak?.current_streak || 0}
+      />
 
       {/* Daily Quote */}
       <div className="mb-10">
