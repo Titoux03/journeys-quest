@@ -59,9 +59,9 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="mb-2 bg-card/95 backdrop-blur-md border border-border/50 rounded-2xl shadow-lg p-3"
+            className="bg-card/95 backdrop-blur-md border border-border/50 rounded-2xl shadow-lg p-3"
           >
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2 mb-3">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = currentScreen === item.id;
@@ -84,68 +84,52 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                   </Button>
                 );
               })}
+              
+              <Button
+                variant="outline"
+                onClick={handleAuthAction}
+                className="h-auto py-3 flex flex-col items-start gap-1 text-left col-span-2"
+              >
+                <div className="flex items-center gap-2">
+                  {user ? <LogOut size={18} /> : <LogIn size={18} />}
+                  <span className="font-medium text-sm">
+                    {user ? t('navigation.signOut') : t('navigation.signIn')}
+                  </span>
+                </div>
+                <span className="text-xs text-muted-foreground">
+                  {user ? 'Se déconnecter du compte' : 'Accéder à votre compte'}
+                </span>
+              </Button>
             </div>
+
+            <Button
+              variant="ghost"
+              onClick={() => setIsExpanded(false)}
+              className="w-full py-2 flex items-center justify-center gap-2 hover:bg-accent/50"
+            >
+              <ChevronDown size={18} />
+              <span className="text-xs font-medium">Réduire</span>
+            </Button>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="bg-card/95 backdrop-blur-md border border-border/50 rounded-2xl shadow-lg overflow-hidden">
-        <Button
-          variant="ghost"
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full py-2 flex items-center justify-center gap-2 border-b border-border/50 hover:bg-accent/50"
+      {!isExpanded && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-card/95 backdrop-blur-md border border-border/50 rounded-full shadow-lg"
         >
-          {isExpanded ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
-          <span className="text-xs font-medium">
-            {isExpanded ? 'Réduire' : 'Voir toutes les fonctionnalités'}
-          </span>
-        </Button>
-
-        <div className="grid grid-cols-8 gap-0 px-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = currentScreen === item.id;
-            
-            return (
-              <Button
-                key={item.id}
-                variant="ghost"
-                onClick={() => onNavigate(item.id)}
-                className={`flex flex-col items-center justify-center gap-1 h-auto py-3 px-1 rounded-none border-0 transition-all duration-200 min-h-[72px] ${
-                  isActive 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
-                }`}
-              >
-                <Icon size={20} className="shrink-0" />
-                <span className="text-[8px] font-medium leading-none text-center">{item.label}</span>
-              </Button>
-            );
-          })}
-          
           <Button
             variant="ghost"
-            onClick={handleAuthAction}
-            className={`flex flex-col items-center justify-center gap-1 h-auto py-3 px-1 rounded-none border-0 transition-all duration-200 min-h-[72px] ${
-              user 
-                ? 'text-muted-foreground hover:text-destructive hover:bg-destructive/10'
-                : 'text-muted-foreground hover:text-primary hover:bg-primary/10'
-            }`}
+            onClick={() => setIsExpanded(true)}
+            className="w-full py-4 flex items-center justify-center gap-2 hover:bg-accent/50 rounded-full"
           >
-            {user ? (
-              <>
-                <LogOut size={20} className="shrink-0" />
-                <span className="text-[8px] font-medium leading-none text-center">{t('navigation.signOut')}</span>
-              </>
-            ) : (
-              <>
-                <LogIn size={20} className="shrink-0" />
-                <span className="text-[8px] font-medium leading-none text-center">{t('navigation.signIn')}</span>
-              </>
-            )}
+            <ChevronUp size={20} />
+            <span className="text-sm font-medium">Menu</span>
           </Button>
-        </div>
-      </div>
+        </motion.div>
+      )}
     </div>
   );
 };
