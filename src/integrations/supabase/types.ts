@@ -267,6 +267,8 @@ export type Database = {
           created_at: string
           current_streak: number
           id: string
+          last_activity_date: string | null
+          last_activity_type: string | null
           last_login_date: string
           longest_streak: number
           streak_start_date: string
@@ -277,6 +279,8 @@ export type Database = {
           created_at?: string
           current_streak?: number
           id?: string
+          last_activity_date?: string | null
+          last_activity_type?: string | null
           last_login_date: string
           longest_streak?: number
           streak_start_date: string
@@ -287,6 +291,8 @@ export type Database = {
           created_at?: string
           current_streak?: number
           id?: string
+          last_activity_date?: string | null
+          last_activity_type?: string | null
           last_login_date?: string
           longest_streak?: number
           streak_start_date?: string
@@ -656,18 +662,9 @@ export type Database = {
       }
     }
     Functions: {
-      calculate_addiction_streaks: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      check_and_award_streak_badges: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      cleanup_old_entries: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
+      calculate_addiction_streaks: { Args: never; Returns: undefined }
+      check_and_award_streak_badges: { Args: never; Returns: undefined }
+      cleanup_old_entries: { Args: never; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -675,9 +672,15 @@ export type Database = {
         }
         Returns: boolean
       }
-      update_all_daily_streaks: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
+      update_all_daily_streaks: { Args: never; Returns: undefined }
+      update_user_streak_on_activity: {
+        Args: { activity_type?: string; user_id_param: string }
+        Returns: {
+          current_streak: number
+          is_new_streak: boolean
+          longest_streak: number
+          streak_start_date: string
+        }[]
       }
       update_user_streaks_on_login: {
         Args: { user_id_param: string }

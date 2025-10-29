@@ -120,7 +120,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
         )}
         
         {user && (
-          <LoginStreakDisplay loginStreak={loginStreak} />
+          <LoginStreakDisplay />
         )}
       </div>
 

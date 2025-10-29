@@ -111,7 +111,7 @@ const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate
         </p>
         
         {/* Streak Journeys */}
-        <LoginStreakDisplay loginStreak={loginStreak} className="mb-6" />
+        <LoginStreakDisplay className="mb-6" />
       </div>
 
       {/* Addictions Grid */}
