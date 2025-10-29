@@ -15,7 +15,10 @@
     "skip": "Passer",
     "yes": "Oui",
     "no": "Non",
-    "locale": "fr-FR"
+    "locale": "fr-FR",
+    "day": "jour",
+    "days": "jours",
+    "error": "Erreur"
   },
   "greeting": {
     "morning": "Bonjour !",
@@ -850,6 +853,22 @@
         "principle": "Conditionnement Opérant (Renforcement Positif)"
       }
     }
+  },
+  "addiction": {
+    "milestone7Title": "Première victoire",
+    "milestone7Subtitle": "1 semaine de liberté",
+    "milestone30Title": "Résilience confirmée",
+    "milestone30Subtitle": "1 mois accompli",
+    "milestone60Title": "Nouvelle habitude ancrée",
+    "milestone60Subtitle": "2 mois de force",
+    "milestone90Title": "Transformation complète",
+    "milestone90Subtitle": "3 mois de maîtrise",
+    "motivationStart": "Chaque voyage commence par un premier pas. Tu peux le faire ! 💪",
+    "motivationWeek1": "Continue ! Chaque jour compte. Tu es sur la bonne voie 🌟",
+    "motivationWeek2to4": "Tu tiens bon 💪 — Les premiers jours sont les plus difficiles. Bravo !",
+    "motivationMonth2": "Incroyable progression ! Tu prouves chaque jour ta détermination 🔥",
+    "motivationMonth3": "Tu approches du cap des 3 mois. C'est une transformation réelle ! 👑",
+    "motivation90Plus": "Tu as atteint les 90 jours ! C'est une victoire majeure. Continue cette liberté ! 🎉"
   },
   "streak": {
     "title": "Streak Journeys",

@@ -15,7 +15,10 @@
     "skip": "Skip",
     "yes": "Yes",
     "no": "No",
-    "locale": "en-US"
+    "locale": "en-US",
+    "day": "day",
+    "days": "days",
+    "error": "Error"
   },
   "greeting": {
     "morning": "Good morning!",
@@ -847,6 +850,22 @@
         "principle": "Operant Conditioning (Positive Reinforcement)"
       }
     }
+  },
+  "addiction": {
+    "milestone7Title": "First victory",
+    "milestone7Subtitle": "1 week of freedom",
+    "milestone30Title": "Confirmed resilience",
+    "milestone30Subtitle": "1 month accomplished",
+    "milestone60Title": "New habit anchored",
+    "milestone60Subtitle": "2 months of strength",
+    "milestone90Title": "Complete transformation",
+    "milestone90Subtitle": "3 months of mastery",
+    "motivationStart": "Every journey begins with a first step. You can do it! 💪",
+    "motivationWeek1": "Keep going! Every day counts. You're on the right track 🌟",
+    "motivationWeek2to4": "You're holding strong 💪 — The first days are the hardest. Well done!",
+    "motivationMonth2": "Incredible progress! You prove your determination every day 🔥",
+    "motivationMonth3": "You're approaching the 3-month mark. This is real transformation! 👑",
+    "motivation90Plus": "You've reached 90 days! This is a major victory. Continue this freedom! 🎉"
   },
   "streak": {
     "title": "Streak Journeys",
