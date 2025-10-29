@@ -66,7 +66,8 @@ export const useStreak = (userId: string | undefined) => {
 
       if (error) throw error;
 
-      const result = data?.[0] as StreakUpdateResult;
+      // La fonction retourne maintenant un tableau avec un seul résultat
+      const result = Array.isArray(data) && data.length > 0 ? data[0] as StreakUpdateResult : null;
       
       if (result) {
         // Recharger les données complètes du streak
