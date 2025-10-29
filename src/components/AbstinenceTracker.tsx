@@ -8,8 +8,6 @@ import { BadgesList } from '@/components/BadgesList';
 import { LoginStreakDisplay } from '@/components/LoginStreakDisplay';
 import { AllBadgesDisplay } from '@/components/AllBadgesDisplay';
 import { ProcrastinationTasks } from '@/components/ProcrastinationTasks';
-import { AthenaCoach } from '@/components/AthenaCoach';
-import { AthenaButton } from '@/components/AthenaButton';
 import { useAddictions } from '@/hooks/useAddictions';
 import { useGongSounds } from '@/hooks/useGongSounds';
 import { useTranslation } from 'react-i18next';
@@ -118,12 +116,7 @@ const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate
 
       {/* Addictions Grid */}
       <div className="space-y-6 mb-8">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-foreground">{t('home.myActiveAddictions')}</h2>
-          
-          {/* Bouton Athena - disponible uniquement dans la section addictions (premium) */}
-          <AthenaButton />
-        </div>
+        <h2 className="text-2xl font-bold text-foreground mb-6">{t('home.myActiveAddictions')}</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {addictionTypes.map((addictionType) => {
@@ -181,9 +174,6 @@ const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate
           onCancel={handleCommitmentCancel}
         />
       )}
-      
-      {/* Athena Coach - disponible uniquement dans la section addictions (premium) */}
-      <AthenaCoach />
     </div>
   );
 };

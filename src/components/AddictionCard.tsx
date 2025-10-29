@@ -57,11 +57,7 @@ export const AddictionCard: React.FC<AddictionCardProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <motion.div 
-              className="text-4xl flex items-center justify-center w-14 h-14 rounded-full"
-              style={{ 
-                backgroundColor: `${addictionType.color}20`,
-                color: addictionType.color
-              }}
+              className="text-4xl flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 text-primary border border-primary/20"
               animate={userAddiction ? { scale: [1, 1.05, 1] } : {}}
               transition={{ duration: 2, repeat: Infinity }}
             >
@@ -200,10 +196,7 @@ export const AddictionCard: React.FC<AddictionCardProps> = ({
                 e.stopPropagation();
                 onStart();
               }}
-              className="w-full shadow-lg"
-              style={{
-                backgroundColor: addictionType.color
-              }}
+              className="w-full shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               {t('addictions.start')}
             </Button>
