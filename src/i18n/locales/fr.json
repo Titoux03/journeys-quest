@@ -870,6 +870,15 @@
     "motivationMonth3": "Tu approches du cap des 3 mois. C'est une transformation réelle ! 👑",
     "motivation90Plus": "Tu as atteint les 90 jours ! C'est une victoire majeure. Continue cette liberté ! 🎉"
   },
+  "athena": {
+    "title": "Athena",
+    "subtitle": "Ton coach personnel",
+    "speakToAthena": "Parler à Athena",
+    "athenaThinking": "Athena réfléchit...",
+    "athenaMessage": "Message d'Athena",
+    "dismiss": "D'accord",
+    "error": "Impossible de générer un message. Réessayez plus tard."
+  },
   "streak": {
     "title": "Streak Journeys",
     "loginDaily": "Connectez-vous quotidiennement pour construire votre streak !",

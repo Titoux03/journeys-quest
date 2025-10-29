@@ -867,6 +867,15 @@
     "motivationMonth3": "You're approaching the 3-month mark. This is real transformation! 👑",
     "motivation90Plus": "You've reached 90 days! This is a major victory. Continue this freedom! 🎉"
   },
+  "athena": {
+    "title": "Athena",
+    "subtitle": "Your personal coach",
+    "speakToAthena": "Talk to Athena",
+    "athenaThinking": "Athena is thinking...",
+    "athenaMessage": "Message from Athena",
+    "dismiss": "Got it",
+    "error": "Unable to generate a message. Please try again later."
+  },
   "streak": {
     "title": "Streak Journeys",
     "loginDaily": "Log in daily to build your streak!",
