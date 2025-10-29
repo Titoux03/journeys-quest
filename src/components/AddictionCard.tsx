@@ -184,7 +184,7 @@ export const AddictionCard: React.FC<AddictionCardProps> = ({
               transition={{ duration: 2, repeat: Infinity }}
             >
               <Sparkles className="w-3 h-3" />
-              <span>Cliquez pour voir votre progression détaillée</span>
+              <span>{t('addictions.viewDetailedProgress')}</span>
             </motion.div>
           </motion.div>
         )}
