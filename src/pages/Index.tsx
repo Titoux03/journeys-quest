@@ -279,13 +279,11 @@ const Index = () => {
         onNavigate={setCurrentScreen}
       />
 
-      {/* Premium Upgrade Modal - disabled for authenticated users */}
-      {!user && (
-        <PremiumUpgrade 
-          isVisible={upgradeModalVisible}
-          onClose={hideUpgradeModal}
-        />
-      )}
+      {/* Premium Upgrade Modal - Accessible pour tous les utilisateurs non-premium */}
+      <PremiumUpgrade 
+        isVisible={upgradeModalVisible}
+        onClose={hideUpgradeModal}
+      />
 
       {/* Progress Interruptor Modal - disabled for authenticated users */}
       {!user && (

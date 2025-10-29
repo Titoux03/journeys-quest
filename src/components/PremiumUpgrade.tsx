@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Crown, Sparkles, TrendingUp, Shield, Dumbbell, Brain, Heart, Calendar, Loader2, UserPlus, ExternalLink, Coins } from 'lucide-react';
 import Lottie from 'lottie-react';
 import crownAnimation from '@/assets/animations/crown-animation.json';
@@ -12,6 +12,7 @@ import { SkillsRadarChart } from '@/components/SkillsRadarChart';
 import { TermsOfService } from '@/components/TermsOfService';
 import { useAffiliation } from '@/hooks/useAffiliation';
 import { useTranslation } from 'react-i18next';
+import { playSound } from '@/utils/soundManager';
 
 interface PremiumUpgradeProps {
   isVisible: boolean;
@@ -32,6 +33,13 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
   const { getAffiliateCode } = useAffiliation();
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
+
+  // Jouer le son d'ouverture de modale
+  useEffect(() => {
+    if (isVisible && !isPremium) {
+      playSound('premium_open');
+    }
+  }, [isVisible, isPremium]);
 
   if (!isVisible || isPremium) return null;
 
@@ -188,7 +196,10 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
       <div className="journey-card-premium max-w-2xl w-full modal-container overflow-y-auto relative">
         {/* Close Button */}
         <button
-          onClick={onClose}
+          onClick={() => {
+            playSound('premium_close');
+            onClose();
+          }}
           className="absolute top-6 right-6 p-2 rounded-full bg-secondary/50 hover:bg-secondary transition-colors z-10"
         >
           <X className="w-5 h-5" />

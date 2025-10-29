@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { usePremium } from '@/hooks/usePremium';
 import { useGongSounds } from '@/hooks/useGongSounds';
 import { useTranslation } from 'react-i18next';
+import { playSound } from '@/utils/soundManager';
 
 interface PremiumCTAProps {
   context?: 'sidebar' | 'footer' | 'inline';
@@ -21,6 +22,7 @@ export const PremiumCTA: React.FC<PremiumCTAProps> = ({
   if (isPremium) return null;
 
   const handleUpgrade = () => {
+    playSound('click');
     playPremium();
     showUpgradeModal();
   };
