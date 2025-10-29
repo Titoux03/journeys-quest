@@ -12,7 +12,6 @@ import { PremiumTodoTeaser } from '@/components/PremiumTodoTeaser';
 import { JourneyCard } from '@/components/JourneyCard';
 import { PremiumSuccessIndicator } from '@/components/PremiumSuccessIndicator';
 import { useTranslation } from 'react-i18next';
-import { AthenaButton } from '@/components/AthenaButton';
 
 
 interface JournalEntry {
@@ -81,13 +80,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
             : t('home.welcomeGuest')
           }
         </p>
-        
-        {/* Bouton Athena pour utilisateurs connectés */}
-        {user && (
-          <div className="mt-6 flex justify-center">
-            <AthenaButton />
-          </div>
-        )}
         
         {!user && (
           <div className="mt-4 p-4 bg-gradient-to-r from-primary/10 to-primary-glow/5 rounded-xl border border-primary/20 relative overflow-hidden">

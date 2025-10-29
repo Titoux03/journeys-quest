@@ -24,7 +24,6 @@ import { useProgress } from '@/hooks/useProgress';
 import { useGongSounds } from '@/hooks/useGongSounds';
 import { usePopupManager } from '@/hooks/usePopupManager';
 import { MobileOptimizations } from '@/components/MobileOptimizations';
-import { AthenaCoach } from '@/components/AthenaCoach';
 
 interface JournalEntry {
   date: string;
@@ -295,9 +294,6 @@ const Index = () => {
           onClose={() => setShowProgressInterruptor(false)}
         />
       )}
-
-      {/* Athena Coach - only for authenticated users */}
-      {user && <AthenaCoach />}
     </div>
   );
 };

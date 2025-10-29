@@ -183,8 +183,12 @@ export const useAthena = () => {
       }
     };
 
-    checkAndShow();
-  }, [user]); // Seulement au changement d'utilisateur
+    // Seulement vérifier si l'utilisateur est connecté
+    if (user) {
+      checkAndShow();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]); // Seulement au changement d'ID utilisateur
 
   return {
     messages,

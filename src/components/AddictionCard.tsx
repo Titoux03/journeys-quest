@@ -205,7 +205,7 @@ export const AddictionCard: React.FC<AddictionCardProps> = ({
                 backgroundColor: addictionType.color
               }}
             >
-              {t('addictions.startTracking')}
+              {t('addictions.start')}
             </Button>
           </motion.div>
         )}
