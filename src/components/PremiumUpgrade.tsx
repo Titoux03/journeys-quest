@@ -60,8 +60,8 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
     
     // Récupérer le code d'affiliation s'il existe
     const affiliateCode = getAffiliateCode();
+    // Ne pas fermer la modale - la redirection Stripe va se faire automatiquement
     await purchasePremium(affiliateCode || undefined);
-    onClose();
   };
 
   const premiumFeatures = [
@@ -535,22 +535,22 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           <div className="text-center mb-4">
             <p className="text-sm font-medium text-foreground mb-2">Pourquoi choisir Journeys Premium ?</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-muted-foreground">
-            <div className="flex flex-col items-center space-y-1 text-center">
-              <Shield className="w-4 h-4 text-success" />
-              <span>Paiement 100% sécurisé</span>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-[11px] sm:text-xs text-muted-foreground">
+            <div className="flex flex-col items-center space-y-2 text-center">
+              <Shield className="w-5 h-5 text-success flex-shrink-0" />
+              <span className="leading-tight">Paiement 100% sécurisé</span>
             </div>
-            <div className="flex flex-col items-center space-y-1 text-center">
-              <Heart className="w-4 h-4 text-success" />
-              <span>Accès à vie garanti</span>
+            <div className="flex flex-col items-center space-y-2 text-center">
+              <Heart className="w-5 h-5 text-success flex-shrink-0" />
+              <span className="leading-tight">Accès à vie garanti</span>
             </div>
-            <div className="flex flex-col items-center space-y-1 text-center">
-              <Calendar className="w-4 h-4 text-success" />
-              <span>Aucun abonnement</span>
+            <div className="flex flex-col items-center space-y-2 text-center">
+              <Calendar className="w-5 h-5 text-success flex-shrink-0" />
+              <span className="leading-tight break-words">Aucun abonnement</span>
             </div>
-            <div className="flex flex-col items-center space-y-1 text-center">
-              <Sparkles className="w-4 h-4 text-success" />
-              <span>Mises à jour incluses</span>
+            <div className="flex flex-col items-center space-y-2 text-center">
+              <Sparkles className="w-5 h-5 text-success flex-shrink-0" />
+              <span className="leading-tight break-words">Mises à jour incluses</span>
             </div>
           </div>
         </div>
