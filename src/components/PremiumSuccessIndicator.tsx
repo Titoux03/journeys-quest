@@ -41,7 +41,7 @@ export const PremiumSuccessIndicator: React.FC<PremiumSuccessIndicatorProps> = (
           </div>
         </div>
         <div className="text-center">
-          <div className="text-xl font-bold text-primary mb-2">{t('premium.features.premium')}</div>
+          <div className="text-xl font-bold text-primary mb-2">{t('premium.title')}</div>
           <div className="space-y-2 text-xs text-foreground">
             <div className="text-success">✓ {t('premium.features.multiAddictionTracking')}</div>
             <div className="text-success">✓ {t('premium.features.fullHistory')}</div>
