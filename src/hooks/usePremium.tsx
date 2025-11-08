@@ -66,13 +66,8 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
     try {
       setLoading(true);
       
-      // Vérifier si l'utilisateur est connecté
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        console.error('User must be logged in to purchase premium');
-        setLoading(false);
-        return;
-      }
+      // L'achat fonctionne aussi sans être connecté (guest checkout)
+      // On laisse Stripe collecter l'email si l'utilisateur n'est pas connecté
 
       // Préparer les données de la requête avec le code d'affiliation
       const requestBody = affiliateCode ? { affiliate_code: affiliateCode } : {};

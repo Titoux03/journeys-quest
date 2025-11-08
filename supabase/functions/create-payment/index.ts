@@ -45,50 +45,54 @@ serve(async (req) => {
       }
     }
     
-    // Retrieve authenticated user
-    const authHeader = req.headers.get("Authorization")!;
-    const token = authHeader.replace("Bearer ", "");
-    const { data } = await supabaseClient.auth.getUser(token);
-    const user = data.user;
-    if (!user?.email) throw new Error("User not authenticated or email not available");
+    // Retrieve authenticated user if available (guest checkout supported)
+    const authHeader = req.headers.get("Authorization");
+    let user: any = null;
+    if (authHeader) {
+      const token = authHeader.replace("Bearer ", "");
+      const { data } = await supabaseClient.auth.getUser(token);
+      user = data.user ?? null;
+    }
 
-    console.log('[CREATE-PAYMENT] User authenticated:', { userId: user.id, email: user.email, affiliateCode: affiliate });
-
+    console.log('[CREATE-PAYMENT] Auth status:', user ? { userId: user.id, email: user.email, affiliateCode: affiliate } : { guest: true, affiliateCode: affiliate });
     // Initialize Stripe
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2025-08-27.basil",
     });
 
-    // Check if user already has premium
-    const { data: existingPurchase } = await supabaseClient
-      .from('premium_purchases')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('status', 'completed')
-      .single();
+    // If authenticated, check if user already has premium
+    if (user?.id) {
+      const { data: existingPurchase } = await supabaseClient
+        .from('premium_purchases')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('status', 'completed')
+        .single();
 
-    if (existingPurchase) {
-      console.log('[CREATE-PAYMENT] User already has premium');
-      return new Response(JSON.stringify({ error: "User already has premium access" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 400,
-      });
+      if (existingPurchase) {
+        console.log('[CREATE-PAYMENT] User already has premium');
+        return new Response(JSON.stringify({ error: "User already has premium access" }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 400,
+        });
+      }
     }
 
-    // Check if a Stripe customer record exists for this user
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-    let customerId;
-    if (customers.data.length > 0) {
-      customerId = customers.data[0].id;
-      console.log('[CREATE-PAYMENT] Found existing customer:', customerId);
-    } else {
-      console.log('[CREATE-PAYMENT] No existing customer found');
+    // Check if a Stripe customer record exists when we know the email
+    let customerId: string | undefined;
+    if (user?.email) {
+      const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+      if (customers.data.length > 0) {
+        customerId = customers.data[0].id;
+        console.log('[CREATE-PAYMENT] Found existing customer:', customerId);
+      } else {
+        console.log('[CREATE-PAYMENT] No existing customer found');
+      }
     }
 
     // Prepare metadata for the payment session
-    const metadata: any = {
-      user_id: user.id,
-    };
+    const metadata: any = {};
+    if (user?.id) metadata.user_id = user.id;
     
     // Add affiliate code to metadata if provided
     if (affiliate) {
