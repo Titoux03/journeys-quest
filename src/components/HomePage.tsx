@@ -247,28 +247,17 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
           </p>
         </button>
 
-        {/* Meditation - Now Premium */}
+        {/* Meditation - Now Free */}
         <button
-          onClick={() => isPremium ? onNavigate('meditation') : showUpgradeModal()}
-          className={`journey-card transition-all duration-300 p-4 sm:p-6 text-left group relative ${
-            isPremium ? 'hover:journey-card-glow' : 'opacity-80'
-          }`}
+          onClick={() => onNavigate('meditation')}
+          className="journey-card hover:journey-card-glow transition-all duration-300 p-4 sm:p-6 text-left group"
         >
-          {!isPremium && (
-            <div className="absolute top-2 right-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-primary flex items-center justify-center">
-              <Crown className="w-2 h-2 sm:w-3 sm:h-3 text-primary-foreground" />
-            </div>
-          )}
           <div className="flex items-center justify-between mb-2 sm:mb-4">
-            <div className={`p-2 sm:p-3 rounded-xl transition-colors ${
-              isPremium 
-                ? 'bg-indigo-500/10 text-indigo-500 group-hover:bg-indigo-500 group-hover:text-indigo-50'
-                : 'bg-muted/20 text-muted-foreground'
-            }`}>
+            <div className="p-2 sm:p-3 rounded-xl bg-indigo-500/10 text-indigo-500 transition-colors group-hover:bg-indigo-500 group-hover:text-indigo-50">
               <Brain className="w-4 h-4 sm:w-6 sm:h-6" />
             </div>
           </div>
-          <h3 className={`font-semibold text-base sm:text-lg mb-1 sm:mb-2 ${!isPremium && 'text-muted-foreground'}`}>
+          <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">
             {t('home.focusDeepWork')}
           </h3>
           <p className="text-xs sm:text-sm text-muted-foreground leading-tight">
