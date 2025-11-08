@@ -147,17 +147,17 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.2 }}
-                    className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-orange-500/10 to-orange-500/5 border border-orange-500/20 hover:border-orange-500/40 transition-all cursor-pointer"
+                    className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-purple-500/10 to-purple-500/5 border border-purple-500/20 hover:border-purple-500/40 transition-all cursor-pointer"
                   >
-                    <div className="shrink-0 w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center">
-                      <Flame size={24} className="text-orange-500" />
+                    <div className="shrink-0 w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center">
+                      <TrendingUp size={24} className="text-purple-500" />
                     </div>
                     <div className="flex-1">
                       <h3 className="font-semibold text-base mb-1">
-                        {t('intro.step2.feature2.title', '🔥 Tes Streaks')}
+                        {t('intro.step2.feature2.title', '🌌 Système de Niveaux')}
                       </h3>
                       <p className="text-sm text-muted-foreground">
-                        {t('intro.step2.feature2.desc', 'Progresse jour après jour sans t\'arrêter')}
+                        {t('intro.step2.feature2.desc', 'Évolue de 1 à 200 en progressant chaque jour')}
                       </p>
                     </div>
                   </motion.div>
@@ -261,17 +261,17 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                     className="relative flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/30 overflow-hidden"
                   >
                     <div className="shrink-0 w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-                      <Brain size={24} className="text-primary" />
+                      <TrendingUp size={24} className="text-primary" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-base">
-                          {t('intro.step3.feature2.title', '💎 Coaching AI Bien-Être')}
+                          {t('intro.step3.feature2.title', '🌠 Niveaux Avancés & Titres')}
                         </h3>
                         <Lock size={14} className="text-primary" />
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {t('intro.step3.feature2.desc', 'Reçois des conseils personnalisés selon ton humeur et ton parcours')}
+                        {t('intro.step3.feature2.desc', 'Accède aux rangs supérieurs et titres prestigieux jusqu\'au niveau 200')}
                       </p>
                     </div>
                   </motion.div>

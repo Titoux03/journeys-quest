@@ -560,6 +560,36 @@ export type Database = {
           },
         ]
       }
+      user_levels: {
+        Row: {
+          created_at: string
+          id: string
+          last_activity_date: string | null
+          level: number
+          updated_at: string
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_activity_date?: string | null
+          level?: number
+          updated_at?: string
+          user_id: string
+          xp?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_activity_date?: string | null
+          level?: number
+          updated_at?: string
+          user_id?: string
+          xp?: number
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -663,8 +693,13 @@ export type Database = {
     }
     Functions: {
       calculate_addiction_streaks: { Args: never; Returns: undefined }
+      calculate_xp_for_level: {
+        Args: { current_level: number }
+        Returns: number
+      }
       check_and_award_streak_badges: { Args: never; Returns: undefined }
       cleanup_old_entries: { Args: never; Returns: undefined }
+      get_level_title: { Args: { user_level: number }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -673,6 +708,16 @@ export type Database = {
         Returns: boolean
       }
       update_all_daily_streaks: { Args: never; Returns: undefined }
+      update_user_level: {
+        Args: { activity_type?: string; user_id_param: string }
+        Returns: {
+          level_up: boolean
+          new_level: number
+          new_xp: number
+          title: string
+          xp_gained: number
+        }[]
+      }
       update_user_streak_on_activity: {
         Args: { activity_type?: string; user_id_param: string }
         Returns: {

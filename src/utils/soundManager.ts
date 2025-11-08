@@ -255,12 +255,14 @@ const createProgressGong = async (): Promise<void> => {
 /**
  * Interface publique du Sound Manager
  */
-export type SoundType =
-  | 'premium_open'
-  | 'premium_close'
-  | 'click'
-  | 'victory'
-  | 'progress_gong';
+export type SoundType = 
+  | 'premium_open' 
+  | 'premium_close' 
+  | 'click' 
+  | 'victory' 
+  | 'progress_gong'
+  | 'level_up'
+  | 'level_up_major'; // For major milestones (25, 50, 100, etc.)
 
 export const playSound = async (type: SoundType): Promise<void> => {
   if (!soundEnabled) return;
@@ -285,11 +287,123 @@ export const playSound = async (type: SoundType): Promise<void> => {
       case 'progress_gong':
         await createProgressGong();
         break;
+      case 'level_up':
+        await createLevelUpSound();
+        break;
+      case 'level_up_major':
+        await createMajorLevelUpSound();
+        break;
     }
   } catch (error) {
     console.warn('Failed to play sound:', type, error);
   }
 };
+
+/**
+ * Son de montée de niveau - futuriste et gratifiant
+ */
+const createLevelUpSound = async (): Promise<void> => {
+  return new Promise(async (resolve) => {
+    try {
+      const ctx = await getContext();
+      const now = ctx.currentTime;
+      const duration = 0.5;
+
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440, now);
+      osc.frequency.exponentialRampToValueAtTime(880, now + 0.2);
+      osc.frequency.exponentialRampToValueAtTime(1320, now + 0.4);
+
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.exponentialRampToValueAtTime(0.3, now + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + duration);
+
+      currentSound = { stop: () => osc.stop() };
+
+      setTimeout(() => {
+        currentSound = null;
+        resolve();
+      }, duration * 1000);
+    } catch (error) {
+      console.warn('Sound error:', error);
+      resolve();
+    }
+  });
+};
+
+/**
+ * Son de montée de niveau majeure - épique et cosmique
+ */
+const createMajorLevelUpSound = async (): Promise<void> => {
+  return new Promise(async (resolve) => {
+    try {
+      const ctx = await getContext();
+      const now = ctx.currentTime;
+      const duration = 1.0;
+
+      // Créer plusieurs oscillateurs pour un son plus riche
+      const oscs = [
+        ctx.createOscillator(),
+        ctx.createOscillator(),
+        ctx.createOscillator()
+      ];
+
+      const mainGain = ctx.createGain();
+      mainGain.connect(ctx.destination);
+
+      // Ton de base
+      oscs[0].type = 'sine';
+      oscs[0].frequency.setValueAtTime(220, now);
+      oscs[0].frequency.exponentialRampToValueAtTime(880, now + 0.6);
+
+      // Harmonique
+      oscs[1].type = 'sine';
+      oscs[1].frequency.setValueAtTime(330, now);
+      oscs[1].frequency.exponentialRampToValueAtTime(1320, now + 0.6);
+
+      // Étincelle haute
+      oscs[2].type = 'sine';
+      oscs[2].frequency.setValueAtTime(1760, now + 0.2);
+      oscs[2].frequency.exponentialRampToValueAtTime(2640, now + 0.8);
+
+      oscs.forEach(osc => {
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(mainGain);
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.exponentialRampToValueAtTime(0.2, now + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+      });
+
+      mainGain.gain.setValueAtTime(0.5, now);
+      mainGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+      oscs.forEach(osc => {
+        osc.start(now);
+        osc.stop(now + duration);
+      });
+
+      currentSound = { stop: () => oscs.forEach(o => o.stop()) };
+
+      setTimeout(() => {
+        currentSound = null;
+        resolve();
+      }, duration * 1000);
+    } catch (error) {
+      console.warn('Sound error:', error);
+      resolve();
+    }
+  });
+}
 
 // Activer/désactiver les sons
 export const setSoundEnabled = (enabled: boolean) => {

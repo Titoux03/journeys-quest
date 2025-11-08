@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { DailyQuote } from '@/components/DailyQuote';
-import { LoginStreakDisplay } from '@/components/LoginStreakDisplay';
+import { LevelDisplay } from '@/components/LevelDisplay';
 import { AddictionCard } from '@/components/AddictionCard';
 import { BadgesModal } from '@/components/BadgesModal';
 import { Sparkles, TrendingUp, Target, Brain, Shield, Dumbbell, Crown, Star, Flame, Timer, BarChart3, Leaf, PenTool, CheckSquare } from 'lucide-react';
@@ -120,7 +120,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
         )}
         
         {user && (
-          <LoginStreakDisplay />
+          <LevelDisplay className="mb-6" />
         )}
       </div>
 
