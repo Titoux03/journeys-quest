@@ -100,7 +100,7 @@ serve(async (req) => {
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
-      payment_method_types: ['apple_pay', 'card', 'link'],
+      payment_method_types: ['apple_pay', 'card', 'revolut_pay', 'klarna'],
       line_items: [
         {
           price: "price_1SBHWc1kjfqE79gbCpyaNAds",
