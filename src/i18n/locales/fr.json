@@ -415,9 +415,6 @@
       }
     }
   },
-  "common": {
-    "back": "Retour"
-  },
   "onboarding": {
     "step1": {
       "title": "Ton journal personnel",
