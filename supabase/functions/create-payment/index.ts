@@ -22,31 +22,26 @@ serve(async (req) => {
   try {
     // Parse and validate request body
     const body = await req.json().catch(() => ({}));
-    const { affiliate_code } = body;
-    
-    // Validate affiliate code format if provided
-    if (affiliate_code) {
-      if (typeof affiliate_code !== 'string' || affiliate_code.length < 3 || affiliate_code.length > 50) {
-        return new Response(JSON.stringify({ error: "Invalid affiliate code format" }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-          status: 400,
-        });
-      }
-      
-      // Check if affiliate code is valid
-      const { data: validCode, error: codeError } = await supabaseClient
-        .from('valid_affiliate_codes')
-        .select('code')
-        .eq('code', affiliate_code)
-        .eq('is_active', true)
-        .single();
-      
-      if (codeError || !validCode) {
-        console.log('[CREATE-PAYMENT] Invalid affiliate code:', affiliate_code);
-        return new Response(JSON.stringify({ error: "Invalid affiliate code" }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-          status: 400,
-        });
+    const { affiliate_code } = body as { affiliate_code?: string };
+    let affiliate: string | undefined = typeof affiliate_code === 'string' ? affiliate_code : undefined;
+    // Validate affiliate code format if provided (non-blocking)
+    if (affiliate) {
+      if (affiliate.length < 3 || affiliate.length > 50) {
+        console.log('[CREATE-PAYMENT] Invalid affiliate code format, ignoring:', affiliate);
+        affiliate = undefined;
+      } else {
+        // Check if affiliate code is valid
+        const { data: validCode, error: codeError } = await supabaseClient
+          .from('valid_affiliate_codes')
+          .select('code')
+          .eq('code', affiliate)
+          .eq('is_active', true)
+          .single();
+        
+        if (codeError || !validCode) {
+          console.log('[CREATE-PAYMENT] Invalid affiliate code, proceeding without it:', affiliate);
+          affiliate = undefined;
+        }
       }
     }
     
@@ -57,7 +52,7 @@ serve(async (req) => {
     const user = data.user;
     if (!user?.email) throw new Error("User not authenticated or email not available");
 
-    console.log('[CREATE-PAYMENT] User authenticated:', { userId: user.id, email: user.email, affiliateCode: affiliate_code });
+    console.log('[CREATE-PAYMENT] User authenticated:', { userId: user.id, email: user.email, affiliateCode: affiliate });
 
     // Initialize Stripe
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
@@ -96,9 +91,9 @@ serve(async (req) => {
     };
     
     // Add affiliate code to metadata if provided
-    if (affiliate_code) {
-      metadata.affiliate_code = affiliate_code;
-      console.log('[CREATE-PAYMENT] Adding affiliate tracking:', affiliate_code);
+    if (affiliate) {
+      metadata.affiliate_code = affiliate;
+      console.log('[CREATE-PAYMENT] Adding affiliate tracking:', affiliate);
     }
 
     // Create a one-time payment session

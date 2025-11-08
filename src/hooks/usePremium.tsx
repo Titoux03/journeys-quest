@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface PremiumContextType {
   isPremium: boolean;
@@ -82,12 +83,19 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
       
       if (error) {
         console.error('Error creating payment:', error);
+        toast.error('Impossible de démarrer le paiement. Réessayez dans un instant.');
         return;
       }
 
       if (data?.url) {
-        // Redirection vers Stripe Checkout (compatible mobile)
-        window.location.href = data.url;
+        // Redirection vers Stripe Checkout (compatibilité navigateurs)
+        try {
+          window.location.assign(data.url);
+        } catch {
+          window.location.href = data.url;
+        }
+      } else {
+        toast.error('Lien de paiement indisponible. Merci de réessayer.');
       }
     } catch (error) {
       console.error('Error purchasing premium:', error);
