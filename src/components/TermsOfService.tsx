@@ -86,7 +86,7 @@ export const TermsOfService: React.FC<TermsOfServiceProps> = ({
           <section>
             <h2 className="text-lg font-semibold text-primary mb-3">5. Conditions d'achat - Version Premium</h2>
             <div className="text-muted-foreground space-y-3">
-              <p><strong>Prix :</strong> 14,99€ TTC - Achat unique, accès à vie</p>
+              <p><strong>Prix :</strong> 24,99€ TTC - Achat unique, accès à vie</p>
               <p><strong>Paiement :</strong> Le paiement s'effectue via les plateformes sécurisées (Stripe)</p>
               <p><strong>Activation :</strong> L'accès Premium est activé immédiatement après confirmation du paiement</p>
               <p><strong>Aucun abonnement :</strong> Il s'agit d'un achat unique sans renouvellement automatique</p>

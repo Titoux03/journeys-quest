@@ -122,7 +122,7 @@ export const PremiumProgressInterruptor: React.FC<PremiumProgressInterruptorProp
         >
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
           <Crown className="w-5 h-5 mr-2" />
-          Débloquer Premium (14,99€)
+          Débloquer Premium (24,99€)
         </Button>
 
         {/* Garanties */}
