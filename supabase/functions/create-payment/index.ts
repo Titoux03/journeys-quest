@@ -108,7 +108,7 @@ serve(async (req) => {
       payment_method_types: ['card', 'revolut_pay', 'klarna'],
       line_items: [
         {
-          price: "price_1SBHWc1kjfqE79gbCpyaNAds",
+          price: "price_1SngK41kjfqE79gbUbJBGx2x",
           quantity: 1,
         },
       ],

@@ -385,7 +385,7 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
               <div className="text-center mt-4">
                 <div className="flex items-center justify-center gap-3 mb-1">
                   <span className="text-xl text-muted-foreground line-through opacity-60">29,99€</span>
-                  <div className="text-3xl font-bold text-gradient-primary">14,99€</div>
+                  <div className="text-3xl font-bold text-gradient-primary">24,99€</div>
                 </div>
                 <div className="text-sm font-bold text-success">{t('premiumModal.lifetimeAccess')}</div>
                 <div className="text-xs text-muted-foreground">{t('premiumModal.noSubscription')}</div>
