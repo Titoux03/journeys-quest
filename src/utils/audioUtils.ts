@@ -18,32 +18,76 @@ const getAudioContext = async (): Promise<AudioContext> => {
   return globalAudioContext;
 };
 
-// Génère un son de bol tibétain synthétique
-export const createMeditationSound = async (frequency: number = 440, duration: number = 2): Promise<void> => {
+// Son de chime doux et agréable (style notification iOS)
+const createChimeSound = async (
+  frequency: number = 880,
+  duration: number = 0.3,
+  volume: number = 0.25
+): Promise<void> => {
   return new Promise(async (resolve) => {
     try {
       const audioContext = await getAudioContext();
-    
-    // Oscillateur principal (ton fondamental)
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-    
-    // Harmoniques pour un son plus riche
-    const harmonics = [1, 2.5, 4.2, 6.8]; // Rapports harmoniques du bol tibétain
-    const oscillators: OscillatorNode[] = [];
-    const gains: GainNode[] = [];
-    
-    harmonics.forEach((harmonic, index) => {
+      
+      // Créer un chime avec harmoniques douces
+      const frequencies = [frequency, frequency * 1.5, frequency * 2];
+      
+      frequencies.forEach((freq, index) => {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        const filter = audioContext.createBiquadFilter();
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+        
+        // Filtre pour adoucir
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(3000, audioContext.currentTime);
+        filter.Q.setValueAtTime(1, audioContext.currentTime);
+        
+        // Enveloppe rapide et douce
+        const vol = volume * (1 / (index + 1));
+        gain.gain.setValueAtTime(0, audioContext.currentTime);
+        gain.gain.linearRampToValueAtTime(vol, audioContext.currentTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+        
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(audioContext.destination);
+        
+        osc.start(audioContext.currentTime);
+        osc.stop(audioContext.currentTime + duration);
+      });
+      
+      setTimeout(resolve, duration * 1000);
+    } catch (error) {
+      console.warn('Audio playback error:', error);
+      resolve();
+    }
+  });
+};
+
+// Son de pop satisfaisant (style bulle/like)
+const createPopSound = async (
+  frequency: number = 600,
+  duration: number = 0.15,
+  volume: number = 0.3
+): Promise<void> => {
+  return new Promise(async (resolve) => {
+    try {
+      const audioContext = await getAudioContext();
+      
       const osc = audioContext.createOscillator();
       const gain = audioContext.createGain();
       
-      osc.frequency.setValueAtTime(frequency * harmonic, audioContext.currentTime);
       osc.type = 'sine';
+      // Glissement de fréquence vers le haut pour effet "pop"
+      osc.frequency.setValueAtTime(frequency * 0.8, audioContext.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(frequency * 1.2, audioContext.currentTime + 0.05);
+      osc.frequency.exponentialRampToValueAtTime(frequency, audioContext.currentTime + duration);
       
-      // Volume décroissant pour les harmoniques
-      const volume = 0.3 / (index + 1);
+      // Enveloppe très courte
       gain.gain.setValueAtTime(0, audioContext.currentTime);
-      gain.gain.exponentialRampToValueAtTime(volume, audioContext.currentTime + 0.1);
+      gain.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);
       gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
       
       osc.connect(gain);
@@ -52,14 +96,7 @@ export const createMeditationSound = async (frequency: number = 440, duration: n
       osc.start(audioContext.currentTime);
       osc.stop(audioContext.currentTime + duration);
       
-      oscillators.push(osc);
-      gains.push(gain);
-    });
-    
-      // Résoudre la promesse quand le son se termine
-      setTimeout(() => {
-        resolve();
-      }, duration * 1000);
+      setTimeout(resolve, duration * 1000);
     } catch (error) {
       console.warn('Audio playback error:', error);
       resolve();
@@ -67,118 +104,137 @@ export const createMeditationSound = async (frequency: number = 440, duration: n
   });
 };
 
-// Génère un son de gong profond et résonnant avec variations
-export const createGongSound = async (
-  baseFrequency: number = 120, 
-  duration: number = 3,
-  volume: number = 0.4,
-  variation: number = 0
-): Promise<void> => {
+// Son de succès ascendant (style achievement)
+const createSuccessSound = async (volume: number = 0.25): Promise<void> => {
+  return new Promise(async (resolve) => {
+    try {
+      const audioContext = await getAudioContext();
+      
+      // Notes ascendantes harmonieuses (accord majeur)
+      const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+      const duration = 0.4;
+      
+      notes.forEach((freq, index) => {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+        
+        const delay = index * 0.08;
+        const vol = volume * (1 - index * 0.15);
+        
+        gain.gain.setValueAtTime(0, audioContext.currentTime + delay);
+        gain.gain.linearRampToValueAtTime(vol, audioContext.currentTime + delay + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + delay + duration);
+        
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+        
+        osc.start(audioContext.currentTime + delay);
+        osc.stop(audioContext.currentTime + delay + duration);
+      });
+      
+      setTimeout(resolve, 500);
+    } catch (error) {
+      console.warn('Audio playback error:', error);
+      resolve();
+    }
+  });
+};
+
+// Son de sparkle/magie (style premium)
+const createSparkleSound = async (volume: number = 0.2): Promise<void> => {
+  return new Promise(async (resolve) => {
+    try {
+      const audioContext = await getAudioContext();
+      
+      // Notes scintillantes rapides
+      const notes = [1047, 1319, 1568, 2093]; // C6, E6, G6, C7
+      const duration = 0.5;
+      
+      notes.forEach((freq, index) => {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        const filter = audioContext.createBiquadFilter();
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+        
+        filter.type = 'highpass';
+        filter.frequency.setValueAtTime(800, audioContext.currentTime);
+        
+        const delay = index * 0.06;
+        const vol = volume * (0.8 + index * 0.1);
+        
+        gain.gain.setValueAtTime(0, audioContext.currentTime + delay);
+        gain.gain.linearRampToValueAtTime(vol, audioContext.currentTime + delay + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + delay + 0.25);
+        
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(audioContext.destination);
+        
+        osc.start(audioContext.currentTime + delay);
+        osc.stop(audioContext.currentTime + delay + duration);
+      });
+      
+      setTimeout(resolve, duration * 1000);
+    } catch (error) {
+      console.warn('Audio playback error:', error);
+      resolve();
+    }
+  });
+};
+
+// Double chime harmonieux
+const createDoubleChime = async (volume: number = 0.2): Promise<void> => {
+  return new Promise(async (resolve) => {
+    try {
+      await createChimeSound(880, 0.25, volume);
+      await new Promise(r => setTimeout(r, 100));
+      await createChimeSound(1100, 0.3, volume * 0.8);
+      resolve();
+    } catch (error) {
+      console.warn('Audio playback error:', error);
+      resolve();
+    }
+  });
+};
+
+// =============================================
+// EXPORTS PUBLICS (remplace les gongs)
+// =============================================
+
+// Génère un son de bol tibétain synthétique (pour méditation)
+export const createMeditationSound = async (frequency: number = 440, duration: number = 2): Promise<void> => {
   return new Promise(async (resolve) => {
     try {
       const audioContext = await getAudioContext();
     
-    // Variations aléatoires légères basées sur l'interaction
-    const frequencyVariation = 1 + (Math.random() - 0.5) * 0.1 + variation;
-    const durationVariation = 1 + (Math.random() - 0.5) * 0.2;
-    
-    // Harmoniques complexes du gong avec plus de résonance
-    const harmonics = [
-      { freq: 1, vol: 1, decay: 0.9 },        // Fondamentale plus longue
-      { freq: 1.618, vol: 0.8, decay: 0.85 }, // Ratio doré pour harmonie
-      { freq: 2.1, vol: 0.7, decay: 0.8 },    // Deuxième harmonique
-      { freq: 3.3, vol: 0.6, decay: 0.7 },    // Troisième harmonique
-      { freq: 4.8, vol: 0.4, decay: 0.6 },    // Quatrième harmonique
-      { freq: 6.2, vol: 0.3, decay: 0.5 },    // Cinquième harmonique
-      { freq: 8.1, vol: 0.25, decay: 0.4 },   // Sixième harmonique
-      { freq: 10.7, vol: 0.2, decay: 0.3 }    // Harmonique supplémentaire pour richesse
-    ];
-    
-    // Créer un delay/reverb naturel avec plusieurs oscillateurs décalés
-    const reverbNodes = 3;
-    
-    harmonics.forEach((harmonic) => {
-      // Oscillateur principal
-      const osc = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-      const filter = audioContext.createBiquadFilter();
-      const compressor = audioContext.createDynamicsCompressor();
+      // Harmoniques pour un son plus riche
+      const harmonics = [1, 2.5, 4.2, 6.8];
       
-      // Fréquence avec variation
-      const finalFreq = baseFrequency * harmonic.freq * frequencyVariation;
-      osc.frequency.setValueAtTime(finalFreq, audioContext.currentTime);
-      
-      // Légère modulation de fréquence pour effet naturel
-      const lfo = audioContext.createOscillator();
-      const lfoGain = audioContext.createGain();
-      lfo.frequency.setValueAtTime(0.5 + Math.random() * 0.5, audioContext.currentTime);
-      lfoGain.gain.setValueAtTime(finalFreq * 0.002, audioContext.currentTime);
-      lfo.connect(lfoGain);
-      lfoGain.connect(osc.frequency);
-      lfo.start(audioContext.currentTime);
-      lfo.stop(audioContext.currentTime + duration * durationVariation);
-      
-      osc.type = 'sine';
-      
-      // Filtre passe-bas avec résonance pour plus de chaleur
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(1500 + Math.random() * 1000, audioContext.currentTime);
-      filter.Q.setValueAtTime(2 + Math.random(), audioContext.currentTime);
-      
-      // Compresseur pour adoucir et enrichir le son
-      compressor.threshold.setValueAtTime(-24, audioContext.currentTime);
-      compressor.knee.setValueAtTime(30, audioContext.currentTime);
-      compressor.ratio.setValueAtTime(12, audioContext.currentTime);
-      compressor.attack.setValueAtTime(0.003, audioContext.currentTime);
-      compressor.release.setValueAtTime(0.25, audioContext.currentTime);
-      
-      // Enveloppe plus complexe pour résonance
-      const finalVolume = volume * harmonic.vol * (0.8 + Math.random() * 0.4);
-      const adjustedDuration = duration * durationVariation;
-      
-      gain.gain.setValueAtTime(0, audioContext.currentTime);
-      gain.gain.exponentialRampToValueAtTime(finalVolume, audioContext.currentTime + 0.02);
-      gain.gain.exponentialRampToValueAtTime(
-        finalVolume * 0.8, 
-        audioContext.currentTime + adjustedDuration * 0.1
-      );
-      gain.gain.exponentialRampToValueAtTime(
-        finalVolume * harmonic.decay * 0.6, 
-        audioContext.currentTime + adjustedDuration * 0.4
-      );
-      gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + adjustedDuration);
-      
-      // Connexions audio avec compression
-      osc.connect(filter);
-      filter.connect(compressor);
-      compressor.connect(gain);
-      gain.connect(audioContext.destination);
-      
-      osc.start(audioContext.currentTime);
-      osc.stop(audioContext.currentTime + adjustedDuration);
-      
-      // Créer des échos naturels pour plus de résonance
-      for (let i = 1; i <= reverbNodes; i++) {
-        const delayNode = audioContext.createDelay();
-        const delayGain = audioContext.createGain();
-        const delayTime = (i * 0.05) + Math.random() * 0.03;
-        const delayVolume = finalVolume * (0.3 / i) * harmonic.decay;
+      harmonics.forEach((harmonic, index) => {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
         
-        delayNode.delayTime.setValueAtTime(delayTime, audioContext.currentTime);
-        delayGain.gain.setValueAtTime(0, audioContext.currentTime);
-        delayGain.gain.exponentialRampToValueAtTime(delayVolume, audioContext.currentTime + delayTime);
-        delayGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + adjustedDuration);
+        osc.frequency.setValueAtTime(frequency * harmonic, audioContext.currentTime);
+        osc.type = 'sine';
         
-        filter.connect(delayNode);
-        delayNode.connect(delayGain);
-        delayGain.connect(audioContext.destination);
-      }
-    });
-    
-      // Résoudre quand le son se termine
-      setTimeout(() => {
-        resolve();
-      }, duration * durationVariation * 1000);
+        const volume = 0.3 / (index + 1);
+        gain.gain.setValueAtTime(0, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(volume, audioContext.currentTime + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+        
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+        
+        osc.start(audioContext.currentTime);
+        osc.stop(audioContext.currentTime + duration);
+      });
+      
+      setTimeout(resolve, duration * 1000);
     } catch (error) {
       console.warn('Audio playback error:', error);
       resolve();
@@ -186,38 +242,26 @@ export const createGongSound = async (
   });
 };
 
-// Son d'accueil - gong majestueux avec variation douce
+// Son d'accueil - chime doux et accueillant
 export const playWelcomeGong = (): Promise<void> => {
-  return createGongSound(100, 4, 0.3, -0.02);
+  return createDoubleChime(0.25);
 };
 
-// Son de début de méditation/deepwork - gong centrant avec variation focalisante
+// Son de début - pop satisfaisant
 export const playStartGong = (): Promise<void> => {
-  return createGongSound(128, 2.5, 0.35, 0.01);
+  return createPopSound(700, 0.2, 0.3);
 };
 
-// Son de fin - triple gong harmonieux avec variations progressives
+// Son de fin - succession de chimes harmonieux
 export const playEndGong = (): Promise<void> => {
-  return new Promise(async (resolve) => {
-    await createGongSound(110, 1.8, 0.3, -0.01);
-    await new Promise(r => setTimeout(r, 500));
-    await createGongSound(130, 1.8, 0.25, 0.005);
-    await new Promise(r => setTimeout(r, 500));
-    await createGongSound(150, 2.2, 0.2, 0.02);
-    resolve();
-  });
+  return createSuccessSound(0.25);
 };
 
-// Son premium - gong cristallin et élégant avec variation premium
+// Son premium - sparkle magique
 export const playPremiumGong = (): Promise<void> => {
-  return createGongSound(200, 2, 0.25, 0.03);
+  return createSparkleSound(0.25);
 };
 
-// Sons existants (compatibilité)
-export const playStartSound = (): Promise<void> => {
-  return playStartGong();
-};
-
-export const playEndSound = (): Promise<void> => {
-  return playEndGong();
-};
+// Alias pour compatibilité
+export const playStartSound = (): Promise<void> => playStartGong();
+export const playEndSound = (): Promise<void> => playEndGong();
