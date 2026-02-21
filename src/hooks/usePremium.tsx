@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { isNativeIOS } from '@/utils/platformDetection';
+import { purchaseApplePremium, initializeIAPStore, restoreApplePurchases } from '@/utils/appleIAP';
 
 interface PremiumContextType {
   isPremium: boolean;
@@ -12,7 +14,9 @@ interface PremiumContextType {
   hideUpgradeModal: () => void;
   upgradeModalVisible: boolean;
   purchasePremium: (affiliateCode?: string) => Promise<void>;
+  restorePurchases: () => Promise<void>;
   loading: boolean;
+  isIOSNative: boolean;
 }
 
 const PremiumContext = createContext<PremiumContextType | undefined>(undefined);
@@ -66,10 +70,20 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
     try {
       setLoading(true);
       
-      // L'achat fonctionne aussi sans être connecté (guest checkout)
-      // On laisse Stripe collecter l'email si l'utilisateur n'est pas connecté
+      // Sur iOS natif → Apple In-App Purchase
+      if (isNativeIOS()) {
+        const success = await purchaseApplePremium();
+        if (success) {
+          toast.success('Achat en cours de traitement...');
+          // Le callback du store gère la vérification
+          setTimeout(() => checkPremiumStatus(), 3000);
+        } else {
+          toast.error('Achat annulé ou échoué.');
+        }
+        return;
+      }
 
-      // Préparer les données de la requête avec le code d'affiliation
+      // Sur Web → Stripe Checkout
       const requestBody = affiliateCode ? { affiliate_code: affiliateCode } : {};
 
       const { data, error } = await supabase.functions.invoke('create-payment', {
@@ -83,7 +97,6 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
       }
 
       if (data?.url) {
-        // Redirection vers Stripe Checkout (compatibilité navigateurs)
         try {
           window.location.assign(data.url);
         } catch {
@@ -99,11 +112,38 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
     }
   };
 
+  const restorePurchases = async () => {
+    if (!isNativeIOS()) {
+      toast.info('La restauration est disponible uniquement sur iOS.');
+      return;
+    }
+    try {
+      setLoading(true);
+      const success = await restoreApplePurchases();
+      if (success) {
+        toast.success('Restauration en cours...');
+        setTimeout(() => checkPremiumStatus(), 3000);
+      } else {
+        toast.error('Aucun achat à restaurer.');
+      }
+    } catch (error) {
+      console.error('Error restoring purchases:', error);
+      toast.error('Erreur lors de la restauration.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const showUpgradeModal = () => setUpgradeModalVisible(true);
   const hideUpgradeModal = () => setUpgradeModalVisible(false);
 
   useEffect(() => {
     checkPremiumStatus();
+    
+    // Initialize Apple IAP store if on iOS
+    if (isNativeIOS()) {
+      initializeIAPStore().catch(console.error);
+    }
     
     // Écouter les changements d'authentification
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
@@ -133,7 +173,9 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
         hideUpgradeModal,
         upgradeModalVisible,
         purchasePremium,
+        restorePurchases,
         loading,
+        isIOSNative: isNativeIOS(),
       }}
     >
       {children}

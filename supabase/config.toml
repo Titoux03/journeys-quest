@@ -65,3 +65,6 @@ verify_jwt = true
 
 [functions.create-payment]
 verify_jwt = false
+
+[functions.verify-apple-purchase]
+verify_jwt = true
