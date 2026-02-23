@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Crown, Sparkles, TrendingUp, Shield, Dumbbell, Brain, Heart, Calendar, Loader2, UserPlus, ExternalLink, Coins, Check, Settings } from 'lucide-react';
+import { X, Crown, Sparkles, Shield, Loader2, UserPlus, ExternalLink, Check, Settings, Heart, Star, Sword, Gem } from 'lucide-react';
 import Lottie from 'lottie-react';
 import crownAnimation from '@/assets/animations/crown-animation.json';
 import { Button } from '@/components/ui/button';
@@ -8,12 +8,12 @@ import { usePremium } from '@/hooks/usePremium';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useGongSounds } from '@/hooks/useGongSounds';
-import { SkillsRadarChart } from '@/components/SkillsRadarChart';
 import { TermsOfService } from '@/components/TermsOfService';
 import { useAffiliation } from '@/hooks/useAffiliation';
 import { useTranslation } from 'react-i18next';
 import { playSound } from '@/utils/soundManager';
 import { motion, AnimatePresence } from 'framer-motion';
+import { PixelAvatar } from '@/components/PixelAvatar';
 
 interface PremiumUpgradeProps {
   isVisible: boolean;
@@ -111,15 +111,6 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
   const annualMonthly = (annualPrice / 12).toFixed(2);
   const savings = Math.round(((monthlyPrice * 12 - annualPrice) / (monthlyPrice * 12)) * 100);
 
-  const premiumFeatures = [
-    { icon: <Coins className="w-6 h-6" />, title: t('premiumModal.features.savings.title'), description: t('premiumModal.features.savings.description'), highlight: true },
-    { icon: <Shield className="w-6 h-6" />, title: t('premiumModal.features.addictions.title'), description: t('premiumModal.features.addictions.description'), highlight: true },
-    { icon: <Brain className="w-6 h-6" />, title: t('premiumModal.features.focus.title'), description: t('premiumModal.features.focus.description'), highlight: true },
-    { icon: <TrendingUp className="w-6 h-6" />, title: t('premiumModal.features.radar.title'), description: t('premiumModal.features.radar.description'), highlight: false },
-    { icon: <Crown className="w-6 h-6" />, title: t('premiumModal.features.badges.title'), description: t('premiumModal.features.badges.description'), highlight: false },
-    { icon: <Dumbbell className="w-6 h-6" />, title: t('premiumModal.features.stretching.title'), description: t('premiumModal.features.stretching.description'), highlight: false },
-  ];
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-lg">
       <motion.div 
@@ -134,28 +125,115 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           <X className="w-5 h-5" />
         </button>
 
-        {/* Header */}
+        {/* Hero Section with Avatar */}
         <div className="text-center mb-8 pt-4">
-          <div className="w-20 h-20 mx-auto mb-6">
-            <Lottie animationData={crownAnimation} loop={true} />
-          </div>
-          
-          <h1 className="text-3xl font-bold text-gradient-primary mb-3">
-            {t('premiumModal.transformYourLife')}
-          </h1>
+          {/* Animated Avatar Showcase */}
+          <div className="relative mb-6">
+            <motion.div
+              animate={{ y: [0, -4, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+              className="flex justify-center"
+            >
+              <div className="relative">
+                {/* Glow behind avatar */}
+                <motion.div
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    background: 'radial-gradient(circle, hsl(var(--primary) / 0.3), transparent)',
+                    filter: 'blur(20px)',
+                    transform: 'scale(2)',
+                  }}
+                  animate={{ opacity: [0.3, 0.6, 0.3] }}
+                  transition={{ duration: 2.5, repeat: Infinity }}
+                />
+                <PixelAvatar size="lg" level={100} gender="male" />
+              </div>
+            </motion.div>
 
-          <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-success/10 border border-success/20">
+            {/* Floating premium items indicators */}
+            <motion.div
+              className="absolute top-0 left-1/4 bg-primary/20 border border-primary/30 rounded-full px-2 py-1"
+              animate={{ y: [0, -5, 0], opacity: [0.7, 1, 0.7] }}
+              transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+            >
+              <span className="text-xs text-primary font-bold">👑 Légendaire</span>
+            </motion.div>
+            <motion.div
+              className="absolute bottom-0 right-1/4 bg-accent/20 border border-accent/30 rounded-full px-2 py-1"
+              animate={{ y: [0, -5, 0], opacity: [0.7, 1, 0.7] }}
+              transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+            >
+              <span className="text-xs text-accent-foreground font-bold">⚔️ Items exclusifs</span>
+            </motion.div>
+          </div>
+
+          <h1 className="text-3xl font-bold text-gradient-primary mb-3">
+            Débloquez votre héros intérieur 💛
+          </h1>
+          
+          <p className="text-muted-foreground text-base max-w-md mx-auto">
+            Faites évoluer votre personnage, débloquez des items exclusifs et vivez l'expérience Journeys Premium complète.
+          </p>
+
+          <div className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full bg-success/10 border border-success/20">
             <UserPlus className="w-4 h-4 text-success" />
             <span className="text-sm font-medium text-success">
-              {t('premiumModal.socialProof')}
+              +5 000 héros ont déjà rejoint l'aventure
             </span>
           </div>
-          
-          {feature && (
-            <p className="text-lg text-muted-foreground mb-4">
-              <span className="text-primary font-semibold">{feature}</span> {t('premiumModal.featureAndMore')}
-            </p>
-          )}
+        </div>
+
+        {/* Avatar & Items Benefits */}
+        <div className="mb-8">
+          <h2 className="text-xl font-bold text-center text-foreground mb-6">
+            🎮 Personnalisez votre aventure
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary-glow/5 border border-primary/30">
+              <div className="flex items-start space-x-3">
+                <div className="p-2 rounded-lg bg-primary text-primary-foreground">
+                  <Crown className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-foreground text-sm mb-1">Personnage Légendaire</h3>
+                  <p className="text-xs text-muted-foreground">Évolutions visuelles exclusives avec effets d'aura, couronnes et tenues épiques</p>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary-glow/5 border border-primary/30">
+              <div className="flex items-start space-x-3">
+                <div className="p-2 rounded-lg bg-primary text-primary-foreground">
+                  <Gem className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-foreground text-sm mb-1">Coffres & Items Rares</h3>
+                  <p className="text-xs text-muted-foreground">Ouvrez des coffres légendaires et équipez des items exclusifs pour votre avatar</p>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 rounded-xl bg-secondary/30 border border-border/50">
+              <div className="flex items-start space-x-3">
+                <div className="p-2 rounded-lg bg-accent text-accent-foreground">
+                  <Shield className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-foreground text-sm mb-1">Suivi Multi-Addictions</h3>
+                  <p className="text-xs text-muted-foreground">Reprenez le contrôle avec un suivi intelligent et des badges de progression</p>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 rounded-xl bg-secondary/30 border border-border/50">
+              <div className="flex items-start space-x-3">
+                <div className="p-2 rounded-lg bg-accent text-accent-foreground">
+                  <Star className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-foreground text-sm mb-1">Quêtes & Récompenses</h3>
+                  <p className="text-xs text-muted-foreground">Accomplissez des quêtes quotidiennes pour gagner des coffres et faire évoluer votre héros</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Plan Selection */}
@@ -220,35 +298,14 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
           </div>
         </div>
 
-        {/* Features Grid */}
-        <div className="mb-8">
-          <h2 className="text-xl font-bold text-center text-foreground mb-6">
-            {t('premiumModal.whatYouUnlock')}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {premiumFeatures.map((feat, index) => (
-              <div
-                key={index}
-                className={`p-4 rounded-xl border transition-all ${
-                  feat.highlight 
-                    ? 'bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/30' 
-                    : 'bg-secondary/30 border-border/50'
-                }`}
-              >
-                <div className="flex items-start space-x-3">
-                  <div className={`p-2 rounded-lg ${
-                    feat.highlight ? 'bg-primary text-primary-foreground' : 'bg-accent text-accent-foreground'
-                  }`}>
-                    {feat.icon}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-foreground text-sm mb-1">{feat.title}</h3>
-                    <p className="text-xs text-muted-foreground">{feat.description}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+        {/* Emotional storytelling */}
+        <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-primary/5 to-primary-glow/5 border border-primary/20 text-center">
+          <p className="text-sm text-foreground italic">
+            "Chaque niveau franchi, chaque item débloqué, te rapproche de ta transformation Journeys Premium."
+          </p>
+          <p className="text-xs text-muted-foreground mt-2">
+            🔥 Chaque connexion vous rapproche de votre transformation complète
+          </p>
         </div>
 
         {/* Terms */}
@@ -285,7 +342,7 @@ export const PremiumUpgrade: React.FC<PremiumUpgradeProps> = ({
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
                 <Sparkles className="w-5 h-5 mr-2" />
-                Créer un compte et s'abonner
+                Créer un compte et commencer l'aventure
               </Button>
             </div>
           ) : (

@@ -1,10 +1,12 @@
 import React from 'react';
-import { Lock, Crown, Sparkles, UserPlus } from 'lucide-react';
+import { Lock, Crown, Sparkles, UserPlus, Gem } from 'lucide-react';
 import { usePremium } from '@/hooks/usePremium';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useGongSounds } from '@/hooks/useGongSounds';
 import { PremiumPreviewProvider } from '@/contexts/PremiumPreviewContext';
+import { motion } from 'framer-motion';
+import { PixelAvatar } from '@/components/PixelAvatar';
 
 interface PremiumLockProps {
   children: React.ReactNode;
@@ -47,27 +49,32 @@ export const PremiumLock: React.FC<PremiumLockProps> = ({
       {/* Premium Overlay */}
       <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-background/85 to-background/70 backdrop-blur-sm">
         <div className="text-center p-6 max-w-sm mx-4">
-          {/* Premium Icon avec effet de brillance */}
-          <div className="relative mb-4">
-            <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center shadow-lg shadow-primary/40 transition-all duration-300 pulse-glow">
-              <Crown className="w-8 h-8 text-primary-foreground" />
+          {/* Animated Avatar */}
+          <motion.div
+            animate={{ y: [0, -3, 0] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+            className="flex justify-center mb-4"
+          >
+            <div className="relative">
+              <PixelAvatar size="md" level={50} gender="male" />
+              <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-gradient-to-br from-primary-glow to-primary flex items-center justify-center animate-pulse">
+                <Lock className="w-3 h-3 text-primary-foreground" />
+              </div>
             </div>
-            <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-gradient-to-br from-primary-glow to-primary flex items-center justify-center animate-pulse">
-              <Lock className="w-3 h-3 text-primary-foreground" />
-            </div>
-          </div>
+          </motion.div>
 
           {/* Text */}
           <h3 className="font-bold text-lg text-gradient-primary mb-2">
             🔒 Fonctionnalité Premium
           </h3>
           
-          <p className="text-sm text-muted-foreground mb-4">
-            {feature} transforme votre parcours de développement personnel
+          <p className="text-sm text-muted-foreground mb-2">
+            {feature} — débloquez cette fonctionnalité et faites évoluer votre personnage !
           </p>
           
-          <p className="text-xs text-warning mb-4 animate-pulse">
-            ✨ À partir de 12,50€/mois
+          <p className="text-xs text-primary mb-4 animate-pulse">
+            <Gem className="w-3 h-3 inline mr-1" />
+            Dès 12,50€/mois
           </p>
 
           {/* Action Buttons */}
@@ -86,7 +93,7 @@ export const PremiumLock: React.FC<PremiumLockProps> = ({
                   className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors"
                 >
                   <Sparkles className="w-4 h-4" />
-                  <span>S'abonner</span>
+                  <span>Découvrir Premium</span>
                 </button>
               </>
             ) : (
@@ -94,8 +101,8 @@ export const PremiumLock: React.FC<PremiumLockProps> = ({
                 onClick={() => handlePremiumAction(() => showUpgradeModal())}
                 className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors"
               >
-                <Sparkles className="w-4 h-4" />
-                <span>Débloquer Premium</span>
+                <Crown className="w-4 h-4" />
+                <span>Débloquer avec Premium</span>
               </button>
             )}
           </div>
