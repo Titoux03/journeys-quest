@@ -1,7 +1,7 @@
 export { AvatarRenderer, PixelIcon } from './AvatarRenderer';
 export { AvatarCustomizer } from './AvatarCustomizer';
 export { ChestOpenerPixel } from './ChestOpenerPixel';
-export type { AvatarGender, AvatarConfig, AvatarColors, PixelItemOverlay, EvolutionStage } from './AvatarEngine';
+export type { AvatarGender, AvatarConfig, AvatarColors, PixelItemOverlay, EvolutionStage, HairStyle } from './AvatarEngine';
 export {
   DEFAULT_AVATAR_CONFIG,
   getAvatarColors,
@@ -10,6 +10,11 @@ export {
   getItemsForLevel,
   getEvolutionStage,
   getAllPixelItems,
+  getHairstylesForGender,
+  getHairStyleSprite,
+  MALE_HAIRSTYLES,
+  FEMALE_HAIRSTYLES,
+  UNISEX_HAIRSTYLES,
   SKIN_PALETTES,
   EYE_PALETTES,
   CLOTHING_PALETTES,

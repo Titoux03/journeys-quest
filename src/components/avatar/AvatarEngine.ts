@@ -36,6 +36,7 @@ export interface AvatarConfig {
   clothingIndex: number;
   shoesIndex: number;
   hairIndex: number;
+  hairStyleIndex: number;
 }
 
 // ── Color Palettes ─────────────────────────────────────────
@@ -1288,4 +1289,504 @@ export const DEFAULT_AVATAR_CONFIG: AvatarConfig = {
   clothingIndex: 0,
   shoesIndex: 0,
   hairIndex: 0,
+  hairStyleIndex: 0,
 };
+
+// ── Hairstyle System ────────────────────────────────────────
+// Each hairstyle is a partial overlay on rows 0-3 (hair area) of the 12x17 grid
+// Uses color indices: 6=hair main, 7=hair shadow, 0=transparent, 1=skin (for exposed skin)
+
+export interface HairStyle {
+  key: string;
+  name: string;
+  nameFr: string;
+  gender: 'male' | 'female' | 'unisex';
+  rarity: string;
+  levelRequired: number;
+  /** Rows 0-3 override (4 rows x 12 cols), uses indices: 0=transparent, 6=hair, 7=hairShadow, 1=skin */
+  rows: number[][];
+}
+
+// ── Male Hairstyles (22) ────────────────────────────────────
+export const MALE_HAIRSTYLES: HairStyle[] = [
+  {
+    key: 'm_short_classic', name: 'Classic Short', nameFr: 'Court Classique',
+    gender: 'male', rarity: 'common', levelRequired: 1,
+    rows: [
+      [0,0,0,0,6,6,6,6,0,0,0,0],
+      [0,0,0,6,6,6,6,6,6,0,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,0,7,6,6,6,6,6,6,7,0,0],
+    ],
+  },
+  {
+    key: 'm_buzz', name: 'Buzz Cut', nameFr: 'Rasé',
+    gender: 'male', rarity: 'common', levelRequired: 1,
+    rows: [
+      [0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,7,7,7,7,0,0,0,0],
+      [0,0,0,7,7,7,7,7,7,0,0,0],
+      [0,0,7,7,7,7,7,7,7,7,0,0],
+    ],
+  },
+  {
+    key: 'm_spiky', name: 'Spiky', nameFr: 'Hérissé',
+    gender: 'male', rarity: 'common', levelRequired: 3,
+    rows: [
+      [0,0,0,6,0,6,6,0,6,0,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,0,7,6,6,6,6,6,6,7,0,0],
+    ],
+  },
+  {
+    key: 'm_curly', name: 'Curly', nameFr: 'Bouclé',
+    gender: 'male', rarity: 'common', levelRequired: 5,
+    rows: [
+      [0,0,0,6,7,6,6,7,6,0,0,0],
+      [0,0,6,7,6,7,7,6,7,6,0,0],
+      [0,0,6,6,7,6,6,7,6,6,0,0],
+      [0,0,7,6,6,6,6,6,6,7,0,0],
+    ],
+  },
+  {
+    key: 'm_fade', name: 'Modern Fade', nameFr: 'Dégradé Moderne',
+    gender: 'male', rarity: 'common', levelRequired: 7,
+    rows: [
+      [0,0,0,0,6,6,6,6,0,0,0,0],
+      [0,0,0,6,6,6,6,6,6,0,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,0,7,7,6,6,6,6,7,7,0,0],
+    ],
+  },
+  {
+    key: 'm_afro', name: 'Afro', nameFr: 'Afro',
+    gender: 'male', rarity: 'uncommon', levelRequired: 10,
+    rows: [
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,6,6,7,6,6,6,6,7,6,6,0],
+      [0,6,6,6,6,6,6,6,6,6,6,0],
+      [0,6,7,6,6,6,6,6,6,7,6,0],
+    ],
+  },
+  {
+    key: 'm_midlong', name: 'Medium Length', nameFr: 'Mi-Long',
+    gender: 'male', rarity: 'common', levelRequired: 8,
+    rows: [
+      [0,0,0,6,6,6,6,6,6,0,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,6,6,6,6,6,6,6,6,6,6,0],
+      [0,7,6,6,6,6,6,6,6,6,7,0],
+    ],
+  },
+  {
+    key: 'm_manbun', name: 'Man Bun', nameFr: 'Chignon Homme',
+    gender: 'male', rarity: 'uncommon', levelRequired: 12,
+    rows: [
+      [0,0,0,0,0,6,6,6,0,0,0,0],
+      [0,0,0,0,6,6,7,6,6,0,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,0,7,6,6,6,6,6,6,7,0,0],
+    ],
+  },
+  {
+    key: 'm_undercut', name: 'Undercut', nameFr: 'Undercut',
+    gender: 'male', rarity: 'uncommon', levelRequired: 15,
+    rows: [
+      [0,0,0,6,6,6,6,6,0,0,0,0],
+      [0,0,6,6,6,6,6,6,0,0,0,0],
+      [0,0,6,6,6,6,6,6,7,7,0,0],
+      [0,0,7,6,6,6,6,6,7,7,0,0],
+    ],
+  },
+  {
+    key: 'm_braids', name: 'Thin Braids', nameFr: 'Tresses Fines',
+    gender: 'male', rarity: 'uncommon', levelRequired: 18,
+    rows: [
+      [0,0,0,6,6,6,6,6,6,0,0,0],
+      [0,0,6,7,6,7,7,6,7,6,0,0],
+      [0,0,6,6,7,6,6,7,6,6,0,0],
+      [0,0,7,6,6,7,7,6,6,7,0,0],
+    ],
+  },
+  {
+    key: 'm_mohawk', name: 'Mohawk', nameFr: 'Crête',
+    gender: 'male', rarity: 'rare', levelRequired: 20,
+    rows: [
+      [0,0,0,0,0,6,6,0,0,0,0,0],
+      [0,0,0,0,6,6,6,6,0,0,0,0],
+      [0,0,0,0,6,6,6,6,0,0,0,0],
+      [0,0,7,7,6,6,6,6,7,7,0,0],
+    ],
+  },
+  {
+    key: 'm_pompadour', name: 'Pompadour', nameFr: 'Pompadour',
+    gender: 'male', rarity: 'rare', levelRequired: 25,
+    rows: [
+      [0,0,0,6,6,6,6,0,0,0,0,0],
+      [0,0,6,6,6,6,6,6,0,0,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,0,7,6,6,6,6,6,6,7,0,0],
+    ],
+  },
+  {
+    key: 'm_samurai', name: 'Samurai', nameFr: 'Samouraï',
+    gender: 'male', rarity: 'rare', levelRequired: 30,
+    rows: [
+      [0,0,0,0,6,6,7,6,0,0,0,0],
+      [0,0,0,6,6,7,6,6,6,0,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,6,7,6,6,6,6,6,6,7,6,0],
+    ],
+  },
+  {
+    key: 'm_dreadlocks', name: 'Dreadlocks', nameFr: 'Dreadlocks',
+    gender: 'male', rarity: 'rare', levelRequired: 35,
+    rows: [
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,6,7,6,7,6,6,7,6,7,6,0],
+      [0,6,6,7,6,7,7,6,7,6,6,0],
+      [6,7,6,6,6,6,6,6,6,6,7,6],
+    ],
+  },
+  {
+    key: 'm_slickback', name: 'Slick Back', nameFr: 'Plaqué Arrière',
+    gender: 'male', rarity: 'uncommon', levelRequired: 14,
+    rows: [
+      [0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,6,6,6,6,6,6,0,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,0,7,6,6,6,6,6,6,7,0,0],
+    ],
+  },
+  {
+    key: 'm_warrior', name: 'Warrior Cut', nameFr: 'Coupe Guerrier',
+    gender: 'male', rarity: 'epic', levelRequired: 40,
+    rows: [
+      [0,0,6,0,6,6,6,6,0,6,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,6,6,7,6,6,6,6,7,6,6,0],
+      [0,7,6,6,6,6,6,6,6,6,7,0],
+    ],
+  },
+  {
+    key: 'm_royal', name: 'Royal Hair', nameFr: 'Coiffure Royale',
+    gender: 'male', rarity: 'epic', levelRequired: 50,
+    rows: [
+      [0,0,0,6,6,6,6,6,6,0,0,0],
+      [0,0,6,6,7,6,6,7,6,6,0,0],
+      [0,6,6,6,6,6,6,6,6,6,6,0],
+      [0,7,6,6,6,6,6,6,6,6,7,0],
+    ],
+  },
+  {
+    key: 'm_flame', name: 'Flame Hair', nameFr: 'Cheveux de Flamme',
+    gender: 'male', rarity: 'epic', levelRequired: 60,
+    rows: [
+      [0,0,6,0,6,0,0,6,0,6,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,0,6,7,6,6,6,6,7,6,0,0],
+      [0,0,7,6,6,6,6,6,6,7,0,0],
+    ],
+  },
+  {
+    key: 'm_cosmic', name: 'Cosmic Flow', nameFr: 'Flux Cosmique',
+    gender: 'male', rarity: 'legendary', levelRequired: 75,
+    rows: [
+      [0,6,0,6,6,6,6,6,6,0,6,0],
+      [0,6,6,6,7,6,6,7,6,6,6,0],
+      [6,6,7,6,6,6,6,6,6,7,6,6],
+      [7,6,6,6,6,6,6,6,6,6,6,7],
+    ],
+  },
+  {
+    key: 'm_legend', name: 'Legend Mane', nameFr: 'Crinière Légendaire',
+    gender: 'male', rarity: 'legendary', levelRequired: 90,
+    rows: [
+      [0,6,6,6,6,6,6,6,6,6,6,0],
+      [6,6,7,6,7,6,6,7,6,7,6,6],
+      [6,7,6,6,6,6,6,6,6,6,7,6],
+      [6,6,6,6,6,6,6,6,6,6,6,6],
+    ],
+  },
+  {
+    key: 'm_divine', name: 'Divine Locks', nameFr: 'Mèches Divines',
+    gender: 'male', rarity: 'legendary', levelRequired: 100,
+    rows: [
+      [6,6,6,6,6,6,6,6,6,6,6,6],
+      [6,7,6,7,6,7,7,6,7,6,7,6],
+      [6,6,7,6,6,6,6,6,6,7,6,6],
+      [7,6,6,6,6,6,6,6,6,6,6,7],
+    ],
+  },
+  {
+    key: 'm_bald', name: 'Bald', nameFr: 'Chauve',
+    gender: 'male', rarity: 'common', levelRequired: 1,
+    rows: [
+      [0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0],
+    ],
+  },
+];
+
+// ── Female Hairstyles (22) ──────────────────────────────────
+export const FEMALE_HAIRSTYLES: HairStyle[] = [
+  {
+    key: 'f_long_straight', name: 'Long Straight', nameFr: 'Long Lisse',
+    gender: 'female', rarity: 'common', levelRequired: 1,
+    rows: [
+      [0,0,0,6,6,6,6,6,6,0,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,6,6,6,6,6,6,6,6,6,6,0],
+      [0,7,6,6,6,6,6,6,6,6,7,0],
+    ],
+  },
+  {
+    key: 'f_long_wavy', name: 'Long Wavy', nameFr: 'Long Ondulé',
+    gender: 'female', rarity: 'common', levelRequired: 1,
+    rows: [
+      [0,0,0,6,6,6,6,6,6,0,0,0],
+      [0,0,6,6,7,6,6,7,6,6,0,0],
+      [0,6,6,7,6,6,6,6,7,6,6,0],
+      [0,7,6,6,6,6,6,6,6,6,7,0],
+    ],
+  },
+  {
+    key: 'f_ponytail', name: 'Ponytail', nameFr: 'Queue de Cheval',
+    gender: 'female', rarity: 'common', levelRequired: 3,
+    rows: [
+      [0,0,0,6,6,6,6,6,6,0,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,6,6,6,6,6,6,6,6,6,6,0],
+      [0,7,6,6,6,6,6,6,6,6,7,6],
+    ],
+  },
+  {
+    key: 'f_braid', name: 'Single Braid', nameFr: 'Tresse Simple',
+    gender: 'female', rarity: 'common', levelRequired: 5,
+    rows: [
+      [0,0,0,6,6,6,6,6,6,0,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,6,6,6,6,6,6,6,6,6,6,0],
+      [0,7,6,6,6,6,6,6,7,6,7,0],
+    ],
+  },
+  {
+    key: 'f_twin_braids', name: 'Twin Braids', nameFr: 'Double Tresse',
+    gender: 'female', rarity: 'common', levelRequired: 7,
+    rows: [
+      [0,0,0,6,6,6,6,6,6,0,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,6,6,6,6,6,6,6,6,6,6,0],
+      [0,7,6,7,6,6,6,6,7,6,7,0],
+    ],
+  },
+  {
+    key: 'f_bob', name: 'Bob Cut', nameFr: 'Carré Court',
+    gender: 'female', rarity: 'common', levelRequired: 4,
+    rows: [
+      [0,0,0,6,6,6,6,6,6,0,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,6,6,6,6,6,6,6,6,6,6,0],
+      [0,6,6,6,6,6,6,6,6,6,6,0],
+    ],
+  },
+  {
+    key: 'f_afro', name: 'Afro', nameFr: 'Afro Volumineux',
+    gender: 'female', rarity: 'uncommon', levelRequired: 10,
+    rows: [
+      [0,6,6,6,6,6,6,6,6,6,6,0],
+      [6,6,7,6,6,6,6,6,6,7,6,6],
+      [6,6,6,6,6,6,6,6,6,6,6,6],
+      [6,7,6,6,6,6,6,6,6,6,7,6],
+    ],
+  },
+  {
+    key: 'f_curly_mid', name: 'Curly Medium', nameFr: 'Mi-Long Bouclé',
+    gender: 'female', rarity: 'common', levelRequired: 8,
+    rows: [
+      [0,0,6,7,6,6,6,6,7,6,0,0],
+      [0,6,7,6,7,6,6,7,6,7,6,0],
+      [0,6,6,7,6,6,6,6,7,6,6,0],
+      [0,7,6,6,6,6,6,6,6,6,7,0],
+    ],
+  },
+  {
+    key: 'f_bangs', name: 'Straight Bangs', nameFr: 'Frange Droite',
+    gender: 'female', rarity: 'common', levelRequired: 6,
+    rows: [
+      [0,0,0,6,6,6,6,6,6,0,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,6,6,6,6,6,6,6,6,6,6,0],
+      [0,7,6,6,6,6,6,6,6,6,7,0],
+    ],
+  },
+  {
+    key: 'f_bun', name: 'Bun', nameFr: 'Chignon',
+    gender: 'female', rarity: 'uncommon', levelRequired: 12,
+    rows: [
+      [0,0,0,0,6,6,6,6,0,0,0,0],
+      [0,0,0,6,6,7,7,6,6,0,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,7,6,6,6,6,6,6,6,6,7,0],
+    ],
+  },
+  {
+    key: 'f_pigtails', name: 'Pigtails', nameFr: 'Couettes',
+    gender: 'female', rarity: 'uncommon', levelRequired: 14,
+    rows: [
+      [0,0,0,6,6,6,6,6,6,0,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,6,6,6,6,6,6,6,6,6,6,0],
+      [6,7,6,6,6,6,6,6,6,6,7,6],
+    ],
+  },
+  {
+    key: 'f_pixie', name: 'Pixie Cut', nameFr: 'Coupe Pixie',
+    gender: 'female', rarity: 'uncommon', levelRequired: 16,
+    rows: [
+      [0,0,0,0,6,6,6,6,0,0,0,0],
+      [0,0,0,6,6,6,6,6,6,0,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,0,7,6,6,6,6,6,6,7,0,0],
+    ],
+  },
+  {
+    key: 'f_sideshave', name: 'Side Shave', nameFr: 'Côté Rasé',
+    gender: 'female', rarity: 'uncommon', levelRequired: 18,
+    rows: [
+      [0,0,6,6,6,6,6,6,0,0,0,0],
+      [0,6,6,6,6,6,6,6,0,0,0,0],
+      [0,6,6,6,6,6,6,6,7,7,0,0],
+      [0,7,6,6,6,6,6,6,7,7,0,0],
+    ],
+  },
+  {
+    key: 'f_crown_braid', name: 'Crown Braid', nameFr: 'Tresse Couronne',
+    gender: 'female', rarity: 'rare', levelRequired: 20,
+    rows: [
+      [0,0,6,7,6,7,7,6,7,6,0,0],
+      [0,6,7,6,6,6,6,6,6,7,6,0],
+      [0,6,6,6,6,6,6,6,6,6,6,0],
+      [0,7,6,6,6,6,6,6,6,6,7,0],
+    ],
+  },
+  {
+    key: 'f_waterfall', name: 'Waterfall', nameFr: 'Cascade',
+    gender: 'female', rarity: 'rare', levelRequired: 25,
+    rows: [
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,6,6,7,6,6,6,6,7,6,6,0],
+      [6,6,7,6,6,6,6,6,6,7,6,6],
+      [7,6,6,6,6,6,6,6,6,6,6,7],
+    ],
+  },
+  {
+    key: 'f_elegant', name: 'Elegant Updo', nameFr: 'Chignon Élégant',
+    gender: 'female', rarity: 'rare', levelRequired: 30,
+    rows: [
+      [0,0,0,6,7,6,6,7,6,0,0,0],
+      [0,0,6,6,6,7,7,6,6,6,0,0],
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,0,7,6,6,6,6,6,6,7,0,0],
+    ],
+  },
+  {
+    key: 'f_space_buns', name: 'Space Buns', nameFr: 'Macarons',
+    gender: 'female', rarity: 'rare', levelRequired: 35,
+    rows: [
+      [0,0,6,6,0,0,0,0,6,6,0,0],
+      [0,0,6,7,6,6,6,6,7,6,0,0],
+      [0,6,6,6,6,6,6,6,6,6,6,0],
+      [0,7,6,6,6,6,6,6,6,6,7,0],
+    ],
+  },
+  {
+    key: 'f_warrior', name: 'Warrior Braids', nameFr: 'Tresses Guerrière',
+    gender: 'female', rarity: 'epic', levelRequired: 40,
+    rows: [
+      [0,6,6,6,6,6,6,6,6,6,6,0],
+      [0,6,7,6,7,6,6,7,6,7,6,0],
+      [0,6,6,7,6,6,6,6,7,6,6,0],
+      [6,7,6,6,6,6,6,6,6,6,7,6],
+    ],
+  },
+  {
+    key: 'f_mermaid', name: 'Mermaid Waves', nameFr: 'Vagues Sirène',
+    gender: 'female', rarity: 'epic', levelRequired: 50,
+    rows: [
+      [0,0,6,6,6,6,6,6,6,6,0,0],
+      [0,6,7,6,7,6,6,7,6,7,6,0],
+      [6,6,6,7,6,7,7,6,7,6,6,6],
+      [7,6,7,6,6,6,6,6,6,7,6,7],
+    ],
+  },
+  {
+    key: 'f_empress', name: 'Empress Hair', nameFr: 'Coiffure Impératrice',
+    gender: 'female', rarity: 'epic', levelRequired: 60,
+    rows: [
+      [0,6,6,6,6,6,6,6,6,6,6,0],
+      [6,6,7,6,7,6,6,7,6,7,6,6],
+      [6,7,6,6,6,6,6,6,6,6,7,6],
+      [7,6,6,6,6,6,6,6,6,6,6,7],
+    ],
+  },
+  {
+    key: 'f_starlight', name: 'Starlight Flow', nameFr: 'Flux Stellaire',
+    gender: 'female', rarity: 'legendary', levelRequired: 75,
+    rows: [
+      [6,6,6,6,6,6,6,6,6,6,6,6],
+      [6,7,6,7,6,7,7,6,7,6,7,6],
+      [6,6,7,6,6,6,6,6,6,7,6,6],
+      [7,6,6,6,6,6,6,6,6,6,6,7],
+    ],
+  },
+  {
+    key: 'f_divine', name: 'Divine Cascade', nameFr: 'Cascade Divine',
+    gender: 'female', rarity: 'legendary', levelRequired: 100,
+    rows: [
+      [6,6,6,6,6,6,6,6,6,6,6,6],
+      [6,7,6,7,6,7,7,6,7,6,7,6],
+      [6,6,7,6,7,6,6,7,6,7,6,6],
+      [7,6,6,7,6,6,6,6,7,6,6,7],
+    ],
+  },
+];
+
+// ── Unisex Hairstyles ──────────────────────────────────────
+export const UNISEX_HAIRSTYLES: HairStyle[] = [
+  {
+    key: 'u_shaved_sides', name: 'Shaved Sides', nameFr: 'Côtés Rasés',
+    gender: 'unisex', rarity: 'uncommon', levelRequired: 13,
+    rows: [
+      [0,0,0,0,6,6,6,6,0,0,0,0],
+      [0,0,0,6,6,6,6,6,6,0,0,0],
+      [0,0,7,6,6,6,6,6,6,7,0,0],
+      [0,0,7,7,6,6,6,6,7,7,0,0],
+    ],
+  },
+  {
+    key: 'u_wild', name: 'Wild Style', nameFr: 'Sauvage',
+    gender: 'unisex', rarity: 'rare', levelRequired: 22,
+    rows: [
+      [0,6,0,6,6,6,6,6,6,0,6,0],
+      [6,6,6,6,7,6,6,7,6,6,6,6],
+      [0,6,6,7,6,6,6,6,7,6,6,0],
+      [6,7,6,6,6,6,6,6,6,6,7,6],
+    ],
+  },
+];
+
+export function getHairstylesForGender(gender: AvatarGender): HairStyle[] {
+  const genderStyles = gender === 'male' ? MALE_HAIRSTYLES : FEMALE_HAIRSTYLES;
+  return [...genderStyles, ...UNISEX_HAIRSTYLES];
+}
+
+export function getHairStyleSprite(gender: AvatarGender, hairStyleIndex: number): number[][] | null {
+  const styles = getHairstylesForGender(gender);
+  const style = styles[hairStyleIndex];
+  if (!style) return null;
+  return style.rows;
+}
