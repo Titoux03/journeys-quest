@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { DailyQuote } from '@/components/DailyQuote';
 import { LevelDisplay } from '@/components/LevelDisplay';
-import { AvatarRenderer, DEFAULT_AVATAR_CONFIG, AvatarConfig } from '@/components/avatar';
+import { AvatarRenderer, DEFAULT_AVATAR_CONFIG, AvatarConfig, getNextUnlock, RARITY_COLORS, RARITY_LABELS } from '@/components/avatar';
+import { PixelIcon } from '@/components/avatar';
+import { Progress } from '@/components/ui/progress';
+import { useLevel } from '@/hooks/useLevel';
 import { AddictionCard } from '@/components/AddictionCard';
 import { BadgesModal } from '@/components/BadgesModal';
 import { Sparkles, TrendingUp, Target, Brain, Shield, Dumbbell, Crown, Star, Flame, Timer, BarChart3, Leaf, PenTool, CheckSquare } from 'lucide-react';
@@ -35,6 +38,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
   const { isPremium, showUpgradeModal } = usePremium();
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { levelData: homeLevelData } = useLevel(user?.id);
   const { 
     addictionTypes, 
     badges,
@@ -114,6 +118,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
           const saved = localStorage.getItem('avatar_config');
           if (saved) avatarConfig = { ...DEFAULT_AVATAR_CONFIG, ...JSON.parse(saved) };
         } catch {}
+        const homeLevel = homeLevelData?.level || 1;
+        const nextItem = getNextUnlock(homeLevel);
         return (
           <motion.button
             onClick={() => onNavigate('avatar')}
@@ -130,19 +136,27 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
           >
             <div className="flex items-center gap-4 p-4">
               <AvatarRenderer config={avatarConfig} size="md" animate={false} />
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <div className="text-sm font-bold text-foreground mb-0.5">Mon personnage</div>
                 <div className="text-xs text-primary font-medium flex items-center gap-1">
                   Modifier mon avatar
                   <Sparkles className="w-3 h-3" />
                 </div>
-                <div className="mt-2 h-1.5 bg-secondary rounded-full overflow-hidden w-full">
-                  <motion.div
-                    className="h-full bg-gradient-to-r from-primary to-primary-glow rounded-full"
-                    animate={{ width: ['0%', '60%'] }}
-                    transition={{ duration: 1.5, ease: 'easeOut' }}
-                  />
-                </div>
+                {nextItem && (
+                  <div className="mt-2 space-y-1">
+                    <div className="flex items-center gap-1.5">
+                      <PixelIcon pixels={nextItem.item.pixels.slice(0, 3)} palette={nextItem.item.palette} pixelSize={2} />
+                      <span className="text-[10px] text-muted-foreground truncate">{nextItem.item.nameFr}</span>
+                      <span
+                        className="text-[8px] font-bold px-1 rounded"
+                        style={{ color: RARITY_COLORS[nextItem.item.rarity] }}
+                      >
+                        Nv.{nextItem.level}
+                      </span>
+                    </div>
+                    <Progress value={Math.min(100, (homeLevel / nextItem.level) * 100)} className="h-1.5" />
+                  </div>
+                )}
               </div>
               <div className="text-xs text-muted-foreground">→</div>
             </div>
