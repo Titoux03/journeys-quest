@@ -6,6 +6,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Save, Lock, Sparkles, Package, Star, Gift, Check, Crown, TrendingUp, Zap, Eye } from 'lucide-react';
+import { AISuggestionsPanel } from './AISuggestionsPanel';
 import { useAuth } from '@/hooks/useAuth';
 import { useLevel } from '@/hooks/useLevel';
 import { usePremium } from '@/hooks/usePremium';
@@ -86,8 +87,9 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [colorCategory, setColorCategory] = useState<'skin' | 'eyes' | 'hair' | 'clothing' | 'shoes' | 'hairstyle'>('skin');
-  const [equipmentTab, setEquipmentTab] = useState<'items' | 'quests' | 'chests'>('items');
+  const [equipmentTab, setEquipmentTab] = useState<'items' | 'quests' | 'chests' | 'ai'>('items');
   const [previewingItem, setPreviewingItem] = useState<string | null>(null);
+  const [previewComboKeys, setPreviewComboKeys] = useState<string[]>([]);
   const [showSparkle, setShowSparkle] = useState(false);
 
   useEffect(() => {
@@ -131,13 +133,27 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
       return allPixelItems.find(p => p.key === overlayKey) || null;
     }).filter(Boolean) as PixelItemOverlay[];
 
-    // Add preview overlay if previewing an item
+    // Combo preview mode (from AI suggestions)
+    if (previewComboKeys.length > 0) {
+      const comboOverlays: PixelItemOverlay[] = [];
+      for (const key of previewComboKeys) {
+        const pixelItem = allPixelItems.find(p => p.key === key);
+        if (pixelItem) {
+          // Replace any existing overlay for same slot
+          const existing = comboOverlays.findIndex(o => o.slot === pixelItem.slot);
+          if (existing >= 0) comboOverlays[existing] = pixelItem;
+          else comboOverlays.push(pixelItem);
+        }
+      }
+      return comboOverlays;
+    }
+
+    // Single item preview
     if (previewingItem) {
       const previewDbItem = allItems.find(i => i.id === previewingItem);
       const previewKey = previewDbItem ? (previewDbItem.pixel_art_data as any)?.overlay_key : previewingItem;
       const previewPixel = allPixelItems.find(p => p.key === previewKey);
       if (previewPixel) {
-        // Replace existing overlay for same slot, or add
         const filtered = overlays.filter(o => o.slot !== previewPixel.slot);
         filtered.push(previewPixel);
         return filtered;
@@ -145,7 +161,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
     }
 
     return overlays;
-  }, [getEquippedForSlot, previewingItem, allItems, allPixelItems]);
+  }, [getEquippedForSlot, previewingItem, previewComboKeys, allItems, allPixelItems]);
 
   // Helper: get local pixel items for a slot (fallback if DB is empty)
   const getLocalItemsForSlot = useCallback((slot: string) => {
@@ -595,23 +611,43 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
               <div className="flex gap-1 mb-4 bg-card rounded-xl p-1 border border-border/20">
                 {([
                   { id: 'items' as const, label: 'Items' },
+                  { id: 'ai' as const, label: '✨ IA' },
                   { id: 'quests' as const, label: 'Quêtes' },
                   { id: 'chests' as const, label: 'Coffres', badge: chests.length },
-                ]).map(tab => (
+                ] as const).map(tab => (
                   <button
                     key={tab.id}
-                    onClick={() => setEquipmentTab(tab.id)}
+                    onClick={() => { setEquipmentTab(tab.id); if (tab.id !== 'ai') setPreviewComboKeys([]); }}
                     className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all ${
                       equipmentTab === tab.id ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
                     {tab.label}
-                    {tab.badge ? (
+                    {'badge' in tab && tab.badge ? (
                       <span className="ml-1 bg-primary-foreground/20 text-primary-foreground px-1.5 py-0.5 rounded-full text-[9px]">{tab.badge}</span>
                     ) : null}
                   </button>
                 ))}
               </div>
+
+              {/* Combo preview indicator */}
+              {previewComboKeys.length > 0 && (
+                <motion.div
+                  className="flex items-center justify-between p-2 mb-3 rounded-lg bg-primary/10 border border-primary/20"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                >
+                  <span className="text-[10px] text-primary font-medium">
+                    Aperçu combo : {previewComboKeys.length} items
+                  </span>
+                  <button
+                    onClick={() => setPreviewComboKeys([])}
+                    className="text-[10px] text-destructive font-medium"
+                  >
+                    Fermer
+                  </button>
+                </motion.div>
+              )}
 
               {/* ── ITEMS TAB ── */}
               {equipmentTab === 'items' && (
@@ -831,6 +867,20 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                     </div>
                   )}
                 </div>
+              )}
+
+              {/* ── AI TAB ── */}
+              {equipmentTab === 'ai' && (
+                <AISuggestionsPanel
+                  level={level}
+                  gender={config.gender}
+                  equippedItems={equippedOverlays.map(o => o.key)}
+                  ownedItems={SLOT_META.flatMap(s => getOwnedItemsForSlot(s.id).map(i => (i.pixel_art_data as any)?.overlay_key).filter(Boolean))}
+                  onPreviewCombo={(keys) => {
+                    setPreviewComboKeys(keys);
+                    setPreviewingItem(null);
+                  }}
+                />
               )}
 
               {/* ── QUESTS TAB ── */}

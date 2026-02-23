@@ -68,3 +68,6 @@ verify_jwt = false
 
 [functions.verify-apple-purchase]
 verify_jwt = true
+
+[functions.suggest-items]
+verify_jwt = false
