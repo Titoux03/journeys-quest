@@ -3,9 +3,9 @@
  * Gender selection, color pickers, equipment, save/modify
  * 100% pixel art, no emojis
  */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Save, Lock, Sparkles, Package, Star, Gift, Flame, Zap, Trophy, Check } from 'lucide-react';
+import { ArrowLeft, Save, Lock, Sparkles, Package, Star, Gift, Check, ChevronRight, TrendingUp } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLevel } from '@/hooks/useLevel';
 import { usePremium } from '@/hooks/usePremium';
@@ -15,6 +15,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { playSound } from '@/utils/soundManager';
 import { AvatarRenderer, PixelIcon } from './AvatarRenderer';
 import { ChestOpenerPixel } from './ChestOpenerPixel';
+import { Progress } from '@/components/ui/progress';
 import {
   AvatarConfig,
   AvatarGender,
@@ -30,13 +31,13 @@ import {
   RARITY_LABELS,
   RARITY_GRADIENTS,
   PixelItemOverlay,
+  getNextUnlock,
 } from './AvatarEngine';
 
 interface AvatarCustomizerProps {
   onNavigate: (screen: string) => void;
 }
 
-// Load/save avatar config from localStorage + Supabase profiles
 function loadAvatarConfig(): AvatarConfig {
   try {
     const saved = localStorage.getItem('avatar_config');
@@ -47,7 +48,6 @@ function loadAvatarConfig(): AvatarConfig {
 
 function saveAvatarConfigLocal(config: AvatarConfig) {
   localStorage.setItem('avatar_config', JSON.stringify(config));
-  // Also keep legacy gender key for compatibility
   localStorage.setItem('avatar_gender', config.gender);
 }
 
@@ -79,7 +79,6 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
   const [saved, setSaved] = useState(false);
   const [colorCategory, setColorCategory] = useState<'skin' | 'eyes' | 'hair' | 'clothing' | 'shoes'>('skin');
 
-  // Save config whenever it changes
   useEffect(() => {
     saveAvatarConfigLocal(config);
   }, [config]);
@@ -89,12 +88,10 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
     setSaved(false);
   }, []);
 
-  // Save to backend
   const handleSave = async () => {
     if (!user) return;
     setSaving(true);
     try {
-      // Save config as JSON in profiles avatar_url field (repurposed)
       await supabase
         .from('profiles')
         .update({ avatar_url: JSON.stringify(config) })
@@ -111,7 +108,6 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
     }
   };
 
-  // Build equipped overlays for renderer
   const equippedOverlays: PixelItemOverlay[] = SLOT_META.map(s => {
     const item = getEquippedForSlot(s.id);
     if (!item) return null;
@@ -128,6 +124,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
   };
 
   const level = levelData?.level || 1;
+  const nextUnlock = useMemo(() => getNextUnlock(level), [level]);
 
   const getEvolutionStage = (l: number) => {
     if (l >= 100) return { name: 'Légende Cosmique', color: 'from-purple-500 via-pink-500 to-cyan-500' };
@@ -152,24 +149,37 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
   const totalItems = allItems.length;
   const collectionPct = totalItems > 0 ? Math.round((collectionCount / totalItems) * 100) : 0;
 
-  // Color palette selector component
+  // Color palette with level-locked colors
   const ColorPalette: React.FC<{
-    palettes: { main?: string; shadow?: string; color?: string; label: string }[];
+    palettes: { main?: string; shadow?: string; color?: string; label: string; levelRequired?: number; rarity?: string }[];
     selectedIndex: number;
     onSelect: (i: number) => void;
     colorKey?: 'main' | 'color';
   }> = ({ palettes, selectedIndex, onSelect, colorKey = 'main' }) => (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2.5">
       {palettes.map((p, i) => {
         const c = colorKey === 'color' ? (p as any).color : (p as any).main;
         const isSelected = selectedIndex === i;
+        const isLocked = (p.levelRequired || 0) > level;
+        const rarity = (p as any).rarity;
         return (
           <motion.button
             key={i}
-            onClick={() => { onSelect(i); playSound('click'); }}
-            className={`relative rounded-full border-2 transition-all ${isSelected ? 'border-primary scale-110 ring-2 ring-primary/30' : 'border-border/30'}`}
-            style={{ width: 36, height: 36 }}
-            whileTap={{ scale: 0.9 }}
+            onClick={() => {
+              if (isLocked) {
+                toast({ title: `Nv. ${p.levelRequired} requis`, description: `Continue ta progression !`, duration: 2000 });
+                return;
+              }
+              onSelect(i);
+              playSound('click');
+            }}
+            className={`relative rounded-full border-2 transition-all ${
+              isSelected ? 'border-primary scale-110 ring-2 ring-primary/30' :
+              isLocked ? 'border-border/20 opacity-40' :
+              'border-border/30 hover:border-primary/40'
+            }`}
+            style={{ width: 38, height: 38 }}
+            whileTap={isLocked ? undefined : { scale: 0.9 }}
           >
             <div className="w-full h-full rounded-full" style={{ backgroundColor: c }} />
             {isSelected && (
@@ -181,9 +191,20 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                 <Check className="w-4 h-4 text-white drop-shadow-lg" />
               </motion.div>
             )}
+            {isLocked && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Lock className="w-3 h-3 text-muted-foreground" />
+              </div>
+            )}
             <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[8px] text-muted-foreground whitespace-nowrap">
-              {isSelected ? p.label : ''}
+              {isSelected ? p.label : isLocked ? `Nv.${p.levelRequired}` : ''}
             </div>
+            {rarity && rarity !== 'common' && !isLocked && (
+              <div
+                className="absolute -top-1 -right-1 w-2 h-2 rounded-full"
+                style={{ backgroundColor: RARITY_COLORS[rarity] || RARITY_COLORS.common }}
+              />
+            )}
           </motion.button>
         );
       })}
@@ -279,6 +300,36 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
             </div>
           </div>
 
+          {/* Next Unlock Teaser */}
+          {nextUnlock && (
+            <motion.div
+              className="w-full mt-3 p-3 rounded-xl bg-card/80 border border-primary/20"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex-shrink-0">
+                  <PixelIcon pixels={nextUnlock.item.pixels.slice(0, 5)} palette={nextUnlock.item.palette} pixelSize={3} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[10px] text-muted-foreground">Prochain déblocage</div>
+                  <div className="text-xs font-bold truncate">{nextUnlock.item.nameFr}</div>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Progress value={Math.min(100, (level / nextUnlock.level) * 100)} className="h-1.5 flex-1" />
+                    <span className="text-[10px] font-mono text-muted-foreground">Nv.{nextUnlock.level}</span>
+                  </div>
+                </div>
+                <div
+                  className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
+                  style={{ color: RARITY_COLORS[nextUnlock.item.rarity], backgroundColor: `${RARITY_COLORS[nextUnlock.item.rarity]}15` }}
+                >
+                  {RARITY_LABELS[nextUnlock.item.rarity]}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
           {/* Quick Stats */}
           <div className="grid grid-cols-3 gap-2 w-full mt-3">
             <div className="bg-card/80 rounded-lg p-2 text-center border border-border/20">
@@ -315,6 +366,11 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
             }`}
           >
             {tab.label}
+            {tab.id === 'chests' && chests.length > 0 && (
+              <span className="ml-1 bg-primary-foreground/20 text-primary-foreground px-1.5 py-0.5 rounded-full text-[9px]">
+                {chests.length}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -322,7 +378,6 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
       {/* ═══ CUSTOMIZE TAB ═══ */}
       {activeTab === 'customize' && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">
-          {/* Color category pills */}
           <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
             {([
               { id: 'skin' as const, label: 'Peau' },
@@ -345,15 +400,19 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
             ))}
           </div>
 
-          {/* Color pickers */}
           <div className="p-4 rounded-xl bg-card border border-border/30">
-            <h3 className="text-sm font-bold mb-4 capitalize">
-              {colorCategory === 'skin' ? 'Couleur de peau' :
-               colorCategory === 'eyes' ? 'Couleur des yeux' :
-               colorCategory === 'hair' ? 'Couleur des cheveux' :
-               colorCategory === 'clothing' ? 'Couleur des vêtements' :
-               'Couleur des chaussures'}
-            </h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-bold">
+                {colorCategory === 'skin' ? 'Couleur de peau' :
+                 colorCategory === 'eyes' ? 'Couleur des yeux' :
+                 colorCategory === 'hair' ? 'Couleur des cheveux' :
+                 colorCategory === 'clothing' ? 'Couleur des vêtements' :
+                 'Couleur des chaussures'}
+              </h3>
+              {colorCategory === 'eyes' && (
+                <span className="text-[9px] text-muted-foreground">Certaines couleurs sont rares !</span>
+              )}
+            </div>
             {colorCategory === 'skin' && (
               <ColorPalette palettes={SKIN_PALETTES} selectedIndex={config.skinIndex} onSelect={i => updateConfig({ skinIndex: i })} />
             )}
@@ -444,7 +503,6 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                         whileHover={{ scale: 1.04 }}
                         whileTap={{ scale: 0.96 }}
                       >
-                        {/* Pixel art preview of item */}
                         <div className="flex justify-center mb-1.5">
                           {pixelItem ? (
                             <PixelIcon pixels={pixelItem.pixels.slice(0, 5)} palette={pixelItem.palette} pixelSize={3} />
@@ -576,7 +634,6 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                   whileTap={{ scale: 0.97 }}
                 >
                   <motion.div className="absolute inset-0 bg-white/10" animate={{ x: ['-100%', '200%'] }} transition={{ duration: 3, repeat: Infinity }} />
-                  {/* Pixel art chest icon */}
                   <div className="relative z-10 mb-2 flex justify-center">
                     <PixelIcon
                       pixels={[

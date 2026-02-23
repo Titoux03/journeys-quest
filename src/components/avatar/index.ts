@@ -6,6 +6,8 @@ export {
   DEFAULT_AVATAR_CONFIG,
   getAvatarColors,
   getBaseSprite,
+  getNextUnlock,
+  getItemsForLevel,
   SKIN_PALETTES,
   EYE_PALETTES,
   CLOTHING_PALETTES,
