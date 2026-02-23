@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Flame, TrendingUp, X, ChevronRight, ChevronLeft, Crown, Lock, Brain, Moon, Bell } from 'lucide-react';
+import { BookOpen, TrendingUp, X, ChevronRight, ChevronLeft, Crown, Lock, Gem, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
 import { usePremium } from '@/hooks/usePremium';
+import { PixelAvatar } from '@/components/PixelAvatar';
 
 interface IntroPopupProps {
   onClose: () => void;
@@ -69,7 +70,7 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
               <X size={18} />
             </Button>
 
-            {/* Écran 1 - Introduction */}
+            {/* Step 1 - Welcome with Avatar */}
             {step === 1 && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -79,18 +80,17 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
               >
                 <div className="text-center mb-8">
                   <motion.div
-                    initial={{ scale: 0, rotate: -180 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ type: "spring", duration: 0.8 }}
-                    className="inline-flex w-20 h-20 rounded-full bg-primary/10 items-center justify-center mb-6"
+                    animate={{ y: [0, -4, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                    className="flex justify-center mb-6"
                   >
-                    <BookOpen size={40} className="text-primary" />
+                    <PixelAvatar size="lg" level={25} gender="male" />
                   </motion.div>
                   <h2 className="text-3xl sm:text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                     {t('intro.step1.title', 'Bienvenue sur Journeys 👋')}
                   </h2>
                   <p className="text-muted-foreground text-base sm:text-lg leading-relaxed">
-                    {t('intro.step1.subtitle', 'Le journal intime nouvelle génération pour booster ton bien-être et suivre ton évolution.')}
+                    Crée ton personnage, progresse chaque jour et débloque des récompenses exclusives !
                   </p>
                 </div>
 
@@ -99,14 +99,14 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                   onClick={handleNext}
                 >
                   <span className="flex items-center justify-center gap-2">
-                    {t('intro.step1.cta', 'Découvrir les fonctionnalités')}
+                    Découvrir l'aventure
                     <ChevronRight size={20} />
                   </span>
                 </Button>
               </motion.div>
             )}
 
-            {/* Écran 2 - Fonctionnalités gratuites */}
+            {/* Step 2 - Free Features */}
             {step === 2 && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -119,7 +119,7 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                     {t('intro.step2.title', 'Fonctionnalités Gratuites')}
                   </h2>
                   <p className="text-muted-foreground text-sm">
-                    {t('intro.step2.subtitle', 'Tout ce dont tu as besoin pour commencer')}
+                    Tout ce dont tu as besoin pour commencer ton parcours
                   </p>
                 </div>
 
@@ -128,18 +128,14 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.1 }}
-                    className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-blue-500/10 to-blue-500/5 border border-blue-500/20 hover:border-blue-500/40 transition-all cursor-pointer"
+                    className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-blue-500/10 to-blue-500/5 border border-blue-500/20"
                   >
                     <div className="shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
                       <BookOpen size={24} className="text-blue-500" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-base mb-1">
-                        {t('intro.step2.feature1.title', '📝 Ton Journal')}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {t('intro.step2.feature1.desc', 'Écris tes pensées, garde une trace de ton humeur')}
-                      </p>
+                      <h3 className="font-semibold text-base mb-1">📝 Ton Journal</h3>
+                      <p className="text-sm text-muted-foreground">Écris tes pensées, garde une trace de ton humeur</p>
                     </div>
                   </motion.div>
 
@@ -147,18 +143,14 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.2 }}
-                    className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-purple-500/10 to-purple-500/5 border border-purple-500/20 hover:border-purple-500/40 transition-all cursor-pointer"
+                    className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-purple-500/10 to-purple-500/5 border border-purple-500/20"
                   >
                     <div className="shrink-0 w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center">
                       <TrendingUp size={24} className="text-purple-500" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-base mb-1">
-                        {t('intro.step2.feature2.title', '🌌 Système de Niveaux')}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {t('intro.step2.feature2.desc', 'Évolue de 1 à 200 en progressant chaque jour')}
-                      </p>
+                      <h3 className="font-semibold text-base mb-1">🎮 Ton Personnage</h3>
+                      <p className="text-sm text-muted-foreground">Crée ton avatar pixel art et fais-le évoluer chaque jour</p>
                     </div>
                   </motion.div>
 
@@ -166,18 +158,14 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.3 }}
-                    className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 hover:border-primary/40 transition-all cursor-pointer"
+                    className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20"
                   >
                     <div className="shrink-0 w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-                      <TrendingUp size={24} className="text-primary" />
+                      <Star size={24} className="text-primary" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-base mb-1">
-                        {t('intro.step2.feature3.title', '🎯 Suivi de tes habitudes')}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {t('intro.step2.feature3.desc', 'Reste motivé et visualise ton parcours')}
-                      </p>
+                      <h3 className="font-semibold text-base mb-1">🔥 Streaks & Niveaux</h3>
+                      <p className="text-sm text-muted-foreground">Reste motivé et visualise ta progression quotidienne</p>
                     </div>
                   </motion.div>
                 </div>
@@ -190,7 +178,7 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                   >
                     <span className="flex items-center justify-center gap-2">
                       <ChevronLeft size={18} />
-                      {t('common.back', 'Retour')}
+                      Retour
                     </span>
                   </Button>
                   <Button
@@ -198,7 +186,7 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                     onClick={handleNext}
                   >
                     <span className="flex items-center justify-center gap-2">
-                      {t('intro.step2.cta', 'Voir Premium ✨')}
+                      Voir Premium ✨
                       <ChevronRight size={18} />
                     </span>
                   </Button>
@@ -206,7 +194,7 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
               </motion.div>
             )}
 
-            {/* Écran 3 - Fonctionnalités Premium */}
+            {/* Step 3 - Premium with Avatar showcase */}
             {step === 3 && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -215,19 +203,31 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                 transition={{ duration: 0.3 }}
               >
                 <div className="text-center mb-6">
+                  {/* Premium Avatar Showcase */}
                   <motion.div
-                    initial={{ scale: 0, rotate: -180 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ type: "spring", duration: 0.8 }}
-                    className="inline-flex w-16 h-16 rounded-full bg-gradient-to-r from-primary to-primary/60 items-center justify-center mb-4"
+                    animate={{ y: [0, -4, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                    className="flex justify-center mb-4"
                   >
-                    <Crown size={32} className="text-white" />
+                    <div className="relative">
+                      <motion.div
+                        className="absolute inset-0 rounded-full"
+                        style={{
+                          background: 'radial-gradient(circle, hsl(var(--primary) / 0.3), transparent)',
+                          filter: 'blur(15px)',
+                          transform: 'scale(2.5)',
+                        }}
+                        animate={{ opacity: [0.3, 0.6, 0.3] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      />
+                      <PixelAvatar size="lg" level={100} gender="male" />
+                    </div>
                   </motion.div>
                   <h2 className="text-2xl sm:text-3xl font-bold mb-3 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                    {t('intro.step3.title', 'Journeys Premium')}
+                    Journeys Premium
                   </h2>
                   <p className="text-muted-foreground text-sm">
-                    {t('intro.step3.subtitle', 'Débloque tout ton potentiel')}
+                    Débloque ton héros intérieur et tous les items exclusifs
                   </p>
                 </div>
 
@@ -236,20 +236,17 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.1 }}
-                    className="relative flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/30 overflow-hidden"
+                    className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/30"
                   >
                     <div className="shrink-0 w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-                      <Lock size={24} className="text-primary" />
+                      <Crown size={24} className="text-primary" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold text-base">
-                          {t('intro.step3.feature1.title', '💊 Contrôle des Addictions')}
-                        </h3>
-                        <Lock size={14} className="text-primary" />
+                        <h3 className="font-semibold text-base">👑 Personnage Légendaire</h3>
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {t('intro.step3.feature1.desc', 'Suis ta progression, mesure tes économies, et reprends le contrôle sur tes habitudes')}
+                        Évolutions exclusives, auras, couronnes et tenues épiques pour ton avatar
                       </p>
                     </div>
                   </motion.div>
@@ -258,20 +255,17 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.2 }}
-                    className="relative flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/30 overflow-hidden"
+                    className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/30"
                   >
                     <div className="shrink-0 w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-                      <TrendingUp size={24} className="text-primary" />
+                      <Gem size={24} className="text-primary" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold text-base">
-                          {t('intro.step3.feature2.title', '🌠 Niveaux Avancés & Titres')}
-                        </h3>
-                        <Lock size={14} className="text-primary" />
+                        <h3 className="font-semibold text-base">💎 Coffres & Items Rares</h3>
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {t('intro.step3.feature2.desc', 'Accède aux rangs supérieurs et titres prestigieux jusqu\'au niveau 200')}
+                        Ouvre des coffres légendaires et collectionne des items pour personnaliser ton héros
                       </p>
                     </div>
                   </motion.div>
@@ -280,49 +274,24 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.3 }}
-                    className="relative flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/30 overflow-hidden"
+                    className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/30"
                   >
                     <div className="shrink-0 w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-                      <Moon size={24} className="text-primary" />
+                      <Lock size={24} className="text-primary" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold text-base">
-                          {t('intro.step3.feature3.title', '🌙 Journal Guidé Premium')}
-                        </h3>
-                        <Lock size={14} className="text-primary" />
+                        <h3 className="font-semibold text-base">🛡️ Suivi Multi-Addictions</h3>
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {t('intro.step3.feature3.desc', 'Écris ton journal intime chaque jour pour faire le point et avancer')}
-                      </p>
-                    </div>
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                    className="relative flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/30 overflow-hidden"
-                  >
-                    <div className="shrink-0 w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-                      <Bell size={24} className="text-primary" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold text-base">
-                          {t('intro.step3.feature4.title', '🔔 Rappels & Statistiques')}
-                        </h3>
-                        <Lock size={14} className="text-primary" />
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {t('intro.step3.feature4.desc', 'Visualise ton évolution sur le long terme avec des données détaillées')}
+                        Reprends le contrôle avec un suivi intelligent, badges et économies calculées
                       </p>
                     </div>
                   </motion.div>
                 </div>
 
                 <p className="text-center text-sm text-muted-foreground mb-6">
-                  {t('intro.step3.motivational', '✨ Débloque tout ton potentiel avec Journeys Premium')}
+                  ✨ Chaque connexion te rapproche de ta transformation Journeys Premium
                 </p>
 
                 <div className="space-y-3">
@@ -331,7 +300,7 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                     onClick={handlePremiumCTA}
                   >
                     <span className="flex items-center justify-center gap-2">
-                      {t('intro.step3.cta.premium', isPremium ? 'Accéder à Premium' : 'Découvrir Journeys Premium')}
+                      {isPremium ? 'Accéder à Premium' : 'Découvrir Journeys Premium'}
                       <Crown size={18} />
                     </span>
                   </Button>
@@ -340,7 +309,7 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                     className="w-full flex items-center justify-center"
                     onClick={handleClose}
                   >
-                    {t('intro.step3.cta.free', 'Continuer gratuitement')}
+                    Continuer gratuitement
                   </Button>
                   <Button
                     variant="ghost"
@@ -350,14 +319,14 @@ export const IntroPopup: React.FC<IntroPopupProps> = ({ onClose }) => {
                   >
                     <span className="flex items-center justify-center gap-2">
                       <ChevronLeft size={16} />
-                      {t('common.back', 'Retour')}
+                      Retour
                     </span>
                   </Button>
                 </div>
               </motion.div>
             )}
 
-            {/* Barre de progression */}
+            {/* Progress bar */}
             <div className="flex gap-2 justify-center mt-6">
               {[1, 2, 3].map((idx) => (
                 <div
