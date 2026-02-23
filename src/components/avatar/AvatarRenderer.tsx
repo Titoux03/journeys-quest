@@ -1,10 +1,11 @@
 /**
  * AvatarRenderer - Pure pixel art CSS Grid renderer
  * Renders base sprite + color customization + equipped item overlays
+ * Enhanced with: eye blink, cumulative glow, equip sparkle
  * No emojis - 100% pixel art
  */
-import React, { useMemo } from 'react';
-import { motion } from 'framer-motion';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   AvatarConfig,
   AvatarColors,
@@ -25,6 +26,8 @@ interface AvatarRendererProps {
   animate?: boolean;
   showGlow?: boolean;
   glowColor?: string;
+  /** Show sparkle burst (e.g. after equipping item) */
+  showSparkle?: boolean;
 }
 
 const SIZE_CONFIG = {
@@ -47,9 +50,34 @@ function resolveBaseColor(idx: number, colors: AvatarColors): string | null {
     case 6: return colors.hair;
     case 7: return colors.hairShadow;
     case 8: return colors.clothingShadow;
-    case 9: return '#FFFFFF'; // highlight
+    case 9: return '#FFFFFF'; // eye sparkle highlight
+    case 10: return blendColor(colors.skin, '#CC7777', 0.45); // mouth/lip
+    case 11: return lightenColor(colors.skin, 0.12); // skin highlight / blush
     default: return null;
   }
+}
+
+// Simple color blending helpers
+function lightenColor(hex: string, amount: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgb(${Math.min(255, r + 255 * amount)}, ${Math.min(255, g + 255 * amount)}, ${Math.min(255, b + 255 * amount)})`;
+}
+
+function blendColor(hex1: string, hex2: string, t: number): string {
+  const parse = (h: string) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+  const c1 = parse(hex1), c2 = parse(hex2);
+  const mix = (a: number, b: number) => Math.round(a + (b - a) * t);
+  return `rgb(${mix(c1[0], c2[0])}, ${mix(c1[1], c2[1])}, ${mix(c1[2], c2[2])})`;
+}
+
+// Get cumulative glow tier based on equipped item count
+function getEquipTier(count: number): { glowIntensity: number; glowHue: string } | null {
+  if (count >= 5) return { glowIntensity: 0.4, glowHue: 'hsl(45 100% 65% / 0.35)' };
+  if (count >= 3) return { glowIntensity: 0.25, glowHue: 'hsl(200 80% 60% / 0.2)' };
+  if (count >= 1) return { glowIntensity: 0.12, glowHue: 'hsl(220 60% 60% / 0.1)' };
+  return null;
 }
 
 export const AvatarRenderer: React.FC<AvatarRendererProps> = ({
@@ -61,6 +89,7 @@ export const AvatarRenderer: React.FC<AvatarRendererProps> = ({
   animate = true,
   showGlow = false,
   glowColor,
+  showSparkle = false,
 }) => {
   const sizeConfig = SIZE_CONFIG[size];
   const colors = useMemo(() => getAvatarColors(config), [config]);
@@ -68,15 +97,41 @@ export const AvatarRenderer: React.FC<AvatarRendererProps> = ({
     const base = getBaseSprite(config.gender);
     const hairRows = getHairStyleSprite(config.gender, config.hairStyleIndex ?? 0);
     if (!hairRows) return base;
-    // Clone and replace rows 0-3 with hairstyle
     return base.map((row, r) => r < hairRows.length ? hairRows[r] : row);
   }, [config.gender, config.hairStyleIndex]);
+
+  // Eye blink state
+  const [isBlinking, setIsBlinking] = useState(false);
+  useEffect(() => {
+    if (!animate || size === 'xs') return;
+    const scheduleNextBlink = () => {
+      const delay = 2500 + Math.random() * 4000;
+      return setTimeout(() => {
+        setIsBlinking(true);
+        setTimeout(() => setIsBlinking(false), 150);
+        timerRef.current = scheduleNextBlink();
+      }, delay);
+    };
+    const timerRef: { current: ReturnType<typeof setTimeout> | null } = { current: scheduleNextBlink() };
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, [animate, size]);
 
   // Merge base sprite with equipped overlays
   const mergedPixels = useMemo(() => {
     const result: (string | null)[][] = baseSprite.map(row =>
       row.map(idx => resolveBaseColor(idx, colors))
     );
+
+    // Eye blink: replace eye row pixels with skin color
+    if (isBlinking) {
+      // Row 5 has eyes (indices 5 and 9)
+      for (let c = 0; c < GRID_COLS; c++) {
+        const origIdx = baseSprite[5]?.[c];
+        if (origIdx === 5 || origIdx === 9) {
+          result[5][c] = colors.skin; // close eyes = skin color
+        }
+      }
+    }
 
     // Layer overlays (background first, then foreground)
     const slotOrder = ['background', 'aura', 'cape', 'outfit', 'head', 'face', 'weapon', 'pet'];
@@ -95,9 +150,17 @@ export const AvatarRenderer: React.FC<AvatarRendererProps> = ({
       }
     }
     return result;
-  }, [baseSprite, colors, equippedOverlays]);
+  }, [baseSprite, colors, equippedOverlays, isBlinking]);
 
   const flat = mergedPixels.flat();
+
+  // Cumulative equip glow
+  const equipTier = useMemo(() => getEquipTier(equippedOverlays.length), [equippedOverlays.length]);
+  const effectiveGlow = showGlow || (equipTier !== null && size !== 'xs');
+  const effectiveGlowColor = glowColor || equipTier?.glowHue || 'hsl(45 100% 65% / 0.2)';
+
+  const gridWidth = sizeConfig.pixelSize * GRID_COLS;
+  const gridHeight = sizeConfig.pixelSize * GRID_ROWS;
 
   return (
     <motion.div
@@ -106,17 +169,17 @@ export const AvatarRenderer: React.FC<AvatarRendererProps> = ({
       whileHover={animate ? { scale: 1.06 } : undefined}
       whileTap={animate ? { scale: 0.95 } : undefined}
     >
-      {/* Optional glow */}
-      {showGlow && (
+      {/* Cumulative glow (grows with items) */}
+      {effectiveGlow && (
         <motion.div
           className="absolute rounded-full pointer-events-none"
           style={{
-            width: sizeConfig.pixelSize * GRID_COLS + 16,
-            height: sizeConfig.pixelSize * GRID_ROWS + 16,
-            background: `radial-gradient(circle, ${glowColor || 'hsl(45 100% 65% / 0.25)'}, transparent)`,
-            filter: 'blur(6px)',
+            width: gridWidth + 20,
+            height: gridHeight + 20,
+            background: `radial-gradient(circle, ${effectiveGlowColor}, transparent)`,
+            filter: `blur(${equipTier && equippedOverlays.length >= 5 ? 10 : 6}px)`,
           }}
-          animate={{ scale: [1, 1.12, 1], opacity: [0.5, 0.8, 0.5] }}
+          animate={{ scale: [1, 1.12, 1], opacity: [0.4, 0.7, 0.4] }}
           transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
         />
       )}
@@ -144,6 +207,39 @@ export const AvatarRenderer: React.FC<AvatarRendererProps> = ({
           />
         ))}
       </motion.div>
+
+      {/* Sparkle effect on equip */}
+      <AnimatePresence>
+        {showSparkle && size !== 'xs' && (
+          <>
+            {[...Array(6)].map((_, i) => {
+              const angle = (i / 6) * Math.PI * 2;
+              const dist = gridWidth * 0.6;
+              return (
+                <motion.div
+                  key={`sparkle-${i}`}
+                  className="absolute pointer-events-none"
+                  style={{
+                    width: sizeConfig.pixelSize * 1.5,
+                    height: sizeConfig.pixelSize * 1.5,
+                    backgroundColor: i % 2 === 0 ? '#FFD700' : '#FFFFFF',
+                    borderRadius: '50%',
+                  }}
+                  initial={{ x: 0, y: 0, opacity: 1, scale: 0 }}
+                  animate={{
+                    x: Math.cos(angle) * dist,
+                    y: Math.sin(angle) * dist,
+                    opacity: 0,
+                    scale: 1.5,
+                  }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.6, ease: 'easeOut' }}
+                />
+              );
+            })}
+          </>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

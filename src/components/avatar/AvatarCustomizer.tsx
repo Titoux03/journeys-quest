@@ -88,6 +88,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
   const [colorCategory, setColorCategory] = useState<'skin' | 'eyes' | 'hair' | 'clothing' | 'shoes' | 'hairstyle'>('skin');
   const [equipmentTab, setEquipmentTab] = useState<'items' | 'quests' | 'chests'>('items');
   const [previewingItem, setPreviewingItem] = useState<string | null>(null);
+  const [showSparkle, setShowSparkle] = useState(false);
 
   useEffect(() => {
     saveAvatarConfigLocal(config);
@@ -346,6 +347,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
               size="lg"
               showGlow={level >= 50}
               glowColor={evolution.glowColor}
+              showSparkle={showSparkle}
             />
             <div className="flex-1 min-w-0">
               {/* Gender Toggle */}
@@ -609,7 +611,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                             return (
                               <motion.button
                                 key={item.id}
-                                onClick={() => { if (!isEquipped) { equipItem(item.id, selectedSlot); playSound('click'); } }}
+                                onClick={() => { if (!isEquipped) { equipItem(item.id, selectedSlot); playSound('click'); setShowSparkle(true); setTimeout(() => setShowSparkle(false), 700); } }}
                                 className={`p-2.5 rounded-xl border text-center transition-all ${
                                   isEquipped ? 'border-primary bg-primary/10 ring-2 ring-primary/20'
                                   : isMythic ? 'border-[#FF2D78]/30 bg-[#FF2D78]/5 hover:border-[#FF2D78]/50'
