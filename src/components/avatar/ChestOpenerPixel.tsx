@@ -44,7 +44,7 @@ export const ChestOpenerPixel: React.FC<ChestOpenerPixelProps> = ({ reward, onCl
   useEffect(() => {
     const t1 = setTimeout(() => {
       setPhase('opening');
-      playSound('click');
+      playSound('chest_open');
     }, 1500);
     const t2 = setTimeout(() => {
       setPhase('reveal');

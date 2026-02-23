@@ -397,6 +397,15 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
             </div>
           </div>
 
+          {/* Equipped items descriptive text */}
+          {equippedOverlays.length > 0 && (
+            <div className="px-4 pb-2">
+              <p className="text-[10px] text-muted-foreground italic">
+                Porte : {equippedOverlays.map(o => o.nameFr).join(', ')}
+              </p>
+            </div>
+          )}
+
           {/* Next unlock teaser - dopamine bar */}
           {nextUnlock && (
             <div className="px-4 pb-3">
@@ -611,7 +620,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                             return (
                               <motion.button
                                 key={item.id}
-                                onClick={() => { if (!isEquipped) { equipItem(item.id, selectedSlot); playSound('click'); setShowSparkle(true); setTimeout(() => setShowSparkle(false), 700); } }}
+                                onClick={() => { if (!isEquipped) { equipItem(item.id, selectedSlot); playSound('equip_item'); setShowSparkle(true); setTimeout(() => setShowSparkle(false), 700); } }}
                                 className={`p-2.5 rounded-xl border text-center transition-all ${
                                   isEquipped ? 'border-primary bg-primary/10 ring-2 ring-primary/20'
                                   : isMythic ? 'border-[#FF2D78]/30 bg-[#FF2D78]/5 hover:border-[#FF2D78]/50'

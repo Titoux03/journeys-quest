@@ -155,6 +155,7 @@ export function getAvatarColors(config: AvatarConfig): AvatarColors {
 
 // Enhanced sprites with eye highlights (9), mouth (10), skin highlight (11)
 // 12x17 grid - refined proportions with expressive face
+// Note: Torso rows (10-14) use skin (1/2) by default = "naked" when no outfit equipped
 const MALE_BASE: number[][] = [
   [0,0,0,0,6,6,6,6,0,0,0,0],  // row 0: hair top
   [0,0,0,6,6,6,6,6,6,0,0,0],  // row 1: hair
@@ -166,11 +167,11 @@ const MALE_BASE: number[][] = [
   [0,0,0,1,1,10,10,1,1,0,0,0], // row 7: mouth with lip color
   [0,0,0,0,2,1,1,2,0,0,0,0],  // row 8: chin shadow
   [0,0,0,0,0,2,2,0,0,0,0,0],  // row 9: neck
-  [0,0,3,3,3,3,3,3,3,3,0,0],  // row 10: shirt top (collar)
-  [0,1,3,3,3,3,3,3,3,3,1,0],  // row 11: shirt with arms (skin)
-  [0,1,3,3,8,3,3,8,3,3,1,0],  // row 12: shirt detail + arms
-  [0,0,3,3,8,3,3,8,3,3,0,0],  // row 13: shirt bottom detail
-  [0,0,3,3,3,3,3,3,3,3,0,0],  // row 14: belt area
+  [0,0,1,1,1,1,1,1,1,1,0,0],  // row 10: torso top (skin - naked)
+  [0,1,1,1,2,1,1,2,1,1,1,0],  // row 11: torso with arms (skin)
+  [0,1,1,1,2,1,1,2,1,1,1,0],  // row 12: torso mid + arms
+  [0,0,1,1,2,1,1,2,1,1,0,0],  // row 13: torso bottom
+  [0,0,1,1,1,1,1,1,1,1,0,0],  // row 14: waist area (skin)
   [0,0,0,1,1,0,0,1,1,0,0,0],  // row 15: legs (skin)
   [0,0,0,4,4,0,0,4,4,0,0,0],  // row 16: shoes
 ];
@@ -186,11 +187,11 @@ const FEMALE_BASE: number[][] = [
   [0,0,0,1,1,10,10,1,1,0,0,0], // row 7: mouth with lip color
   [0,0,0,0,2,1,1,2,0,0,0,0],  // row 8: chin shadow
   [0,0,0,0,0,2,2,0,0,0,0,0],  // row 9: neck
-  [0,0,3,3,3,3,3,3,3,3,0,0],  // row 10: top
-  [0,1,3,3,3,3,3,3,3,3,1,0],  // row 11: top with arms
-  [0,1,3,3,3,3,3,3,3,3,1,0],  // row 12: dress/skirt top
-  [0,0,3,3,3,3,3,3,3,3,0,0],  // row 13: dress mid
-  [0,0,0,3,3,3,3,3,3,0,0,0],  // row 14: dress bottom (tapered)
+  [0,0,1,1,1,1,1,1,1,1,0,0],  // row 10: torso top (skin - naked)
+  [0,1,1,1,2,1,1,2,1,1,1,0],  // row 11: torso with arms (skin)
+  [0,1,1,1,1,1,1,1,1,1,1,0],  // row 12: torso mid
+  [0,0,1,1,1,1,1,1,1,1,0,0],  // row 13: torso lower
+  [0,0,0,1,1,1,1,1,1,0,0,0],  // row 14: waist (tapered skin)
   [0,0,0,1,1,0,0,1,1,0,0,0],  // row 15: legs
   [0,0,0,4,4,0,0,4,4,0,0,0],  // row 16: shoes
 ];
