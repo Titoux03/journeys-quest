@@ -262,7 +262,10 @@ export type SoundType =
   | 'victory' 
   | 'progress_gong'
   | 'level_up'
-  | 'level_up_major'; // For major milestones (25, 50, 100, etc.)
+  | 'level_up_major'
+  | 'equip_item'
+  | 'chest_open'
+  | 'xp_gain';
 
 export const playSound = async (type: SoundType): Promise<void> => {
   if (!soundEnabled) return;
@@ -292,6 +295,15 @@ export const playSound = async (type: SoundType): Promise<void> => {
         break;
       case 'level_up_major':
         await createMajorLevelUpSound();
+        break;
+      case 'equip_item':
+        await createEquipItemSound();
+        break;
+      case 'chest_open':
+        await createChestOpenSound();
+        break;
+      case 'xp_gain':
+        await createXpGainSound();
         break;
     }
   } catch (error) {
@@ -403,7 +415,136 @@ const createMajorLevelUpSound = async (): Promise<void> => {
       resolve();
     }
   });
-}
+};
+
+/**
+ * Son d'équipement d'item - satisfaisant, court "clink" métallique
+ */
+const createEquipItemSound = async (): Promise<void> => {
+  return new Promise(async (resolve) => {
+    try {
+      const ctx = await getContext();
+      const now = ctx.currentTime;
+      const duration = 0.35;
+
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(1400, now);
+      osc1.frequency.exponentialRampToValueAtTime(1800, now + 0.08);
+
+      osc2.type = 'triangle';
+      osc2.frequency.setValueAtTime(2800, now + 0.05);
+      osc2.frequency.exponentialRampToValueAtTime(3200, now + 0.15);
+
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.exponentialRampToValueAtTime(0.18, now + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.08, now + 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc1.start(now);
+      osc1.stop(now + duration);
+      osc2.start(now + 0.05);
+      osc2.stop(now + duration);
+
+      currentSound = { stop: () => { osc1.stop(); osc2.stop(); } };
+      setTimeout(() => { currentSound = null; resolve(); }, duration * 1000);
+    } catch (error) {
+      console.warn('Sound error:', error);
+      resolve();
+    }
+  });
+};
+
+/**
+ * Son d'ouverture de coffre - mystérieux puis révélation
+ */
+const createChestOpenSound = async (): Promise<void> => {
+  return new Promise(async (resolve) => {
+    try {
+      const ctx = await getContext();
+      const now = ctx.currentTime;
+      const duration = 0.8;
+
+      // Low rumble
+      const osc1 = ctx.createOscillator();
+      const gain1 = ctx.createGain();
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(150, now);
+      osc1.frequency.exponentialRampToValueAtTime(300, now + 0.3);
+      gain1.gain.setValueAtTime(0, now);
+      gain1.gain.exponentialRampToValueAtTime(0.15, now + 0.05);
+      gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+      osc1.connect(gain1);
+      gain1.connect(ctx.destination);
+      osc1.start(now);
+      osc1.stop(now + 0.4);
+
+      // Reveal sparkle
+      const osc2 = ctx.createOscillator();
+      const gain2 = ctx.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(800, now + 0.25);
+      osc2.frequency.exponentialRampToValueAtTime(2000, now + 0.5);
+      gain2.gain.setValueAtTime(0, now + 0.25);
+      gain2.gain.exponentialRampToValueAtTime(0.2, now + 0.3);
+      gain2.gain.exponentialRampToValueAtTime(0.001, now + duration);
+      osc2.connect(gain2);
+      gain2.connect(ctx.destination);
+      osc2.start(now + 0.25);
+      osc2.stop(now + duration);
+
+      currentSound = { stop: () => { osc1.stop(); osc2.stop(); } };
+      setTimeout(() => { currentSound = null; resolve(); }, duration * 1000);
+    } catch (error) {
+      console.warn('Sound error:', error);
+      resolve();
+    }
+  });
+};
+
+/**
+ * Son de gain d'XP - petit pop satisfaisant
+ */
+const createXpGainSound = async (): Promise<void> => {
+  return new Promise(async (resolve) => {
+    try {
+      const ctx = await getContext();
+      const now = ctx.currentTime;
+      const duration = 0.15;
+
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, now);
+      osc.frequency.exponentialRampToValueAtTime(900, now + 0.08);
+
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.exponentialRampToValueAtTime(0.1, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + duration);
+
+      currentSound = { stop: () => osc.stop() };
+      setTimeout(() => { currentSound = null; resolve(); }, duration * 1000);
+    } catch (error) {
+      console.warn('Sound error:', error);
+      resolve();
+    }
+  });
+};
+
 
 // Activer/désactiver les sons
 export const setSoundEnabled = (enabled: boolean) => {

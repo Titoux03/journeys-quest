@@ -74,7 +74,7 @@ export const useLevel = (userId: string | undefined) => {
   };
 
   // Update level on activity
-  const updateLevel = async (activityType: 'login' | 'journal' | 'meditation' = 'login') => {
+  const updateLevel = async (activityType: 'login' | 'journal' | 'meditation' | 'addiction' = 'login') => {
     if (!userId || isUpdating) return null;
 
     setIsUpdating(true);
@@ -125,6 +125,7 @@ export const useLevel = (userId: string | undefined) => {
   const updateLevelOnLogin = () => updateLevel('login');
   const updateLevelOnJournal = () => updateLevel('journal');
   const updateLevelOnMeditation = () => updateLevel('meditation');
+  const updateLevelOnAddiction = () => updateLevel('addiction');
 
   useEffect(() => {
     loadLevel();
@@ -137,6 +138,7 @@ export const useLevel = (userId: string | undefined) => {
     updateLevelOnLogin,
     updateLevelOnJournal,
     updateLevelOnMeditation,
+    updateLevelOnAddiction,
     loadLevel
   };
 };
