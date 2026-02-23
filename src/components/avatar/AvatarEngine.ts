@@ -1099,13 +1099,14 @@ export const SLOT_META: { id: string; label: string; iconPixels: number[][]; ico
   },
 ];
 
-// Rarity system
+// Rarity system (5 tiers including Mythic for Premium)
 export const RARITY_COLORS: Record<string, string> = {
   common: '#9CA3AF',
   uncommon: '#22C55E',
   rare: '#3B82F6',
   epic: '#A855F7',
   legendary: '#F59E0B',
+  mythic: '#FF2D78',
 };
 
 export const RARITY_GRADIENTS: Record<string, string> = {
@@ -1114,6 +1115,7 @@ export const RARITY_GRADIENTS: Record<string, string> = {
   rare: 'from-blue-400 to-blue-600',
   epic: 'from-purple-400 to-purple-600',
   legendary: 'from-yellow-400 to-orange-500',
+  mythic: 'from-pink-500 via-rose-500 to-red-500',
 };
 
 export const RARITY_LABELS: Record<string, string> = {
@@ -1122,7 +1124,161 @@ export const RARITY_LABELS: Record<string, string> = {
   rare: 'Rare',
   epic: 'Épique',
   legendary: 'Légendaire',
+  mythic: 'Mythique',
 };
+
+// Premium-exclusive neon color palettes
+export const PREMIUM_CLOTHING_PALETTES = [
+  { main: '#FF00FF', shadow: '#CC00CC', label: 'Néon Rose', levelRequired: 0 },
+  { main: '#00FFFF', shadow: '#00CCCC', label: 'Néon Cyan', levelRequired: 0 },
+  { main: '#FF3300', shadow: '#CC2200', label: 'Néon Flamme', levelRequired: 0 },
+  { main: '#7700FF', shadow: '#5500CC', label: 'Néon Violet', levelRequired: 0 },
+  { main: '#00FF88', shadow: '#00CC66', label: 'Néon Émeraude', levelRequired: 0 },
+  { main: '#FFAA00', shadow: '#CC8800', label: 'Néon Or', levelRequired: 0 },
+];
+
+export const PREMIUM_EYE_PALETTES = [
+  { color: '#FF00FF', label: 'Néon', rarity: 'mythic' },
+  { color: '#00FFFF', label: 'Plasma', rarity: 'mythic' },
+  { color: '#FFFFFF', label: 'Argent Pur', rarity: 'mythic' },
+];
+
+// Items flagged as premium-only (mythic rarity)
+export const PREMIUM_PIXEL_ITEMS: PixelItemOverlay[] = [
+  {
+    key: 'crown_mythic',
+    name: 'Mythic Crown',
+    nameFr: 'Couronne Mythique',
+    slot: 'head',
+    rarity: 'mythic',
+    levelRequired: 1,
+    palette: ['', '#FF2D78', '#FF69B4', '#FFFFFF', '#FFD700'],
+    pixels: [
+      [0,0,1,4,1,0,0,1,4,1,0,0],
+      [0,0,1,3,1,3,3,1,3,1,0,0],
+      [0,0,4,1,1,1,1,1,1,4,0,0],
+      E,E,E,E,E,E,E,E,E,E,E,E,E,E,
+    ],
+  },
+  {
+    key: 'aura_mythic',
+    name: 'Mythic Aura',
+    nameFr: 'Aura Mythique',
+    slot: 'aura',
+    rarity: 'mythic',
+    levelRequired: 1,
+    palette: ['', '#FF2D7844', '#FF69B444', '#FFD70033', '#FFFFFF22'],
+    pixels: [
+      [4,0,3,0,0,1,1,0,0,3,0,4],
+      [0,3,0,0,2,0,0,2,0,0,3,0],
+      [3,0,0,2,0,0,0,0,2,0,0,3],
+      [0,0,1,0,0,0,0,0,0,1,0,0],
+      [0,1,0,0,0,0,0,0,0,0,1,0],
+      [1,0,0,0,0,0,0,0,0,0,0,1],
+      [4,0,0,0,0,0,0,0,0,0,0,4],
+      [1,0,0,0,0,0,0,0,0,0,0,1],
+      E,
+      [1,0,0,0,0,0,0,0,0,0,0,1],
+      [4,0,0,0,0,0,0,0,0,0,0,4],
+      [1,0,0,0,0,0,0,0,0,0,0,1],
+      [0,1,0,0,0,0,0,0,0,0,1,0],
+      [0,0,1,0,0,0,0,0,0,1,0,0],
+      [3,0,0,2,0,0,0,0,2,0,0,3],
+      [0,3,0,0,2,0,0,2,0,0,3,0],
+      [4,0,3,0,0,1,1,0,0,3,0,4],
+    ],
+  },
+  {
+    key: 'bg_mythic',
+    name: 'Mythic Realm',
+    nameFr: 'Royaume Mythique',
+    slot: 'background',
+    rarity: 'mythic',
+    levelRequired: 1,
+    palette: ['', '#FF2D7822', '#FF69B418', '#FFD70022', '#FFFFFF18'],
+    pixels: [
+      [1,0,4,0,0,3,3,0,0,4,0,1],
+      [0,3,0,0,2,0,0,2,0,0,3,0],
+      [4,0,0,1,0,0,0,0,1,0,0,4],
+      [0,0,1,0,0,0,0,0,0,1,0,0],
+      [0,2,0,0,0,0,0,0,0,0,2,0],
+      [3,0,0,0,0,0,0,0,0,0,0,3],
+      E,
+      [1,0,0,0,0,0,0,0,0,0,0,1],
+      [0,0,4,0,0,0,0,0,0,4,0,0],
+      [3,0,0,0,0,0,0,0,0,0,0,3],
+      E,
+      [0,2,0,0,0,0,0,0,0,0,2,0],
+      [0,0,1,0,0,0,0,0,0,1,0,0],
+      [4,0,0,1,0,0,0,0,1,0,0,4],
+      [0,3,0,0,2,0,0,2,0,0,3,0],
+      [1,0,4,0,0,3,3,0,0,4,0,1],
+      [0,0,0,4,0,0,0,0,4,0,0,0],
+    ],
+  },
+  {
+    key: 'outfit_mythic',
+    name: 'Mythic Armor',
+    nameFr: 'Armure Mythique',
+    slot: 'outfit',
+    rarity: 'mythic',
+    levelRequired: 1,
+    palette: ['', '#FF2D78', '#FF69B4', '#FFD700', '#FFFFFF', '#AA0044'],
+    pixels: [
+      E,E,E,E,E,E,E,E,E,
+      [0,0,0,0,0,1,1,0,0,0,0,0],
+      [0,5,1,1,3,1,1,3,1,1,5,0],
+      [0,1,2,4,3,2,2,3,4,2,1,0],
+      [0,1,2,5,3,4,4,3,5,2,1,0],
+      [0,1,2,2,3,2,2,3,2,2,1,0],
+      [0,0,1,1,1,1,1,1,1,1,0,0],
+      E,E,
+    ],
+  },
+  {
+    key: 'pet_phoenix',
+    name: 'Phoenix',
+    nameFr: 'Phénix',
+    slot: 'pet',
+    rarity: 'mythic',
+    levelRequired: 1,
+    palette: ['', '#FF4400', '#FF8800', '#FFCC00', '#FFFFFF'],
+    pixels: [
+      E,E,E,E,E,E,E,E,E,E,E,
+      [0,0,0,0,0,0,0,0,0,3,0,0],
+      [0,0,0,0,0,0,0,0,0,2,3,0],
+      [0,0,0,0,0,0,0,0,4,1,1,0],
+      [0,0,0,0,0,0,0,0,1,2,1,3],
+      [0,0,0,0,0,0,0,0,0,1,3,0],
+      [0,0,0,0,0,0,0,0,0,2,2,0],
+    ],
+  },
+];
+
+// Get all items including premium
+export function getAllPixelItems(includePremium: boolean): PixelItemOverlay[] {
+  return includePremium ? [...PIXEL_ITEMS, ...PREMIUM_PIXEL_ITEMS] : PIXEL_ITEMS;
+}
+
+// Evolution stage config
+export interface EvolutionStage {
+  name: string;
+  color: string;
+  minLevel: number;
+  glowColor?: string;
+}
+
+export const EVOLUTION_STAGES: EvolutionStage[] = [
+  { name: 'Initié', color: 'from-gray-400 to-blue-400', minLevel: 0 },
+  { name: 'Voyageur', color: 'from-blue-400 to-cyan-500', minLevel: 10 },
+  { name: 'Guerrier Zen', color: 'from-orange-400 to-red-500', minLevel: 25 },
+  { name: 'Maître Astral', color: 'from-purple-400 to-indigo-600', minLevel: 50, glowColor: 'hsl(270 80% 60% / 0.25)' },
+  { name: 'Légende Cosmique', color: 'from-purple-500 via-pink-500 to-cyan-500', minLevel: 100, glowColor: 'hsl(280 100% 70% / 0.3)' },
+];
+
+export function getEvolutionStage(level: number): EvolutionStage {
+  return [...EVOLUTION_STAGES].reverse().find(s => level >= s.minLevel) || EVOLUTION_STAGES[0];
+}
 
 // Default avatar config
 export const DEFAULT_AVATAR_CONFIG: AvatarConfig = {

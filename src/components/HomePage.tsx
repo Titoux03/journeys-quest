@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { DailyQuote } from '@/components/DailyQuote';
 import { LevelDisplay } from '@/components/LevelDisplay';
-import { AvatarRenderer, DEFAULT_AVATAR_CONFIG, AvatarConfig, getNextUnlock, RARITY_COLORS, RARITY_LABELS } from '@/components/avatar';
+import { AvatarRenderer, DEFAULT_AVATAR_CONFIG, AvatarConfig, getNextUnlock, getEvolutionStage, RARITY_COLORS, RARITY_LABELS } from '@/components/avatar';
 import { PixelIcon } from '@/components/avatar';
 import { Progress } from '@/components/ui/progress';
 import { useLevel } from '@/hooks/useLevel';
@@ -120,6 +120,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
         } catch {}
         const homeLevel = homeLevelData?.level || 1;
         const nextItem = getNextUnlock(homeLevel);
+        const evo = getEvolutionStage(homeLevel);
         return (
           <motion.button
             onClick={() => onNavigate('avatar')}
@@ -134,10 +135,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <div className="flex items-center gap-4 p-4">
-              <AvatarRenderer config={avatarConfig} size="md" animate={false} />
+            <div className={`absolute inset-0 bg-gradient-to-br ${evo.color} opacity-[0.07]`} />
+            <div className="relative flex items-center gap-4 p-4">
+              <AvatarRenderer config={avatarConfig} size="md" animate={false} showGlow={homeLevel >= 50} glowColor={evo.glowColor} />
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-bold text-foreground mb-0.5">Mon personnage</div>
+                <div className="flex items-center gap-2 mb-0.5">
+                  <span className="text-sm font-bold text-foreground">Mon personnage</span>
+                  <span className={`text-[9px] font-bold bg-gradient-to-r ${evo.color} text-white px-1.5 py-0.5 rounded-full`}>{evo.name}</span>
+                </div>
                 <div className="text-xs text-primary font-medium flex items-center gap-1">
                   Modifier mon avatar
                   <Sparkles className="w-3 h-3" />
@@ -147,10 +152,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
                     <div className="flex items-center gap-1.5">
                       <PixelIcon pixels={nextItem.item.pixels.slice(0, 3)} palette={nextItem.item.palette} pixelSize={2} />
                       <span className="text-[10px] text-muted-foreground truncate">{nextItem.item.nameFr}</span>
-                      <span
-                        className="text-[8px] font-bold px-1 rounded"
-                        style={{ color: RARITY_COLORS[nextItem.item.rarity] }}
-                      >
+                      <span className="text-[8px] font-bold px-1 rounded" style={{ color: RARITY_COLORS[nextItem.item.rarity] }}>
                         Nv.{nextItem.level}
                       </span>
                     </div>
