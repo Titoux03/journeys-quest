@@ -62,12 +62,12 @@ export const PremiumLock: React.FC<PremiumLockProps> = ({
             🔒 Fonctionnalité Premium
           </h3>
           
-          <p className="text-sm text-muted-foreground mb-6">
+          <p className="text-sm text-muted-foreground mb-4">
             {feature} transforme votre parcours de développement personnel
           </p>
           
-          <p className="text-xs text-warning mb-6 animate-pulse">
-            ✨ Disponible en Premium
+          <p className="text-xs text-warning mb-4 animate-pulse">
+            ✨ À partir de 12,50€/mois
           </p>
 
           {/* Action Buttons */}
@@ -86,7 +86,7 @@ export const PremiumLock: React.FC<PremiumLockProps> = ({
                   className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors"
                 >
                   <Sparkles className="w-4 h-4" />
-                  <span>Acheter Premium</span>
+                  <span>S'abonner</span>
                 </button>
               </>
             ) : (
