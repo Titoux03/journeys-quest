@@ -45,6 +45,7 @@ export const DesktopNavigation: React.FC<DesktopNavigationProps> = ({
 
   const navItems = [
     { id: 'home', icon: Home, label: t('navigation.home') },
+    { id: 'avatar', icon: User, label: 'Avatar' },
     { id: 'journal', icon: TrendingUp, label: 'Score' },
     { id: 'todos', icon: CheckSquare, label: t('navigation.todos') },
     { id: 'notes', icon: PenTool, label: t('navigation.notes') },

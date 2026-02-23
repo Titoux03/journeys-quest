@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DailyQuote } from '@/components/DailyQuote';
 import { LevelDisplay } from '@/components/LevelDisplay';
+import { PixelAvatar } from '@/components/PixelAvatar';
 import { AddictionCard } from '@/components/AddictionCard';
 import { BadgesModal } from '@/components/BadgesModal';
 import { Sparkles, TrendingUp, Target, Brain, Shield, Dumbbell, Crown, Star, Flame, Timer, BarChart3, Leaf, PenTool, CheckSquare } from 'lucide-react';
@@ -120,7 +121,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
         )}
         
         {user && (
-          <LevelDisplay className="mb-6" />
+          <div className="flex flex-col items-center gap-3 mb-6">
+            <PixelAvatar size="md" onClick={() => onNavigate('avatar')} />
+            <p className="text-xs text-muted-foreground">Touche pour personnaliser</p>
+          </div>
         )}
       </div>
 

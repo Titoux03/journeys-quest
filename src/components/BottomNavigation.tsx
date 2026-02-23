@@ -13,7 +13,8 @@ import {
   PenTool,
   CheckSquare,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
+  User
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -43,6 +44,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
 
   const navItems = [
     { id: 'home', icon: Home, label: t('navigation.home'), desc: 'Tableau de bord' },
+    { id: 'avatar', icon: User, label: 'Avatar', desc: 'Ton personnage' },
     { id: 'journal', icon: TrendingUp, label: 'Score', desc: 'Évalue ta journée' },
     { id: 'todos', icon: CheckSquare, label: t('navigation.todos'), desc: 'Gère tes tâches' },
     { id: 'notes', icon: PenTool, label: t('navigation.notes'), desc: 'Prends des notes' },

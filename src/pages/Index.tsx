@@ -8,6 +8,7 @@ import { MeditationTimer } from '@/components/MeditationTimer';
 import { AbstinenceTracker } from '@/components/AbstinenceTracker';
 import { StretchingRoutine } from '@/components/StretchingRoutine';
 import TodoList from '@/components/TodoList';
+import { AvatarCustomization } from '@/components/AvatarCustomization';
 import { DailyQuote } from '@/components/DailyQuote';
 import { PremiumUpgrade } from '@/components/PremiumUpgrade';
 import { MarketingNotifications } from '@/components/MarketingNotifications';
@@ -241,6 +242,8 @@ const Index = () => {
         return <MeditationTimer onNavigate={setCurrentScreen} />;
       case 'todos':
         return <TodoList onNavigate={setCurrentScreen} />;
+      case 'avatar':
+        return <AvatarCustomization onNavigate={setCurrentScreen} />;
       default:
         return <HomePage onNavigate={setCurrentScreen} entries={entries} />;
     }
