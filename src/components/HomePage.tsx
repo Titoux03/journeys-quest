@@ -123,7 +123,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
           transition={{ delay: 0.2 }}
         >
           <div className="flex items-center gap-4 p-4">
-            <PixelAvatar size="md" />
+            <PixelAvatar size="md" gender={(localStorage.getItem('avatar_gender') as 'male' | 'female') || 'male'} />
             <div className="flex-1">
               <div className="text-sm font-bold text-foreground mb-0.5">Mon personnage</div>
               <div className="text-xs text-primary font-medium flex items-center gap-1">

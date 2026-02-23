@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAvatar, getRarityColor, getRarityLabel, AvatarItem } from '@/hooks/useAvatar';
 import { useAuth } from '@/hooks/useAuth';
 import { useLevel } from '@/hooks/useLevel';
 import { usePremium } from '@/hooks/usePremium';
-import { PixelAvatar } from '@/components/PixelAvatar';
+import { PixelAvatar, AvatarGender, ITEM_PIXEL_OVERLAYS } from '@/components/PixelAvatar';
 import { ChestOpener } from '@/components/ChestOpener';
-import { ArrowLeft, Lock, Crown, Package, Swords, Sparkles, Star, Flame, Gift, Zap, Trophy, Clock } from 'lucide-react';
+import { ArrowLeft, Lock, Crown, Package, Swords, Sparkles, Star, Flame, Gift, Zap, Trophy } from 'lucide-react';
 import { playSound } from '@/utils/soundManager';
 
 const SLOTS = [
-  { id: 'body', label: 'Corps', emoji: '🧍' },
   { id: 'head', label: 'Tête', emoji: '👑' },
   { id: 'face', label: 'Visage', emoji: '😎' },
   { id: 'outfit', label: 'Tenue', emoji: '👕' },
@@ -21,7 +20,6 @@ const SLOTS = [
   { id: 'pet', label: 'Compagnon', emoji: '🐱' },
 ];
 
-// Daily reward tiers
 const DAILY_REWARDS = [
   { day: 1, reward: '10 XP', emoji: '⭐' },
   { day: 2, reward: '15 XP', emoji: '⭐' },
@@ -35,6 +33,15 @@ const DAILY_REWARDS = [
 interface AvatarCustomizationProps {
   onNavigate: (screen: string) => void;
 }
+
+// Map item pixel_art_data key to ITEM_PIXEL_OVERLAYS
+const getOverlayForItem = (item: AvatarItem) => {
+  const key = item.pixel_art_data?.overlay_key as string | undefined;
+  if (key && ITEM_PIXEL_OVERLAYS[key]) {
+    return { slot: item.slot, pixelData: ITEM_PIXEL_OVERLAYS[key].pixels, palette: ITEM_PIXEL_OVERLAYS[key].palette };
+  }
+  return null;
+};
 
 export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavigate }) => {
   const { user } = useAuth();
@@ -58,29 +65,39 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
   const [openingChest, setOpeningChest] = useState<string | null>(null);
   const [chestReward, setChestReward] = useState<AvatarItem | null>(null);
   const [activeTab, setActiveTab] = useState<'character' | 'quests' | 'rewards'>('character');
-  const [showEvolution, setShowEvolution] = useState(false);
+  const [gender, setGender] = useState<AvatarGender>(() => {
+    return (localStorage.getItem('avatar_gender') as AvatarGender) || 'male';
+  });
 
-  // Evolution stage names
+  useEffect(() => {
+    localStorage.setItem('avatar_gender', gender);
+  }, [gender]);
+
   const getEvolutionStage = (level: number) => {
-    if (level >= 100) return { name: 'Légende Cosmique', tier: 5, color: 'from-purple-500 via-pink-500 to-cyan-500' };
-    if (level >= 50) return { name: 'Maître Astral', tier: 4, color: 'from-purple-400 to-indigo-600' };
-    if (level >= 25) return { name: 'Guerrier Zen', tier: 3, color: 'from-orange-400 to-red-500' };
-    if (level >= 10) return { name: 'Voyageur Intérieur', tier: 2, color: 'from-blue-400 to-cyan-500' };
-    return { name: 'Initié du Calme', tier: 1, color: 'from-gray-400 to-blue-400' };
+    if (level >= 100) return { name: 'Légende Cosmique', color: 'from-purple-500 via-pink-500 to-cyan-500' };
+    if (level >= 50) return { name: 'Maître Astral', color: 'from-purple-400 to-indigo-600' };
+    if (level >= 25) return { name: 'Guerrier Zen', color: 'from-orange-400 to-red-500' };
+    if (level >= 10) return { name: 'Voyageur Intérieur', color: 'from-blue-400 to-cyan-500' };
+    return { name: 'Initié du Calme', color: 'from-gray-400 to-blue-400' };
   };
 
   const evolution = getEvolutionStage(levelData?.level || 1);
-  const nextEvolution = getEvolutionStage(
-    levelData?.level ? (levelData.level < 10 ? 10 : levelData.level < 25 ? 25 : levelData.level < 50 ? 50 : levelData.level < 100 ? 100 : 200) : 10
-  );
-  const nextEvolutionLevel = levelData?.level ? (levelData.level < 10 ? 10 : levelData.level < 25 ? 25 : levelData.level < 50 ? 50 : levelData.level < 100 ? 100 : 200) : 10;
+  const nextEvolutionLevel = levelData?.level
+    ? (levelData.level < 10 ? 10 : levelData.level < 25 ? 25 : levelData.level < 50 ? 50 : levelData.level < 100 ? 100 : 200)
+    : 10;
+  const nextEvolution = getEvolutionStage(nextEvolutionLevel);
+
+  // Build equipped overlays for pixel rendering
+  const equippedOverlays = SLOTS.map(s => {
+    const item = getEquippedForSlot(s.id);
+    if (!item) return null;
+    return getOverlayForItem(item);
+  }).filter(Boolean) as { slot: string; pixelData: number[][]; palette: string[] }[];
 
   const handleOpenChest = async (chestId: string) => {
     setOpeningChest(chestId);
     const reward = await openChest(chestId);
-    if (reward) {
-      setChestReward(reward);
-    }
+    if (reward) setChestReward(reward);
   };
 
   const handleCloseChestReward = () => {
@@ -91,25 +108,16 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
   if (!user) {
     return (
       <div className="min-h-screen p-4 pb-24 flex flex-col items-center justify-center">
-        <PixelAvatar size="lg" level={1} />
+        <PixelAvatar size="lg" level={1} gender="male" />
         <h2 className="text-xl font-bold mb-2 mt-6">Connecte-toi pour débloquer ton personnage</h2>
         <p className="text-muted-foreground text-center text-sm">Fais-le évoluer en accomplissant tes objectifs !</p>
       </div>
     );
   }
 
-  const ownedCount = allItems.filter(i => getOwnedItemsForSlot(i.slot).some(oi => oi.id === i.id)).length;
+  const collectionCount = SLOTS.reduce((sum, s) => sum + getOwnedItemsForSlot(s.id).length, 0);
   const totalItems = allItems.length;
-  const collectionPct = totalItems > 0 ? Math.round((new Set(getOwnedItemsForSlot('body').concat(
-    getOwnedItemsForSlot('head'),
-    getOwnedItemsForSlot('face'),
-    getOwnedItemsForSlot('outfit'),
-    getOwnedItemsForSlot('weapon'),
-    getOwnedItemsForSlot('cape'),
-    getOwnedItemsForSlot('aura'),
-    getOwnedItemsForSlot('background'),
-    getOwnedItemsForSlot('pet'),
-  )).size / totalItems) * 100) : 0;
+  const collectionPct = totalItems > 0 ? Math.round((collectionCount / totalItems) * 100) : 0;
 
   return (
     <div className="min-h-screen p-4 sm:p-6 pb-24">
@@ -127,7 +135,7 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
         </div>
       </div>
 
-      {/* Character Card */}
+      {/* Character Card with Gender Selector */}
       <motion.div
         className="relative rounded-2xl overflow-hidden mb-6"
         style={{
@@ -137,15 +145,36 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        {/* Background gradient based on evolution */}
         <div className={`absolute inset-0 bg-gradient-to-b ${evolution.color} opacity-10`} />
 
         <div className="relative p-6 flex flex-col items-center">
+          {/* Gender Selector */}
+          <div className="flex gap-2 mb-4">
+            <button
+              onClick={() => setGender('male')}
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all border ${
+                gender === 'male'
+                  ? 'bg-blue-500/20 border-blue-400/40 text-blue-300'
+                  : 'bg-card/50 border-border/20 text-muted-foreground'
+              }`}
+            >
+              ♂ Homme
+            </button>
+            <button
+              onClick={() => setGender('female')}
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all border ${
+                gender === 'female'
+                  ? 'bg-pink-500/20 border-pink-400/40 text-pink-300'
+                  : 'bg-card/50 border-border/20 text-muted-foreground'
+              }`}
+            >
+              ♀ Femme
+            </button>
+          </div>
+
           {/* Avatar */}
           <div className="relative mb-4">
-            <PixelAvatar size="lg" />
-            
-            {/* Evolution badge */}
+            <PixelAvatar size="lg" gender={gender} equippedOverlays={equippedOverlays} />
             <motion.div
               className={`absolute -bottom-3 left-1/2 -translate-x-1/2 bg-gradient-to-r ${evolution.color} text-white px-4 py-1 rounded-full text-xs font-bold whitespace-nowrap shadow-lg`}
               animate={{ scale: [1, 1.05, 1] }}
@@ -155,7 +184,7 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
             </motion.div>
           </div>
 
-          {/* XP Progress to next level */}
+          {/* XP Progress */}
           <div className="w-full mt-6 space-y-1.5">
             <div className="flex justify-between text-xs">
               <span className="text-muted-foreground">XP</span>
@@ -179,12 +208,9 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
             </div>
           </div>
 
-          {/* Next evolution preview */}
+          {/* Next evolution */}
           {(levelData?.level || 1) < 200 && (
-            <button
-              onClick={() => setShowEvolution(!showEvolution)}
-              className="mt-4 w-full p-3 rounded-xl bg-card/80 border border-border/30 flex items-center gap-3"
-            >
+            <div className="mt-4 w-full p-3 rounded-xl bg-card/80 border border-border/30 flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-primary-glow/10 flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-primary" />
               </div>
@@ -194,11 +220,11 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
                   {nextEvolution.name} — Nv. {nextEvolutionLevel}
                 </div>
               </div>
-              <PixelAvatar size="sm" level={nextEvolutionLevel} />
-            </button>
+              <PixelAvatar size="sm" level={nextEvolutionLevel} gender={gender} />
+            </div>
           )}
 
-          {/* Stats row */}
+          {/* Stats */}
           <div className="grid grid-cols-3 gap-3 w-full mt-4">
             <div className="bg-card/80 rounded-xl p-3 text-center border border-border/20">
               <Trophy className="w-4 h-4 text-primary mx-auto mb-1" />
@@ -244,7 +270,6 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
       {/* Equipment Tab */}
       {activeTab === 'character' && (
         <div>
-          {/* Slot Tabs */}
           <div className="flex gap-2 overflow-x-auto pb-3 mb-4 scrollbar-hide">
             {SLOTS.map(slot => {
               const equipped = getEquippedForSlot(slot.id);
@@ -273,7 +298,6 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
             })}
           </div>
 
-          {/* Items Grid */}
           <AnimatePresence mode="wait">
             {selectedSlot && (
               <motion.div
@@ -292,7 +316,6 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
                   </button>
                 )}
 
-                {/* Owned */}
                 <div className="grid grid-cols-3 gap-2.5">
                   {getOwnedItemsForSlot(selectedSlot).map(item => {
                     const isEquipped = getEquippedForSlot(selectedSlot)?.id === item.id;
@@ -318,13 +341,12 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
                         <div className={`text-[9px] font-bold bg-gradient-to-r ${getRarityColor(item.rarity)} bg-clip-text text-transparent`}>
                           {getRarityLabel(item.rarity)}
                         </div>
-                        {isEquipped && <div className="text-[9px] text-primary font-bold mt-0.5">✓</div>}
+                        {isEquipped && <div className="text-[9px] text-primary font-bold mt-0.5">✓ Équipé</div>}
                       </motion.button>
                     );
                   })}
                 </div>
 
-                {/* Locked */}
                 {getLockedItemsForSlot(selectedSlot).length > 0 && (
                   <>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -334,10 +356,7 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
                     </div>
                     <div className="grid grid-cols-3 gap-2.5">
                       {getLockedItemsForSlot(selectedSlot).map(item => (
-                        <div
-                          key={item.id}
-                          className="p-3 rounded-xl border border-border/15 bg-card/30 text-center relative"
-                        >
+                        <div key={item.id} className="p-3 rounded-xl border border-border/15 bg-card/30 text-center relative">
                           <div className="text-2xl mb-1 grayscale opacity-40">{item.preview_emoji}</div>
                           <div className="text-[10px] font-medium text-muted-foreground truncate">{item.name_fr}</div>
                           <div className={`text-[9px] font-bold bg-gradient-to-r ${getRarityColor(item.rarity)} bg-clip-text text-transparent`}>
@@ -348,9 +367,7 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
                               <button onClick={showUpgradeModal} className="flex items-center justify-center gap-0.5 text-primary">
                                 <Crown className="w-2.5 h-2.5" /> Premium
                               </button>
-                            ) : item.unlock_method === 'level' ? (
-                              `Nv. ${item.level_required}`
-                            ) : item.unlock_method === 'quest' ? 'Quête' : '📦'}
+                            ) : item.unlock_method === 'level' ? `Nv. ${item.level_required}` : item.unlock_method === 'quest' ? 'Quête' : '📦'}
                           </div>
                         </div>
                       ))}
@@ -377,20 +394,15 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
             const progress = questProgress.find(p => p.quest_id === quest.id);
             const progressPct = progress ? Math.min(100, (progress.current_value / quest.target_value) * 100) : 0;
             const isCompleted = progress?.is_completed;
-
             return (
               <motion.div
                 key={quest.id}
-                className={`p-4 rounded-xl border ${
-                  isCompleted ? 'border-success/30 bg-success/5' : 'border-border/30 bg-card'
-                }`}
+                className={`p-4 rounded-xl border ${isCompleted ? 'border-success/30 bg-success/5' : 'border-border/30 bg-card'}`}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                    isCompleted ? 'bg-success/20' : 'bg-primary/10'
-                  }`}>
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isCompleted ? 'bg-success/20' : 'bg-primary/10'}`}>
                     {isCompleted ? '✅' : <Star className="w-5 h-5 text-primary" />}
                   </div>
                   <div className="flex-1">
@@ -405,9 +417,7 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
                           transition={{ duration: 0.8 }}
                         />
                       </div>
-                      <span className="text-[10px] text-muted-foreground font-mono">
-                        {progress?.current_value || 0}/{quest.target_value}
-                      </span>
+                      <span className="text-[10px] text-muted-foreground font-mono">{progress?.current_value || 0}/{quest.target_value}</span>
                     </div>
                   </div>
                 </div>
@@ -429,10 +439,9 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
         </div>
       )}
 
-      {/* Rewards/Chests Tab */}
+      {/* Rewards Tab */}
       {activeTab === 'rewards' && (
         <div className="space-y-6">
-          {/* Daily Rewards */}
           <div>
             <h3 className="text-sm font-bold mb-3 flex items-center gap-2">
               <Flame className="w-4 h-4 text-primary" />
@@ -443,9 +452,7 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
                 <div
                   key={idx}
                   className={`flex-shrink-0 w-16 p-2.5 rounded-xl border text-center ${
-                    idx === 0
-                      ? 'border-primary bg-primary/10 shadow-lg shadow-primary/10'
-                      : 'border-border/20 bg-card/50 opacity-50'
+                    idx === 0 ? 'border-primary bg-primary/10 shadow-lg shadow-primary/10' : 'border-border/20 bg-card/50 opacity-50'
                   }`}
                 >
                   <div className="text-lg mb-0.5">{reward.emoji}</div>
@@ -456,7 +463,6 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
             </div>
           </div>
 
-          {/* Chests to open */}
           {chests.length > 0 ? (
             <div>
               <h3 className="text-sm font-bold mb-3 flex items-center gap-2">
@@ -472,24 +478,10 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                   >
-                    <motion.div
-                      className="absolute inset-0 bg-white/10"
-                      animate={{ x: ['-100%', '200%'] }}
-                      transition={{ duration: 3, repeat: Infinity }}
-                    />
-                    <motion.div
-                      className="text-4xl mb-2 relative z-10"
-                      animate={{ rotate: [-3, 3, -3] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    >
-                      📦
-                    </motion.div>
-                    <div className="text-xs font-bold text-white drop-shadow-lg relative z-10">
-                      {getRarityLabel(chest.rarity)}
-                    </div>
-                    <div className="text-[10px] text-white/70 mt-1 relative z-10">
-                      Touche pour ouvrir
-                    </div>
+                    <motion.div className="absolute inset-0 bg-white/10" animate={{ x: ['-100%', '200%'] }} transition={{ duration: 3, repeat: Infinity }} />
+                    <motion.div className="text-4xl mb-2 relative z-10" animate={{ rotate: [-3, 3, -3] }} transition={{ duration: 1.5, repeat: Infinity }}>📦</motion.div>
+                    <div className="text-xs font-bold text-white drop-shadow-lg relative z-10">{getRarityLabel(chest.rarity)}</div>
+                    <div className="text-[10px] text-white/70 mt-1 relative z-10">Touche pour ouvrir</div>
                   </motion.button>
                 ))}
               </div>
@@ -504,14 +496,8 @@ export const AvatarCustomization: React.FC<AvatarCustomizationProps> = ({ onNavi
         </div>
       )}
 
-      {/* Chest Opening Modal */}
       <AnimatePresence>
-        {openingChest && (
-          <ChestOpener
-            reward={chestReward}
-            onClose={handleCloseChestReward}
-          />
-        )}
+        {openingChest && <ChestOpener reward={chestReward} onClose={handleCloseChestReward} />}
       </AnimatePresence>
     </div>
   );
