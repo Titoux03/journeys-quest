@@ -158,6 +158,117 @@ export type Database = {
         }
         Relationships: []
       }
+      avatar_items: {
+        Row: {
+          created_at: string
+          description: string | null
+          description_fr: string | null
+          id: string
+          is_premium: boolean
+          level_required: number | null
+          name: string
+          name_fr: string
+          pixel_art_data: Json
+          preview_emoji: string
+          rarity: Database["public"]["Enums"]["item_rarity"]
+          slot: Database["public"]["Enums"]["item_slot"]
+          sort_order: number | null
+          unlock_method: string
+          unlock_requirement: Json | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          description_fr?: string | null
+          id?: string
+          is_premium?: boolean
+          level_required?: number | null
+          name: string
+          name_fr: string
+          pixel_art_data?: Json
+          preview_emoji?: string
+          rarity?: Database["public"]["Enums"]["item_rarity"]
+          slot: Database["public"]["Enums"]["item_slot"]
+          sort_order?: number | null
+          unlock_method?: string
+          unlock_requirement?: Json | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          description_fr?: string | null
+          id?: string
+          is_premium?: boolean
+          level_required?: number | null
+          name?: string
+          name_fr?: string
+          pixel_art_data?: Json
+          preview_emoji?: string
+          rarity?: Database["public"]["Enums"]["item_rarity"]
+          slot?: Database["public"]["Enums"]["item_slot"]
+          sort_order?: number | null
+          unlock_method?: string
+          unlock_requirement?: Json | null
+        }
+        Relationships: []
+      }
+      avatar_quests: {
+        Row: {
+          created_at: string
+          description: string | null
+          description_fr: string | null
+          id: string
+          is_active: boolean
+          quest_type: string
+          reward_chest_rarity: Database["public"]["Enums"]["item_rarity"] | null
+          reward_item_id: string | null
+          sort_order: number | null
+          target_value: number
+          title: string
+          title_fr: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          description_fr?: string | null
+          id?: string
+          is_active?: boolean
+          quest_type: string
+          reward_chest_rarity?:
+            | Database["public"]["Enums"]["item_rarity"]
+            | null
+          reward_item_id?: string | null
+          sort_order?: number | null
+          target_value?: number
+          title: string
+          title_fr: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          description_fr?: string | null
+          id?: string
+          is_active?: boolean
+          quest_type?: string
+          reward_chest_rarity?:
+            | Database["public"]["Enums"]["item_rarity"]
+            | null
+          reward_item_id?: string | null
+          sort_order?: number | null
+          target_value?: number
+          title?: string
+          title_fr?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "avatar_quests_reward_item_id_fkey"
+            columns: ["reward_item_id"]
+            isOneToOne: false
+            referencedRelation: "avatar_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       badges: {
         Row: {
           addiction_type_id: string | null
@@ -531,6 +642,70 @@ export type Database = {
           },
         ]
       }
+      user_avatar_equipped: {
+        Row: {
+          equipped_at: string
+          id: string
+          item_id: string
+          slot: Database["public"]["Enums"]["item_slot"]
+          user_id: string
+        }
+        Insert: {
+          equipped_at?: string
+          id?: string
+          item_id: string
+          slot: Database["public"]["Enums"]["item_slot"]
+          user_id: string
+        }
+        Update: {
+          equipped_at?: string
+          id?: string
+          item_id?: string
+          slot?: Database["public"]["Enums"]["item_slot"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_avatar_equipped_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "avatar_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_avatar_items: {
+        Row: {
+          id: string
+          item_id: string
+          obtained_at: string
+          obtained_via: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          item_id: string
+          obtained_at?: string
+          obtained_via?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          item_id?: string
+          obtained_at?: string
+          obtained_via?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_avatar_items_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "avatar_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_badges: {
         Row: {
           badge_id: string
@@ -559,6 +734,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_chests: {
+        Row: {
+          id: string
+          is_opened: boolean
+          obtained_at: string
+          opened_at: string | null
+          rarity: Database["public"]["Enums"]["item_rarity"]
+          source: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          is_opened?: boolean
+          obtained_at?: string
+          opened_at?: string | null
+          rarity?: Database["public"]["Enums"]["item_rarity"]
+          source?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          is_opened?: boolean
+          obtained_at?: string
+          opened_at?: string | null
+          rarity?: Database["public"]["Enums"]["item_rarity"]
+          source?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_levels: {
         Row: {
@@ -589,6 +794,50 @@ export type Database = {
           xp?: number
         }
         Relationships: []
+      }
+      user_quest_progress: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          current_value: number
+          id: string
+          is_completed: boolean
+          quest_id: string
+          reward_claimed: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          current_value?: number
+          id?: string
+          is_completed?: boolean
+          quest_id: string
+          reward_claimed?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          current_value?: number
+          id?: string
+          is_completed?: boolean
+          quest_id?: string
+          reward_claimed?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_quest_progress_quest_id_fkey"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "avatar_quests"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -734,6 +983,17 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      item_rarity: "common" | "uncommon" | "rare" | "epic" | "legendary"
+      item_slot:
+        | "body"
+        | "head"
+        | "face"
+        | "outfit"
+        | "weapon"
+        | "cape"
+        | "aura"
+        | "background"
+        | "pet"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -862,6 +1122,18 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      item_rarity: ["common", "uncommon", "rare", "epic", "legendary"],
+      item_slot: [
+        "body",
+        "head",
+        "face",
+        "outfit",
+        "weapon",
+        "cape",
+        "aura",
+        "background",
+        "pet",
+      ],
     },
   },
 } as const
