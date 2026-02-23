@@ -36,6 +36,8 @@ import {
   PixelItemOverlay,
   getNextUnlock,
   getEvolutionStage,
+  getHairstylesForGender,
+  HairStyle,
 } from './AvatarEngine';
 
 interface AvatarCustomizerProps {
@@ -83,8 +85,9 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
   const [chestReward, setChestReward] = useState<AvatarItem | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [colorCategory, setColorCategory] = useState<'skin' | 'eyes' | 'hair' | 'clothing' | 'shoes'>('skin');
+  const [colorCategory, setColorCategory] = useState<'skin' | 'eyes' | 'hair' | 'clothing' | 'shoes' | 'hairstyle'>('skin');
   const [equipmentTab, setEquipmentTab] = useState<'items' | 'quests' | 'chests'>('items');
+  const [previewingItem, setPreviewingItem] = useState<string | null>(null);
 
   useEffect(() => {
     saveAvatarConfigLocal(config);
@@ -238,6 +241,70 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
       )}
     </div>
   );
+
+  // Hairstyle selector component
+  const HairstyleSelector: React.FC<{
+    gender: AvatarGender;
+    selectedIndex: number;
+    level: number;
+    onSelect: (i: number) => void;
+    config: AvatarConfig;
+  }> = ({ gender, selectedIndex, level: currentLevel, onSelect, config: currentConfig }) => {
+    const hairstyles = getHairstylesForGender(gender);
+    const unlockedCount = hairstyles.filter(h => h.levelRequired <= currentLevel).length;
+    return (
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[10px] text-muted-foreground">{unlockedCount}/{hairstyles.length} débloquées</span>
+          <div className="h-1.5 w-20 bg-secondary rounded-full overflow-hidden">
+            <div className="h-full bg-primary rounded-full" style={{ width: `${(unlockedCount / hairstyles.length) * 100}%` }} />
+          </div>
+        </div>
+        <div className="grid grid-cols-4 gap-2">
+          {hairstyles.map((style, i) => {
+            const isSelected = selectedIndex === i;
+            const isLocked = style.levelRequired > currentLevel;
+            const previewConfig = { ...currentConfig, hairStyleIndex: i };
+            return (
+              <motion.button
+                key={style.key}
+                onClick={() => {
+                  if (isLocked) {
+                    toast({ title: `Nv. ${style.levelRequired} requis`, duration: 2000 });
+                    return;
+                  }
+                  onSelect(i);
+                  playSound('click');
+                }}
+                className={`relative p-1.5 rounded-xl border text-center transition-all ${
+                  isSelected ? 'border-primary bg-primary/10 ring-2 ring-primary/20'
+                  : isLocked ? 'border-border/10 bg-card/30 opacity-60'
+                  : 'border-border/20 bg-card hover:border-primary/30'
+                }`}
+                whileTap={isLocked ? undefined : { scale: 0.95 }}
+              >
+                <div className="flex justify-center mb-1">
+                  <AvatarRenderer config={previewConfig} size="xs" animate={false} />
+                </div>
+                <div className="text-[9px] font-medium truncate">{style.nameFr}</div>
+                {style.rarity !== 'common' && (
+                  <div className="text-[8px] font-bold" style={{ color: RARITY_COLORS[style.rarity] }}>
+                    {RARITY_LABELS[style.rarity] || style.rarity}
+                  </div>
+                )}
+                {isLocked && (
+                  <div className="absolute top-1 right-1">
+                    <Lock className="w-2.5 h-2.5 text-muted-foreground" />
+                  </div>
+                )}
+                {isSelected && <div className="text-[8px] text-primary font-bold">✓</div>}
+              </motion.button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen pb-24">
@@ -401,6 +468,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                   { id: 'skin' as const, label: 'Peau' },
                   { id: 'eyes' as const, label: 'Yeux' },
                   { id: 'hair' as const, label: 'Cheveux' },
+                  { id: 'hairstyle' as const, label: 'Coiffure' },
                   { id: 'clothing' as const, label: 'Vêtements' },
                   { id: 'shoes' as const, label: 'Chaussures' },
                 ]).map(cat => (
@@ -416,12 +484,13 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                 ))}
               </div>
 
-              {/* Color Palette */}
+              {/* Color Palette or Hairstyle Selector */}
               <div className="p-4 rounded-xl bg-card border border-border/20">
                 <h3 className="text-sm font-bold mb-3">
                   {colorCategory === 'skin' ? 'Couleur de peau' :
                    colorCategory === 'eyes' ? 'Couleur des yeux' :
                    colorCategory === 'hair' ? 'Couleur des cheveux' :
+                   colorCategory === 'hairstyle' ? 'Coiffure' :
                    colorCategory === 'clothing' ? 'Couleur des vêtements' :
                    'Couleur des chaussures'}
                 </h3>
@@ -433,6 +502,15 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                 )}
                 {colorCategory === 'hair' && (
                   <ColorPalette palettes={HAIR_PALETTES} selectedIndex={config.hairIndex} onSelect={i => updateConfig({ hairIndex: i })} />
+                )}
+                {colorCategory === 'hairstyle' && (
+                  <HairstyleSelector
+                    gender={config.gender}
+                    selectedIndex={config.hairStyleIndex}
+                    level={level}
+                    onSelect={i => updateConfig({ hairStyleIndex: i })}
+                    config={config}
+                  />
                 )}
                 {colorCategory === 'clothing' && (
                   <ColorPalette palettes={CLOTHING_PALETTES} selectedIndex={config.clothingIndex} onSelect={i => updateConfig({ clothingIndex: i })} premiumPalettes={PREMIUM_CLOTHING_PALETTES} />
@@ -494,10 +572,22 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                             <PixelIcon pixels={slot.iconPixels} palette={slot.iconPalette} pixelSize={3} />
                             <span>{slot.label}</span>
                             <span className="text-[9px] opacity-60">{ownedCount}/{totalCount}</span>
+                            <div className="w-full h-0.5 bg-border/20 rounded-full mt-0.5">
+                              <div className="h-full bg-primary rounded-full" style={{ width: totalCount > 0 ? `${(ownedCount / totalCount) * 100}%` : '0%' }} />
+                            </div>
                           </div>
                         </button>
                       );
                     })}
+                  </div>
+
+                  {/* Total collection counter */}
+                  <div className="flex items-center gap-2 mb-3 px-1">
+                    <span className="text-[10px] text-muted-foreground">{collectionCount}/{totalItems} items</span>
+                    <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
+                      <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${collectionPct}%` }} />
+                    </div>
+                    <span className="text-[10px] font-bold text-primary">{collectionPct}%</span>
                   </div>
 
                   <AnimatePresence mode="wait">
@@ -541,12 +631,12 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                           })}
                         </div>
 
-                        {/* Locked items */}
+                        {/* Locked items - ALL VISIBLE */}
                         {getLockedItemsForSlot(selectedSlot).length > 0 && (
                           <>
                             <div className="flex items-center gap-2 text-xs text-muted-foreground">
                               <Lock className="w-3 h-3" />
-                              <span className="font-medium">Verrouillés</span>
+                              <span className="font-medium">Verrouillés ({getLockedItemsForSlot(selectedSlot).length})</span>
                               <div className="flex-1 h-px bg-border/20" />
                             </div>
                             <div className="grid grid-cols-3 gap-2">
@@ -555,15 +645,20 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                                 const pixelItem = overlayKey ? [...PIXEL_ITEMS, ...PREMIUM_PIXEL_ITEMS].find(p => p.key === overlayKey) : null;
                                 const isMythic = item.rarity === 'mythic';
                                 const isPremiumLocked = item.is_premium && !isPremium;
+                                const isPreviewing = previewingItem === item.id;
                                 return (
-                                  <div
+                                  <motion.button
                                     key={item.id}
-                                    className={`p-2.5 rounded-xl border text-center relative overflow-hidden ${
-                                      isMythic ? 'border-[#FF2D78]/15 bg-[#FF2D78]/5' : 'border-border/10 bg-card/30'
-                                    } ${isPremiumLocked ? 'opacity-70' : 'opacity-50'}`}
+                                    onClick={() => setPreviewingItem(isPreviewing ? null : item.id)}
+                                    className={`p-2.5 rounded-xl border text-center relative overflow-hidden transition-all ${
+                                      isPreviewing ? 'border-primary/40 bg-primary/5 opacity-100'
+                                      : isMythic ? 'border-[#FF2D78]/15 bg-[#FF2D78]/5 opacity-70'
+                                      : 'border-border/10 bg-card/30 opacity-60'
+                                    }`}
+                                    whileHover={{ scale: 1.03, opacity: 0.85 }}
+                                    whileTap={{ scale: 0.96 }}
                                   >
-                                    {/* Blurred preview for premium items */}
-                                    <div className={`flex justify-center mb-1 ${isPremiumLocked ? 'blur-[2px]' : ''}`}>
+                                    <div className={`flex justify-center mb-1 ${isPremiumLocked && !isPreviewing ? 'blur-[2px]' : ''}`}>
                                       {pixelItem ? <PixelIcon pixels={pixelItem.pixels.slice(0, 5)} palette={pixelItem.palette} pixelSize={3} /> : <div className="w-8 h-8 bg-secondary/50 rounded" />}
                                     </div>
                                     <div className="text-[10px] font-medium text-muted-foreground truncate">{item.name_fr}</div>
@@ -572,12 +667,14 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                                     </div>
                                     <div className="text-[8px] text-muted-foreground mt-0.5">
                                       {isPremiumLocked ? (
-                                        <button onClick={showUpgradeModal} className="flex items-center justify-center gap-0.5 text-[#FF2D78] mx-auto font-bold">
+                                        <span onClick={(e) => { e.stopPropagation(); showUpgradeModal(); }} className="flex items-center justify-center gap-0.5 text-[#FF2D78] mx-auto font-bold">
                                           <Crown className="w-2.5 h-2.5" /> Premium
-                                        </button>
+                                        </span>
                                       ) : item.unlock_method === 'level' ? `Nv. ${item.level_required}` : item.unlock_method === 'quest' ? 'Quête' : 'Coffre'}
                                     </div>
-                                    {/* Subtle animated shimmer for mythic */}
+                                    {isPreviewing && (
+                                      <div className="text-[8px] text-primary font-bold mt-0.5">👁 Aperçu</div>
+                                    )}
                                     {isMythic && (
                                       <motion.div
                                         className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FF2D78]/10 to-transparent pointer-events-none"
@@ -585,7 +682,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                                         transition={{ duration: 3, repeat: Infinity }}
                                       />
                                     )}
-                                  </div>
+                                  </motion.button>
                                 );
                               })}
                             </div>

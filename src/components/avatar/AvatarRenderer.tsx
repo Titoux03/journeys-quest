@@ -10,6 +10,7 @@ import {
   AvatarColors,
   getAvatarColors,
   getBaseSprite,
+  getHairStyleSprite,
   GRID_COLS,
   GRID_ROWS,
   PixelItemOverlay,
@@ -63,7 +64,13 @@ export const AvatarRenderer: React.FC<AvatarRendererProps> = ({
 }) => {
   const sizeConfig = SIZE_CONFIG[size];
   const colors = useMemo(() => getAvatarColors(config), [config]);
-  const baseSprite = useMemo(() => getBaseSprite(config.gender), [config.gender]);
+  const baseSprite = useMemo(() => {
+    const base = getBaseSprite(config.gender);
+    const hairRows = getHairStyleSprite(config.gender, config.hairStyleIndex ?? 0);
+    if (!hairRows) return base;
+    // Clone and replace rows 0-3 with hairstyle
+    return base.map((row, r) => r < hairRows.length ? hairRows[r] : row);
+  }, [config.gender, config.hairStyleIndex]);
 
   // Merge base sprite with equipped overlays
   const mergedPixels = useMemo(() => {
