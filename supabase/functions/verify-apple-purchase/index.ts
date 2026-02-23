@@ -23,7 +23,6 @@ serve(async (req) => {
   );
 
   try {
-    // Authenticate user
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -45,73 +44,81 @@ serve(async (req) => {
 
     logStep("User authenticated", { userId: user.id });
 
-    const { receipt_data } = await req.json();
-    if (!receipt_data) {
-      throw new Error("Receipt data is required");
+    const body = await req.json();
+    const { rc_customer_id, product_id, transaction_id } = body;
+
+    if (!rc_customer_id) {
+      throw new Error("RevenueCat customer ID is required");
     }
 
-    logStep("Verifying receipt with Apple");
+    logStep("Verifying RevenueCat purchase", { rc_customer_id, product_id });
 
-    // Verify receipt with Apple's servers
-    // First try production, then sandbox (Apple's recommended approach)
-    let verifyResult = await verifyWithApple(receipt_data, false);
-    
-    // Status 21007 means it's a sandbox receipt
-    if (verifyResult.status === 21007) {
-      logStep("Sandbox receipt detected, retrying with sandbox");
-      verifyResult = await verifyWithApple(receipt_data, true);
+    // Verify with RevenueCat REST API
+    const rcApiKey = Deno.env.get("REVENUECAT_API_KEY");
+    if (!rcApiKey) {
+      throw new Error("REVENUECAT_API_KEY not configured");
     }
 
-    logStep("Apple verification result", { status: verifyResult.status });
-
-    if (verifyResult.status !== 0) {
-      logStep("Invalid receipt", { status: verifyResult.status });
-      return new Response(JSON.stringify({ 
-        verified: false, 
-        error: `Invalid receipt (status: ${verifyResult.status})` 
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 400,
-      });
-    }
-
-    // Find the premium purchase in the receipt
-    const inAppPurchases = verifyResult.receipt?.in_app || [];
-    const premiumPurchase = inAppPurchases.find(
-      (p: any) => p.product_id === 'com.journeys.premium'
+    const rcResponse = await fetch(
+      `https://api.revenuecat.com/v1/subscribers/${rc_customer_id}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${rcApiKey}`,
+          'Content-Type': 'application/json',
+        },
+      }
     );
 
-    if (!premiumPurchase) {
-      logStep("Premium product not found in receipt");
+    if (!rcResponse.ok) {
+      logStep("RevenueCat API error", { status: rcResponse.status });
+      throw new Error(`RevenueCat API returned ${rcResponse.status}`);
+    }
+
+    const rcData = await rcResponse.json();
+    const subscriber = rcData.subscriber;
+    
+    // Check for active "Titoux corp Pro" entitlement
+    const entitlements = subscriber?.entitlements || {};
+    const proEntitlement = entitlements['Titoux corp Pro'] || entitlements['pro'] || entitlements['premium'];
+    
+    const isActive = proEntitlement && 
+      new Date(proEntitlement.expires_date) > new Date();
+
+    logStep("Entitlement check", { 
+      isActive, 
+      expiresDate: proEntitlement?.expires_date 
+    });
+
+    if (!isActive) {
       return new Response(JSON.stringify({ 
         verified: false, 
-        error: "Premium product not found in receipt" 
+        error: "No active subscription found" 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 400,
       });
     }
 
-    logStep("Premium purchase found", { 
-      transactionId: premiumPurchase.transaction_id,
-      productId: premiumPurchase.product_id 
-    });
+    // Determine plan from product ID
+    const isAnnual = product_id?.includes('yearly') || product_id?.includes('annual');
+    const txId = transaction_id || `rc_${rc_customer_id}_${Date.now()}`;
 
     // Check if already recorded
     const { data: existing } = await supabaseClient
       .from('premium_purchases')
-      .select('*')
-      .eq('stripe_payment_intent_id', `apple_${premiumPurchase.transaction_id}`)
+      .select('id')
+      .eq('user_id', user.id)
+      .like('stripe_payment_intent_id', 'rc_%')
+      .eq('status', 'completed')
       .single();
 
     if (!existing) {
-      // Record the purchase
       const { error: insertError } = await supabaseClient
         .from('premium_purchases')
         .insert({
           user_id: user.id,
-          stripe_payment_intent_id: `apple_${premiumPurchase.transaction_id}`,
-          amount: 2499, // 24.99€ in cents
+          stripe_payment_intent_id: `rc_${txId}`,
+          amount: isAnnual ? 14999 : 1499,
           currency: 'eur',
           status: 'completed',
           purchased_at: new Date().toISOString(),
@@ -121,15 +128,16 @@ serve(async (req) => {
         logStep("Error recording purchase", insertError);
         throw insertError;
       }
-
-      logStep("Apple purchase recorded successfully");
+      logStep("RevenueCat purchase recorded successfully");
     } else {
       logStep("Purchase already recorded");
     }
 
     return new Response(JSON.stringify({ 
       verified: true, 
-      message: "Apple purchase verified and premium granted!" 
+      message: "RevenueCat purchase verified and premium granted!",
+      plan: isAnnual ? 'annual' : 'monthly',
+      expires_date: proEntitlement.expires_date,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
@@ -143,24 +151,3 @@ serve(async (req) => {
     });
   }
 });
-
-async function verifyWithApple(receiptData: string, sandbox: boolean): Promise<any> {
-  const url = sandbox 
-    ? 'https://sandbox.itunes.apple.com/verifyReceipt'
-    : 'https://buy.itunes.apple.com/verifyReceipt';
-
-  // Note: Apple's App Store Server API v2 is preferred for new apps,
-  // but verifyReceipt still works. For production, consider migrating
-  // to the App Store Server API v2.
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      'receipt-data': receiptData,
-      'password': Deno.env.get('APPLE_SHARED_SECRET') || '',
-      'exclude-old-transactions': true,
-    }),
-  });
-
-  return await response.json();
-}
