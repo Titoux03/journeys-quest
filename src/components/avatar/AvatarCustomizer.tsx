@@ -118,13 +118,55 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
     }
   };
 
-  const equippedOverlays: PixelItemOverlay[] = SLOT_META.map(s => {
-    const item = getEquippedForSlot(s.id);
-    if (!item) return null;
-    const overlayKey = (item.pixel_art_data as any)?.overlay_key as string | undefined;
-    if (!overlayKey) return null;
-    return [...PIXEL_ITEMS, ...PREMIUM_PIXEL_ITEMS].find(p => p.key === overlayKey) || null;
-  }).filter(Boolean) as PixelItemOverlay[];
+  // All pixel items for reference
+  const allPixelItems = useMemo(() => [...PIXEL_ITEMS, ...PREMIUM_PIXEL_ITEMS], []);
+
+  // Build equipped overlays from DB
+  const equippedOverlays: PixelItemOverlay[] = useMemo(() => {
+    const overlays = SLOT_META.map(s => {
+      const item = getEquippedForSlot(s.id);
+      if (!item) return null;
+      const overlayKey = (item.pixel_art_data as any)?.overlay_key as string | undefined;
+      if (!overlayKey) return null;
+      return allPixelItems.find(p => p.key === overlayKey) || null;
+    }).filter(Boolean) as PixelItemOverlay[];
+
+    // Add preview overlay if previewing an item
+    if (previewingItem) {
+      const previewDbItem = allItems.find(i => i.id === previewingItem);
+      const previewKey = previewDbItem ? (previewDbItem.pixel_art_data as any)?.overlay_key : previewingItem;
+      const previewPixel = allPixelItems.find(p => p.key === previewKey);
+      if (previewPixel) {
+        // Replace existing overlay for same slot, or add
+        const filtered = overlays.filter(o => o.slot !== previewPixel.slot);
+        filtered.push(previewPixel);
+        return filtered;
+      }
+    }
+
+    return overlays;
+  }, [getEquippedForSlot, previewingItem, allItems, allPixelItems]);
+
+  // Helper: get local pixel items for a slot (fallback if DB is empty)
+  const getLocalItemsForSlot = useCallback((slot: string) => {
+    return allPixelItems.filter(p => p.slot === slot);
+  }, [allPixelItems]);
+
+  // Helper: check if a local pixel item is owned (by overlay_key match)
+  const isPixelItemOwned = useCallback((pixelKey: string) => {
+    return allItems.some(i => (i.pixel_art_data as any)?.overlay_key === pixelKey) 
+      ? allItems.some(i => (i.pixel_art_data as any)?.overlay_key === pixelKey && 
+          getOwnedItemsForSlot(allItems.find(x => (x.pixel_art_data as any)?.overlay_key === pixelKey)?.slot || '').some(o => (o.pixel_art_data as any)?.overlay_key === pixelKey))
+      : false;
+  }, [allItems, getOwnedItemsForSlot]);
+
+  // Helper: check if a pixel item is equipped
+  const isPixelItemEquipped = useCallback((pixelKey: string) => {
+    return SLOT_META.some(s => {
+      const eq = getEquippedForSlot(s.id);
+      return eq && (eq.pixel_art_data as any)?.overlay_key === pixelKey;
+    });
+  }, [getEquippedForSlot]);
 
   const handleOpenChest = async (chestId: string) => {
     setOpeningChest(chestId);
@@ -405,6 +447,17 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
               </p>
             </div>
           )}
+          {previewingItem && (
+            <div className="px-4 pb-2">
+              <motion.p
+                className="text-[10px] text-primary font-medium"
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                👁 Mode aperçu — Touche un item pour l'essayer
+              </motion.p>
+            </div>
+          )}
 
           {/* Next unlock teaser - dopamine bar */}
           {nextUnlock && (
@@ -615,7 +668,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                           {getOwnedItemsForSlot(selectedSlot).map(item => {
                             const isEquipped = getEquippedForSlot(selectedSlot)?.id === item.id;
                             const overlayKey = (item.pixel_art_data as any)?.overlay_key;
-                            const pixelItem = overlayKey ? [...PIXEL_ITEMS, ...PREMIUM_PIXEL_ITEMS].find(p => p.key === overlayKey) : null;
+                            const pixelItem = overlayKey ? allPixelItems.find(p => p.key === overlayKey) : null;
                             const isMythic = item.rarity === 'mythic';
                             return (
                               <motion.button
@@ -653,14 +706,14 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                             <div className="grid grid-cols-3 gap-2">
                               {getLockedItemsForSlot(selectedSlot).map(item => {
                                 const overlayKey = (item.pixel_art_data as any)?.overlay_key;
-                                const pixelItem = overlayKey ? [...PIXEL_ITEMS, ...PREMIUM_PIXEL_ITEMS].find(p => p.key === overlayKey) : null;
+                                const pixelItem = overlayKey ? allPixelItems.find(p => p.key === overlayKey) : null;
                                 const isMythic = item.rarity === 'mythic';
                                 const isPremiumLocked = item.is_premium && !isPremium;
-                                const isPreviewing = previewingItem === item.id;
+                                const isPreviewing = previewingItem === item.id || previewingItem === overlayKey;
                                 return (
                                   <motion.button
                                     key={item.id}
-                                    onClick={() => setPreviewingItem(isPreviewing ? null : item.id)}
+                                    onClick={() => setPreviewingItem(isPreviewing ? null : (overlayKey || item.id))}
                                     className={`p-2.5 rounded-xl border text-center relative overflow-hidden transition-all ${
                                       isPreviewing ? 'border-primary/40 bg-primary/5 opacity-100'
                                       : isMythic ? 'border-[#FF2D78]/15 bg-[#FF2D78]/5 opacity-70'
@@ -684,7 +737,14 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                                       ) : item.unlock_method === 'level' ? `Nv. ${item.level_required}` : item.unlock_method === 'quest' ? 'Quête' : 'Coffre'}
                                     </div>
                                     {isPreviewing && (
-                                      <div className="text-[8px] text-primary font-bold mt-0.5">👁 Aperçu</div>
+                                      <motion.div
+                                        className="text-[8px] text-primary font-bold mt-0.5"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: [0.6, 1, 0.6] }}
+                                        transition={{ duration: 1.5, repeat: Infinity }}
+                                      >
+                                        👁 Aperçu actif
+                                      </motion.div>
                                     )}
                                     {isMythic && (
                                       <motion.div
@@ -704,8 +764,70 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                   </AnimatePresence>
 
                   {!selectedSlot && (
-                    <div className="text-center py-6 text-muted-foreground">
-                      <p className="text-sm">Sélectionne un slot pour équiper</p>
+                    <div className="space-y-4">
+                      {SLOT_META.map(slot => {
+                        const localItems = getLocalItemsForSlot(slot.id);
+                        if (localItems.length === 0) return null;
+                        const equippedItem = getEquippedForSlot(slot.id);
+                        const equippedKey = equippedItem ? (equippedItem.pixel_art_data as any)?.overlay_key : null;
+                        return (
+                          <div key={slot.id}>
+                            <button
+                              onClick={() => setSelectedSlot(slot.id)}
+                              className="flex items-center gap-2 mb-2 group"
+                            >
+                              <PixelIcon pixels={slot.iconPixels} palette={slot.iconPalette} pixelSize={3} />
+                              <span className="text-xs font-bold">{slot.label}</span>
+                              <span className="text-[9px] text-muted-foreground">({localItems.filter(i => i.levelRequired <= level).length}/{localItems.length})</span>
+                              <ArrowLeft className="w-3 h-3 text-muted-foreground rotate-180 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </button>
+                            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                              {localItems.slice(0, 6).map(pixelItem => {
+                                const isUnlocked = pixelItem.levelRequired <= level;
+                                const isEquipped = equippedKey === pixelItem.key;
+                                const isPreviewing = previewingItem === pixelItem.key;
+                                return (
+                                  <motion.button
+                                    key={pixelItem.key}
+                                    onClick={() => {
+                                      if (isPreviewing) {
+                                        setPreviewingItem(null);
+                                      } else {
+                                        setPreviewingItem(pixelItem.key);
+                                      }
+                                    }}
+                                    className={`flex-shrink-0 p-2 rounded-xl border text-center transition-all w-16 ${
+                                      isEquipped ? 'border-primary bg-primary/10 ring-1 ring-primary/20'
+                                      : isPreviewing ? 'border-primary/40 bg-primary/5'
+                                      : isUnlocked ? 'border-border/20 bg-card hover:border-primary/30'
+                                      : 'border-border/10 bg-card/30 opacity-50'
+                                    }`}
+                                    whileTap={{ scale: 0.95 }}
+                                  >
+                                    <div className="flex justify-center mb-1">
+                                      <PixelIcon pixels={pixelItem.pixels.slice(0, 5)} palette={pixelItem.palette} pixelSize={2} />
+                                    </div>
+                                    <div className="text-[8px] font-medium truncate">{pixelItem.nameFr}</div>
+                                    <div className="text-[7px]" style={{ color: RARITY_COLORS[pixelItem.rarity] }}>
+                                      {RARITY_LABELS[pixelItem.rarity]}
+                                    </div>
+                                    {isEquipped && <div className="text-[7px] text-primary font-bold">✓</div>}
+                                    {!isUnlocked && <Lock className="w-2 h-2 mx-auto text-muted-foreground mt-0.5" />}
+                                  </motion.button>
+                                );
+                              })}
+                              {localItems.length > 6 && (
+                                <button
+                                  onClick={() => setSelectedSlot(slot.id)}
+                                  className="flex-shrink-0 w-16 p-2 rounded-xl border border-border/10 bg-card/30 flex items-center justify-center text-[10px] text-muted-foreground hover:text-primary transition-colors"
+                                >
+                                  +{localItems.length - 6}
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
