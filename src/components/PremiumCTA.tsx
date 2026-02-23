@@ -1,5 +1,5 @@
 import React from 'react';
-import { Crown, Sparkles, TrendingUp, Zap } from 'lucide-react';
+import { Crown, Sparkles, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePremium } from '@/hooks/usePremium';
 import { useGongSounds } from '@/hooks/useGongSounds';
@@ -36,7 +36,7 @@ export const PremiumCTA: React.FC<PremiumCTAProps> = ({
           </div>
           <div>
             <h4 className="font-semibold text-sm text-foreground">{t('premium.title')}</h4>
-            <p className="text-xs text-muted-foreground">{t('premium.features.title')}</p>
+            <p className="text-xs text-muted-foreground">À partir de 12,50€/mois</p>
           </div>
         </div>
         <Button 
@@ -45,7 +45,7 @@ export const PremiumCTA: React.FC<PremiumCTAProps> = ({
           className="w-full journey-button-primary text-xs"
         >
           <Sparkles className="w-3 h-3 mr-1" />
-          {t('premium.unlockPremium')}
+          S'abonner
         </Button>
       </div>
     );
@@ -62,16 +62,16 @@ export const PremiumCTA: React.FC<PremiumCTAProps> = ({
             <span className="text-sm font-medium text-foreground">{t('premium.features.unlockPotential')}</span>
           </div>
           <p className="text-xs text-muted-foreground mb-4">
-            {t('premium.features.unlimitedAccess')}
+            Accès illimité • Suivi complet • Gamification
           </p>
-        <Button 
-          onClick={handleUpgrade}
-          size="sm"
-          className="journey-button-primary"
-        >
-          <Crown className="w-4 h-4 mr-2" />
-          {t('premium.title')}
-        </Button>
+          <Button 
+            onClick={handleUpgrade}
+            size="sm"
+            className="journey-button-primary"
+          >
+            <Crown className="w-4 h-4 mr-2" />
+            À partir de 12,50€/mois
+          </Button>
         </div>
       </div>
     );
@@ -80,7 +80,6 @@ export const PremiumCTA: React.FC<PremiumCTAProps> = ({
   // context === 'inline'
   return (
     <div className={`p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-primary-glow/5 border-2 border-primary/30 text-center relative overflow-hidden ${className}`}>
-      
       <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center pulse-glow">
         <Crown className="w-8 h-8 text-primary-foreground" />
       </div>
@@ -118,12 +117,11 @@ export const PremiumCTA: React.FC<PremiumCTAProps> = ({
       >
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
         <Crown className="w-4 h-4 mr-2" />
-        <span className="line-through opacity-60 mr-2">{t('premium.oldPrice')}</span>
-        {t('premium.unlockPremium')} ({t('premium.currentPrice')})
+        S'abonner — à partir de 12,50€/mois
       </Button>
       
       <p className="text-xs text-muted-foreground mt-3">
-        ⚡ {t('premium.noSubscription')} • {t('premium.lifetimeAccess')}
+        ⚡ Sans engagement • Annulable à tout moment
       </p>
     </div>
   );

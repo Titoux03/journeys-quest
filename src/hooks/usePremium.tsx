@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { isNativeIOS } from '@/utils/platformDetection';
@@ -6,14 +6,17 @@ import { purchaseApplePremium, initializeIAPStore, restoreApplePurchases } from 
 
 interface PremiumContextType {
   isPremium: boolean;
-  productId: string | null;
+  plan: string | null; // 'monthly' | 'annual' | 'lifetime' | null
   subscriptionEnd: string | null;
+  subscriptionStatus: string | null; // 'active' | 'past_due' | null
+  isLegacy: boolean;
   isLoading: boolean;
   checkPremiumStatus: () => Promise<void>;
   showUpgradeModal: () => void;
   hideUpgradeModal: () => void;
   upgradeModalVisible: boolean;
-  purchasePremium: (affiliateCode?: string) => Promise<void>;
+  purchasePremium: (plan?: string, affiliateCode?: string) => Promise<void>;
+  manageSubscription: () => Promise<void>;
   restorePurchases: () => Promise<void>;
   loading: boolean;
   isIOSNative: boolean;
@@ -21,61 +24,64 @@ interface PremiumContextType {
 
 const PremiumContext = createContext<PremiumContextType | undefined>(undefined);
 
-interface PremiumProviderProps {
-  children: React.ReactNode;
-}
-
-export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) => {
+export const PremiumProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isPremium, setIsPremium] = useState(false);
-  const [productId, setProductId] = useState<string | null>(null);
+  const [plan, setPlan] = useState<string | null>(null);
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
+  const [subscriptionStatus, setSubscriptionStatus] = useState<string | null>(null);
+  const [isLegacy, setIsLegacy] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [upgradeModalVisible, setUpgradeModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const checkPremiumStatus = async () => {
+  const checkPremiumStatus = useCallback(async () => {
     setIsLoading(true);
     try {
-      // Si pas d'utilisateur connecté, pas de premium
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
         setIsPremium(false);
-        setProductId(null);
+        setPlan(null);
         setSubscriptionEnd(null);
+        setSubscriptionStatus(null);
+        setIsLegacy(false);
         setIsLoading(false);
         return;
       }
 
-      const { data } = await supabase.functions.invoke('check-premium');
-      if (data?.isPremium) {
+      const { data, error } = await supabase.functions.invoke('check-subscription');
+      
+      if (error) {
+        console.error('Error checking subscription:', error);
+        setIsPremium(false);
+      } else if (data?.subscribed) {
         setIsPremium(true);
-        setProductId('prod_T7WZyN63dpDW6k');
-        setSubscriptionEnd(data.purchaseDate);
+        setPlan(data.plan || null);
+        setSubscriptionEnd(data.subscription_end || null);
+        setSubscriptionStatus(data.status || null);
+        setIsLegacy(!!data.legacy);
       } else {
         setIsPremium(false);
-        setProductId(null);
+        setPlan(null);
         setSubscriptionEnd(null);
+        setSubscriptionStatus(null);
+        setIsLegacy(false);
       }
     } catch (error) {
       console.error('Error checking premium status:', error);
       setIsPremium(false);
-      setProductId(null);
-      setSubscriptionEnd(null);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const purchasePremium = async (affiliateCode?: string) => {
+  const purchasePremium = async (selectedPlan: string = 'monthly', affiliateCode?: string) => {
     try {
       setLoading(true);
-      
-      // Sur iOS natif → Apple In-App Purchase
+
       if (isNativeIOS()) {
         const success = await purchaseApplePremium();
         if (success) {
           toast.success('Achat en cours de traitement...');
-          // Le callback du store gère la vérification
           setTimeout(() => checkPremiumStatus(), 3000);
         } else {
           toast.error('Achat annulé ou échoué.');
@@ -83,30 +89,43 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
         return;
       }
 
-      // Sur Web → Stripe Checkout
-      const requestBody = affiliateCode ? { affiliate_code: affiliateCode } : {};
+      const body: Record<string, string> = { plan: selectedPlan };
+      if (affiliateCode) body.affiliate_code = affiliateCode;
 
-      const { data, error } = await supabase.functions.invoke('create-payment', {
-        body: requestBody
-      });
-      
+      const { data, error } = await supabase.functions.invoke('create-checkout', { body });
+
       if (error) {
-        console.error('Error creating payment:', error);
-        toast.error('Impossible de démarrer le paiement. Réessayez dans un instant.');
+        console.error('Error creating checkout:', error);
+        toast.error('Impossible de démarrer le paiement. Réessayez.');
         return;
       }
 
       if (data?.url) {
-        try {
-          window.location.assign(data.url);
-        } catch {
-          window.location.href = data.url;
-        }
+        window.location.assign(data.url);
+      } else if (data?.error) {
+        toast.error(data.error);
       } else {
-        toast.error('Lien de paiement indisponible. Merci de réessayer.');
+        toast.error('Lien de paiement indisponible.');
       }
     } catch (error) {
       console.error('Error purchasing premium:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const manageSubscription = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase.functions.invoke('customer-portal');
+      if (error || !data?.url) {
+        toast.error('Impossible d\'ouvrir le portail de gestion.');
+        return;
+      }
+      window.open(data.url, '_blank');
+    } catch (error) {
+      console.error('Error opening portal:', error);
+      toast.error('Erreur lors de l\'ouverture du portail.');
     } finally {
       setLoading(false);
     }
@@ -139,40 +158,40 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
 
   useEffect(() => {
     checkPremiumStatus();
-    
-    // Initialize Apple IAP store if on iOS
+
     if (isNativeIOS()) {
       initializeIAPStore().catch(console.error);
     }
-    
-    // Écouter les changements d'authentification
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
         checkPremiumStatus();
       }
     });
 
-    // Check every minute for real-time updates
     const interval = setInterval(checkPremiumStatus, 60000);
-    
+
     return () => {
       subscription.unsubscribe();
       clearInterval(interval);
     };
-  }, []);
+  }, [checkPremiumStatus]);
 
   return (
     <PremiumContext.Provider
       value={{
         isPremium,
-        productId,
+        plan,
         subscriptionEnd,
+        subscriptionStatus,
+        isLegacy,
         isLoading,
         checkPremiumStatus,
         showUpgradeModal,
         hideUpgradeModal,
         upgradeModalVisible,
         purchasePremium,
+        manageSubscription,
         restorePurchases,
         loading,
         isIOSNative: isNativeIOS(),

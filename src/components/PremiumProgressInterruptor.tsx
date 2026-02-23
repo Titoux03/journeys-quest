@@ -122,14 +122,14 @@ export const PremiumProgressInterruptor: React.FC<PremiumProgressInterruptorProp
         >
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
           <Crown className="w-5 h-5 mr-2" />
-          Débloquer Premium (24,99€)
+          S'abonner — dès 12,50€/mois
         </Button>
 
         {/* Garanties */}
         <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground">
           <div className="flex flex-col items-center">
             <Star className="w-4 h-4 text-success mb-1" />
-            <span>Accès à vie</span>
+            <span>Sans engagement</span>
           </div>
           <div className="flex flex-col items-center">
             <Zap className="w-4 h-4 text-primary mb-1" />
