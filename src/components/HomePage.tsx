@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { DailyQuote } from '@/components/DailyQuote';
 import { LevelDisplay } from '@/components/LevelDisplay';
 import { PixelAvatar } from '@/components/PixelAvatar';
@@ -106,24 +107,56 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
         )}
       </div>
 
-      {/* Premium Status & Streaks */}
+      {/* Character Card - Main engagement hook */}
+      {user && (
+        <motion.button
+          onClick={() => onNavigate('avatar')}
+          className="w-full mb-6 relative overflow-hidden rounded-2xl border border-primary/20 text-left"
+          style={{
+            background: 'linear-gradient(145deg, hsl(220 50% 6%), hsl(220 45% 10%))',
+            boxShadow: '0 0 30px hsl(45 100% 65% / 0.1)',
+          }}
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.99 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <div className="flex items-center gap-4 p-4">
+            <PixelAvatar size="md" />
+            <div className="flex-1">
+              <div className="text-sm font-bold text-foreground mb-0.5">Mon personnage</div>
+              <div className="text-xs text-primary font-medium flex items-center gap-1">
+                Évolution en cours
+                <Sparkles className="w-3 h-3" />
+              </div>
+              <div className="mt-2 h-1.5 bg-secondary rounded-full overflow-hidden w-full">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-primary to-primary-glow rounded-full"
+                  animate={{ width: ['0%', '60%'] }}
+                  transition={{ duration: 1.5, ease: 'easeOut' }}
+                />
+              </div>
+            </div>
+            <div className="text-xs text-muted-foreground">→</div>
+          </div>
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent pointer-events-none"
+            animate={{ x: ['-100%', '200%'] }}
+            transition={{ duration: 4, repeat: Infinity }}
+          />
+        </motion.button>
+      )}
+
+      {/* Premium Status */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         {isPremium && (
           <div className="journey-card-glow">
             <div className="flex items-center justify-center space-x-3">
               <Crown className="w-6 h-6 text-primary" />
-              <span className="text-lg font-semibold text-gradient-primary">
-                Journeys Premium
-              </span>
+              <span className="text-lg font-semibold text-gradient-primary">Journeys Premium</span>
               <Crown className="w-6 h-6 text-primary" />
             </div>
-          </div>
-        )}
-        
-        {user && (
-          <div className="flex flex-col items-center gap-3 mb-6">
-            <PixelAvatar size="md" onClick={() => onNavigate('avatar')} />
-            <p className="text-xs text-muted-foreground">Touche pour personnaliser</p>
           </div>
         )}
       </div>
