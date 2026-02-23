@@ -171,8 +171,8 @@ const MALE_BASE: number[][] = [
   [0,1,1,1,2,1,1,2,1,1,1,0],  // row 11: torso with arms (skin)
   [0,1,1,1,2,1,1,2,1,1,1,0],  // row 12: torso mid + arms
   [0,0,1,1,2,1,1,2,1,1,0,0],  // row 13: torso bottom
-  [0,0,1,1,1,1,1,1,1,1,0,0],  // row 14: waist area (skin)
-  [0,0,0,1,1,0,0,1,1,0,0,0],  // row 15: legs (skin)
+  [0,0,3,3,8,3,3,8,3,3,0,0],  // row 14: pants waist (clothing color)
+  [0,0,0,3,3,0,0,3,3,0,0,0],  // row 15: pants legs (clothing color)
   [0,0,0,4,4,0,0,4,4,0,0,0],  // row 16: shoes
 ];
 
@@ -191,8 +191,8 @@ const FEMALE_BASE: number[][] = [
   [0,1,1,1,2,1,1,2,1,1,1,0],  // row 11: torso with arms (skin)
   [0,1,1,1,1,1,1,1,1,1,1,0],  // row 12: torso mid
   [0,0,1,1,1,1,1,1,1,1,0,0],  // row 13: torso lower
-  [0,0,0,1,1,1,1,1,1,0,0,0],  // row 14: waist (tapered skin)
-  [0,0,0,1,1,0,0,1,1,0,0,0],  // row 15: legs
+  [0,0,0,3,3,3,3,3,3,0,0,0],  // row 14: pants waist (clothing, tapered)
+  [0,0,0,3,3,0,0,3,3,0,0,0],  // row 15: pants legs (clothing color)
   [0,0,0,4,4,0,0,4,4,0,0,0],  // row 16: shoes
 ];
 

@@ -8,7 +8,7 @@ import { MeditationTimer } from '@/components/MeditationTimer';
 import { AbstinenceTracker } from '@/components/AbstinenceTracker';
 import { StretchingRoutine } from '@/components/StretchingRoutine';
 import TodoList from '@/components/TodoList';
-import { AvatarCustomizer } from '@/components/avatar';
+import { AvatarCustomizer, LevelUpCelebration } from '@/components/avatar';
 import { DailyQuote } from '@/components/DailyQuote';
 import { PremiumUpgrade } from '@/components/PremiumUpgrade';
 import { MarketingNotifications } from '@/components/MarketingNotifications';
@@ -24,6 +24,7 @@ import { usePremium } from '@/hooks/usePremium';
 import { useProgress } from '@/hooks/useProgress';
 import { useGongSounds } from '@/hooks/useGongSounds';
 import { usePopupManager } from '@/hooks/usePopupManager';
+import { useLevel } from '@/hooks/useLevel';
 import { MobileOptimizations } from '@/components/MobileOptimizations';
 
 interface JournalEntry {
@@ -40,6 +41,7 @@ const Index = () => {
   const { journalEntries, saveJournalEntry, deleteJournalEntry } = useProgress();
   const { playWelcome } = useGongSounds();
   const navigate = useNavigate();
+  const { levelUpEvent, dismissLevelUp } = useLevel(user?.id);
   const { 
     shouldShowIntro, 
     shouldShowTutorial, 
@@ -287,6 +289,17 @@ const Index = () => {
         isVisible={upgradeModalVisible}
         onClose={hideUpgradeModal}
       />
+
+      {/* Level Up Celebration Overlay */}
+      {levelUpEvent && (
+        <LevelUpCelebration
+          level={levelUpEvent.level}
+          xpGained={levelUpEvent.xpGained}
+          title={levelUpEvent.title}
+          show={true}
+          onDone={dismissLevelUp}
+        />
+      )}
 
       {/* Progress Interruptor Modal - disabled for authenticated users */}
       {!user && (

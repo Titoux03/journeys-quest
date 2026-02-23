@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -18,18 +18,23 @@ interface LevelUpdateResult {
   title: string;
 }
 
+export interface LevelUpEvent {
+  level: number;
+  xpGained: number;
+  title: string;
+}
+
 export const useLevel = (userId: string | undefined) => {
   const [levelData, setLevelData] = useState<LevelData | null>(null);
   const [loading, setLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [levelUpEvent, setLevelUpEvent] = useState<LevelUpEvent | null>(null);
   const { toast } = useToast();
 
-  // Calculate XP needed for next level
   const calculateXpForLevel = (level: number): number => {
     return Math.floor(50 * Math.pow(level, 1.15));
   };
 
-  // Load user level data
   const loadLevel = async () => {
     if (!userId) {
       setLoading(false);
@@ -52,12 +57,11 @@ export const useLevel = (userId: string | undefined) => {
         setLevelData({
           level: data.level,
           xp: data.xp,
-          title: '', // Will be fetched from the function
+          title: '',
           xpForNextLevel,
           progressPercentage
         });
 
-        // Get title from function
         const { data: titleData } = await supabase.rpc('get_level_title', {
           user_level: data.level
         });
@@ -73,7 +77,6 @@ export const useLevel = (userId: string | undefined) => {
     }
   };
 
-  // Update level on activity
   const updateLevel = async (activityType: 'login' | 'journal' | 'meditation' | 'addiction' = 'login') => {
     if (!userId || isUpdating) return null;
 
@@ -100,12 +103,11 @@ export const useLevel = (userId: string | undefined) => {
           progressPercentage
         });
 
-        // Show level up notification
         if (result.level_up) {
-          toast({
-            title: `✨ Niveau ${result.new_level} atteint !`,
-            description: `${result.title}\n+${result.xp_gained} XP`,
-            duration: 5000,
+          setLevelUpEvent({
+            level: result.new_level,
+            xpGained: result.xp_gained,
+            title: result.title,
           });
         }
 
@@ -121,7 +123,10 @@ export const useLevel = (userId: string | undefined) => {
     return null;
   };
 
-  // Convenience functions
+  const dismissLevelUp = useCallback(() => {
+    setLevelUpEvent(null);
+  }, []);
+
   const updateLevelOnLogin = () => updateLevel('login');
   const updateLevelOnJournal = () => updateLevel('journal');
   const updateLevelOnMeditation = () => updateLevel('meditation');
@@ -135,6 +140,8 @@ export const useLevel = (userId: string | undefined) => {
     levelData,
     loading,
     isUpdating,
+    levelUpEvent,
+    dismissLevelUp,
     updateLevelOnLogin,
     updateLevelOnJournal,
     updateLevelOnMeditation,
