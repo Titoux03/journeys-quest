@@ -19,6 +19,7 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { GlobalAvatar } from '@/components/avatar/GlobalAvatar';
 
 interface BottomNavigationProps {
   currentScreen: string;
@@ -134,14 +135,19 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
           }}
           className="bg-card/95 backdrop-blur-xl border border-border/50 rounded-full shadow-xl"
         >
-          <Button
-            variant="ghost"
+          <button
             onClick={() => setIsExpanded(true)}
-            className="w-full py-4 flex items-center justify-center gap-2 hover:bg-accent/50 rounded-full"
+            className="w-full py-3 px-4 flex items-center justify-center gap-3 hover:bg-accent/20 rounded-full transition-colors"
           >
+            {/* Show mini avatar in collapsed menu */}
+            {user && (
+              <div className="flex items-center">
+                <GlobalAvatar size="xs" animate={false} showGlow={false} />
+              </div>
+            )}
             <ChevronUp size={20} className="shrink-0" />
             <span className="text-sm font-medium">Menu</span>
-          </Button>
+          </button>
         </motion.div>
       )}
     </div>
