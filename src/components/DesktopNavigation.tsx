@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { LanguageToggle } from '@/components/LanguageToggle';
-import { GlobalAvatar } from '@/components/avatar/GlobalAvatar';
+
 
 interface DesktopNavigationProps {
   currentScreen: string;
@@ -73,8 +73,8 @@ export const DesktopNavigation: React.FC<DesktopNavigationProps> = ({
             onClick={() => onNavigate('avatar')}
             className="w-full flex items-center space-x-3 p-3 bg-secondary/30 rounded-lg hover:bg-secondary/50 transition-colors text-left"
           >
-            <div className="w-12 h-12 flex items-center justify-center">
-              <GlobalAvatar size="sm" animate={false} showGlow={false} />
+            <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+              <User className="w-5 h-5 text-primary" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">
