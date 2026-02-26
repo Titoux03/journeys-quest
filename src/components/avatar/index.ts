@@ -2,6 +2,7 @@ export { AvatarRenderer, PixelIcon } from './AvatarRenderer';
 export { AvatarCustomizer } from './AvatarCustomizer';
 export { ChestOpenerPixel } from './ChestOpenerPixel';
 export { LevelUpCelebration } from './LevelUpCelebration';
+export { GlobalAvatar } from './GlobalAvatar';
 export type { AvatarGender, AvatarConfig, AvatarColors, PixelItemOverlay, EvolutionStage, HairStyle } from './AvatarEngine';
 export {
   DEFAULT_AVATAR_CONFIG,

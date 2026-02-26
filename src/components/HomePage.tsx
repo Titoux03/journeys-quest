@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { DailyQuote } from '@/components/DailyQuote';
 import { LevelDisplay } from '@/components/LevelDisplay';
-import { AvatarRenderer, DEFAULT_AVATAR_CONFIG, AvatarConfig, getNextUnlock, getEvolutionStage, RARITY_COLORS, RARITY_LABELS } from '@/components/avatar';
+import { GlobalAvatar } from '@/components/avatar/GlobalAvatar';
+import { getNextUnlock, getEvolutionStage, RARITY_COLORS } from '@/components/avatar/AvatarEngine';
 import { PixelIcon } from '@/components/avatar';
 import { Progress } from '@/components/ui/progress';
 import { useLevel } from '@/hooks/useLevel';
@@ -17,6 +18,7 @@ import { PremiumTodoTeaser } from '@/components/PremiumTodoTeaser';
 import { JourneyCard } from '@/components/JourneyCard';
 import { PremiumSuccessIndicator } from '@/components/PremiumSuccessIndicator';
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 
 
 interface JournalEntry {
@@ -58,7 +60,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
   const todayStr = today.toISOString().split('T')[0];
   const todayEntry = entries.find(entry => entry.date === todayStr);
 
-  // Déterminer le message d'accueil selon l'heure
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour >= 6 && hour < 18) {
@@ -69,6 +70,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
   };
 
   const greeting = getGreeting();
+  const homeLevel = homeLevelData?.level || 1;
+  const nextItem = getNextUnlock(homeLevel);
+  const evo = getEvolutionStage(homeLevel);
 
   return (
     <div className="min-h-screen p-4 sm:p-6 pb-24 flex flex-col">
@@ -111,65 +115,57 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
         )}
       </div>
 
-      {/* Character Card - Main engagement hook */}
-      {user && (() => {
-        let avatarConfig: AvatarConfig = DEFAULT_AVATAR_CONFIG;
-        try {
-          const saved = localStorage.getItem('avatar_config');
-          if (saved) avatarConfig = { ...DEFAULT_AVATAR_CONFIG, ...JSON.parse(saved) };
-        } catch {}
-        const homeLevel = homeLevelData?.level || 1;
-        const nextItem = getNextUnlock(homeLevel);
-        const evo = getEvolutionStage(homeLevel);
-        return (
-          <motion.button
-            onClick={() => onNavigate('avatar')}
-            className="w-full mb-6 relative overflow-hidden rounded-2xl border border-primary/20 text-left"
-            style={{
-              background: 'linear-gradient(145deg, hsl(220 50% 6%), hsl(220 45% 10%))',
-              boxShadow: '0 0 30px hsl(45 100% 65% / 0.1)',
-            }}
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <div className={`absolute inset-0 bg-gradient-to-br ${evo.color} opacity-[0.07]`} />
-            <div className="relative flex items-center gap-4 p-4">
-              <AvatarRenderer config={avatarConfig} size="md" animate={false} showGlow={homeLevel >= 50} glowColor={evo.glowColor} />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-0.5">
-                  <span className="text-sm font-bold text-foreground">Mon personnage</span>
-                  <span className={`text-[9px] font-bold bg-gradient-to-r ${evo.color} text-white px-1.5 py-0.5 rounded-full`}>{evo.name}</span>
-                </div>
-                <div className="text-xs text-primary font-medium flex items-center gap-1">
-                  Modifier mon avatar
-                  <Sparkles className="w-3 h-3" />
-                </div>
-                {nextItem && (
-                  <div className="mt-2 space-y-1">
-                    <div className="flex items-center gap-1.5">
-                      <PixelIcon pixels={nextItem.item.pixels.slice(0, 3)} palette={nextItem.item.palette} pixelSize={2} />
-                      <span className="text-[10px] text-muted-foreground truncate">{nextItem.item.nameFr}</span>
-                      <span className="text-[8px] font-bold px-1 rounded" style={{ color: RARITY_COLORS[nextItem.item.rarity] }}>
-                        Nv.{nextItem.level}
-                      </span>
-                    </div>
-                    <Progress value={Math.min(100, (homeLevel / nextItem.level) * 100)} className="h-1.5" />
-                  </div>
-                )}
+      {/* Character Card - Uses GlobalAvatar with ALL equipped items */}
+      {user && (
+        <motion.button
+          onClick={() => onNavigate('avatar')}
+          className="w-full mb-6 relative overflow-hidden rounded-2xl border border-primary/20 text-left"
+          style={{
+            background: 'linear-gradient(145deg, hsl(220 50% 6%), hsl(220 45% 10%))',
+            boxShadow: '0 0 30px hsl(45 100% 65% / 0.1)',
+          }}
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.99 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <div className={`absolute inset-0 bg-gradient-to-br ${evo.color} opacity-[0.07]`} />
+          <div className="relative flex items-center gap-4 p-4">
+            {/* GlobalAvatar shows equipped items automatically */}
+            <GlobalAvatar size="lg" animate showGlow={homeLevel >= 25} />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-0.5">
+                <span className="text-sm font-bold text-foreground">Mon personnage</span>
+                <span className={`text-[9px] font-bold bg-gradient-to-r ${evo.color} text-white px-1.5 py-0.5 rounded-full`}>{evo.name}</span>
               </div>
-              <div className="text-xs text-muted-foreground">→</div>
+              <div className="text-[11px] text-muted-foreground mb-1">Niveau {homeLevel}</div>
+              <div className="text-xs text-primary font-medium flex items-center gap-1">
+                Personnaliser
+                <Sparkles className="w-3 h-3" />
+              </div>
+              {nextItem && (
+                <div className="mt-2 space-y-1">
+                  <div className="flex items-center gap-1.5">
+                    <PixelIcon pixels={nextItem.item.pixels.slice(0, 3)} palette={nextItem.item.palette} pixelSize={2} />
+                    <span className="text-[10px] text-muted-foreground truncate">{nextItem.item.nameFr}</span>
+                    <span className="text-[8px] font-bold px-1 rounded" style={{ color: RARITY_COLORS[nextItem.item.rarity] }}>
+                      Nv.{nextItem.level}
+                    </span>
+                  </div>
+                  <Progress value={Math.min(100, (homeLevel / nextItem.level) * 100)} className="h-1.5" />
+                </div>
+              )}
             </div>
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent pointer-events-none"
-              animate={{ x: ['-100%', '200%'] }}
-              transition={{ duration: 4, repeat: Infinity }}
-            />
-          </motion.button>
-        );
-      })()}
+            <div className="text-xs text-muted-foreground">→</div>
+          </div>
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent pointer-events-none"
+            animate={{ x: ['-100%', '200%'] }}
+            transition={{ duration: 4, repeat: Infinity }}
+          />
+        </motion.button>
+      )}
 
       {/* Premium Status */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -403,114 +399,49 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
         <div className="flex items-center space-x-4 p-4 sm:p-6">
           <div className={`p-3 sm:p-4 rounded-xl transition-colors ${
             isPremium 
-              ? 'bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground'
+              ? 'bg-accent/10 text-accent group-hover:bg-accent group-hover:text-accent-foreground'
               : 'bg-muted/20 text-muted-foreground'
           }`}>
-            <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8" />
+            <BarChart3 className="w-6 h-6 sm:w-8 sm:h-8" />
           </div>
           <div className="flex-1">
             <h3 className={`font-semibold text-lg sm:text-xl mb-1 sm:mb-2 ${!isPremium && 'text-muted-foreground'}`}>
-              {t('home.progress')}
+              {t('home.weeklyProgress')}
             </h3>
             <p className="text-sm sm:text-base text-muted-foreground">
-              {isPremium 
-                ? t('home.progressDesc', { count: entries.length })
-                : t('home.progressDescFree')
-              }
+              {t('home.weeklyProgressDesc')}
             </p>
           </div>
         </div>
       </button>
 
-      {/* Section Premium Todo Teaser */}
-      {!isPremium && (
-        <div className="mb-6">
-          <PremiumTodoTeaser />
-        </div>
-      )}
-
-      {/* Featured Addictions Preview - Moved to bottom */}
+      {/* Addiction Cards */}
       {isPremium && user && userAddictions.length > 0 && (
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-foreground">{t('home.myActiveAddictions')}</h2>
-            <button
-              onClick={() => onNavigate('abstinence')}
-              className="text-primary hover:text-primary-glow transition-colors text-sm font-medium"
-            >
-              {t('home.viewAll')}
-            </button>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {userAddictions.slice(0, 2).map((userAddiction) => {
-              const addictionType = addictionTypes.find(at => at.id === userAddiction.addiction_type_id);
-              if (!addictionType) return null;
-              
-              return (
-                <AddictionCard
-                  key={userAddiction.id}
-                  addictionType={addictionType}
-                  userAddiction={userAddiction}
-                  onStart={() => {}}
-                  onRelapse={() => markRelapse(userAddiction.id)}
-                  onDeactivate={() => handleDeactivateAddiction(userAddiction.id)}
-                  className="cursor-pointer"
-                />
-              );
-            })}
-          </div>
+        <div className="space-y-4 mb-8">
+          <h2 className="text-xl font-bold text-foreground flex items-center">
+            <Shield className="w-6 h-6 mr-2 text-destructive" />
+            {t('home.myAddictions')}
+          </h2>
+          {userAddictions.map((addiction) => {
+            const addictionType = addictionTypes.find(at => at.id === addiction.addiction_type_id);
+            if (!addictionType) return null;
+            return (
+              <AddictionCard
+                key={addiction.id}
+                userAddiction={addiction}
+                addictionType={addictionType}
+                onStart={() => {}}
+                onRelapse={() => markRelapse(addiction.id)}
+                onDeactivate={() => handleDeactivateAddiction(addiction.id)}
+              />
+            );
+          })}
         </div>
       )}
 
-      {/* Premium Upgrade CTA (for free users) */}
-      {!isPremium && user && (
-        <button
-          onClick={showUpgradeModal}
-          className="journey-card-premium w-full text-center p-8 relative overflow-hidden group"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/15 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-          
-          <div className="relative z-10">
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center pulse-glow">
-              <Crown className="w-10 h-10 text-primary-foreground" />
-            </div>
-            
-            <h3 className="text-2xl font-bold text-gradient-primary mb-3">
-              {t('home.unlockPotential')}
-            </h3>
-            
-            <p className="text-muted-foreground mb-6">
-              {t('home.unlockPotentialDesc')}
-            </p>
-
-            {/* Comparaison avant/après */}
-            <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
-              <div className="bg-secondary/30 rounded-lg p-3">
-                <div className="text-muted-foreground font-medium mb-1">{t('premiumModal.freeVersion')}</div>
-                <div className="text-xs text-muted-foreground">• {t('premiumModal.basicJournalOnly')}</div>
-                <div className="text-xs text-muted-foreground">• {t('premiumModal.limitedData')}</div>
-                <div className="text-xs text-muted-foreground">• {t('premiumModal.noGamification')}</div>
-              </div>
-              <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
-                <div className="text-primary font-medium mb-1">{t('premium.title')}</div>
-                <div className="text-xs text-success">✅ {t('premiumModal.fullTracking')}</div>
-                <div className="text-xs text-success">✅ {t('premiumModal.exclusiveBadges')}</div>
-                <div className="text-xs text-success">✅ {t('premiumModal.unlimitedHistoryShort')}</div>
-              </div>
-            </div>
-            
-            <div className="inline-flex items-center space-x-2 px-8 py-4 rounded-xl bg-primary text-primary-foreground font-bold text-lg group-hover:scale-105 transition-transform">
-              <Crown className="w-6 h-6" />
-              <span>{t('premiumModal.unlockPremium')}</span>
-            </div>
-            
-            <p className="text-xs text-muted-foreground mt-3">
-              ⚡ {t('premiumModal.noSubscription')} • {t('premiumModal.lifetimeAccess')}
-            </p>
-          </div>
-        </button>
-      )}
+      {/* Premium Teasers */}
+      {!isPremium && <PremiumTodoTeaser />}
+      {isPremium && <PremiumSuccessIndicator />}
     </div>
   );
 };

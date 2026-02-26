@@ -5,18 +5,17 @@ import { usePremium } from '@/hooks/usePremium';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LanguageToggle } from './LanguageToggle';
+import { GlobalAvatar } from '@/components/avatar/GlobalAvatar';
 
 export const UserStatus: React.FC = () => {
   const { t } = useTranslation();
-  const {
-    user
-  } = useAuth();
-  const {
-    isPremium
-  } = usePremium();
+  const { user } = useAuth();
+  const { isPremium } = usePremium();
   const navigate = useNavigate();
+
   if (!user) {
-    return <div className="flex items-center justify-between p-4 bg-card/50 backdrop-blur-sm border-b border-border/30 lg:hidden">
+    return (
+      <div className="flex items-center justify-between p-4 bg-card/50 backdrop-blur-sm border-b border-border/30 lg:hidden">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
             <User className="w-4 h-4 text-muted-foreground" />
@@ -34,12 +33,16 @@ export const UserStatus: React.FC = () => {
             <span>{t('userStatus.signIn')}</span>
           </button>
         </div>
-      </div>;
+      </div>
+    );
   }
-  return <div className="flex items-center justify-between p-4 bg-card/50 backdrop-blur-sm border-b border-border/30 lg:hidden">
+
+  return (
+    <div className="flex items-center justify-between p-4 bg-card/50 backdrop-blur-sm border-b border-border/30 lg:hidden">
       <div className="flex items-center space-x-3">
-        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-          {isPremium ? <Crown className="w-4 h-4 text-primary" /> : <User className="w-4 h-4 text-primary" />}
+        {/* Mini avatar with equipped items */}
+        <div className="w-10 h-10 flex items-center justify-center">
+          <GlobalAvatar size="xs" animate={false} showGlow={false} />
         </div>
         <div>
           <p className="text-sm font-medium">
@@ -53,10 +56,13 @@ export const UserStatus: React.FC = () => {
       
       <div className="flex items-center space-x-2">
         <LanguageToggle />
-        {isPremium && <div className="flex items-center space-x-1 px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
+        {isPremium && (
+          <div className="flex items-center space-x-1 px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
             <Crown className="w-3 h-3" />
             <span>Premium</span>
-          </div>}
+          </div>
+        )}
       </div>
-    </div>;
+    </div>
+  );
 };
