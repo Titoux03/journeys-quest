@@ -162,7 +162,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
   const [chestReward, setChestReward] = useState<AvatarItem | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [colorCategory, setColorCategory] = useState<'skin' | 'eyes' | 'hair' | 'clothing' | 'shoes' | 'hairstyle'>('skin');
+  const [colorCategory, setColorCategory] = useState<'skin' | 'eyes' | 'hair' | 'hairstyle'>('skin');
   const [equipmentTab, setEquipmentTab] = useState<'items' | 'quests' | 'chests'>('items');
   const [previewingItem, setPreviewingItem] = useState<string | null>(null);
   const [showSparkle, setShowSparkle] = useState(false);
@@ -603,8 +603,6 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                   { id: 'eyes' as const, label: 'Yeux' },
                   { id: 'hair' as const, label: 'Cheveux' },
                   { id: 'hairstyle' as const, label: 'Coiffure' },
-                  { id: 'clothing' as const, label: 'Vêtements' },
-                  { id: 'shoes' as const, label: 'Chaussures' },
                 ]).map(cat => (
                   <button
                     key={cat.id}
@@ -623,9 +621,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                   {colorCategory === 'skin' ? 'Couleur de peau' :
                    colorCategory === 'eyes' ? 'Couleur des yeux' :
                    colorCategory === 'hair' ? 'Couleur des cheveux' :
-                   colorCategory === 'hairstyle' ? 'Coiffure' :
-                   colorCategory === 'clothing' ? 'Couleur des vêtements' :
-                   'Couleur des chaussures'}
+                   'Coiffure'}
                 </h3>
                 {colorCategory === 'skin' && (
                   <ColorPalette palettes={SKIN_PALETTES} selectedIndex={config.skinIndex} onSelect={i => updateConfig({ skinIndex: i })} />
@@ -638,12 +634,6 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                 )}
                 {colorCategory === 'hairstyle' && (
                   <HairstyleSelector gender={config.gender} selectedIndex={config.hairStyleIndex} level={level} onSelect={i => updateConfig({ hairStyleIndex: i })} config={config} />
-                )}
-                {colorCategory === 'clothing' && (
-                  <ColorPalette palettes={CLOTHING_PALETTES} selectedIndex={config.clothingIndex} onSelect={i => updateConfig({ clothingIndex: i })} premiumPalettes={PREMIUM_CLOTHING_PALETTES} />
-                )}
-                {colorCategory === 'shoes' && (
-                  <ColorPalette palettes={SHOES_PALETTES} selectedIndex={config.shoesIndex} onSelect={i => updateConfig({ shoesIndex: i })} />
                 )}
               </div>
             </motion.div>
