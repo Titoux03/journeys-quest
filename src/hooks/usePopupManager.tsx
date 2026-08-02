@@ -71,11 +71,11 @@ export const usePopupManager = () => {
 
     // Si connecté, synchroniser avec le serveur
     if (user) {
-      const dbKey = key === 'hasSeenIntroPopup' ? 'has_seen_intro_popup' : 'has_seen_tutorial';
+      const dbKey = key === 'hasSeenIntroPopup' ? 'has_seen_intro_popup' as const : 'has_seen_tutorial' as const;
       
       await supabase
         .from('profiles')
-        .update({ [dbKey]: value })
+        .update({ [dbKey]: value } as never)
         .eq('user_id', user.id);
     }
   };

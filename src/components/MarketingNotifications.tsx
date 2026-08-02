@@ -135,7 +135,7 @@ export const MarketingNotifications: React.FC = () => {
     setShownNotifications(todaySet);
 
     // Programmer les notifications
-    const timers: NodeJS.Timeout[] = [];
+    const timers: ReturnType<typeof setTimeout>[] = [];
     const marketingNotifications = getMarketingNotifications(t);
 
     marketingNotifications.forEach(notification => {
