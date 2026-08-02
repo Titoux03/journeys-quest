@@ -6,6 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { AvatarItem } from '@/hooks/useAvatar';
 import { playSound } from '@/utils/soundManager';
+import { resolveOverlay } from './resolveOverlay';
 import { PixelIcon } from './AvatarRenderer';
 import { RARITY_COLORS, RARITY_LABELS, RARITY_GRADIENTS, PIXEL_ITEMS } from './AvatarEngine';
 
@@ -134,8 +135,7 @@ export const ChestOpenerPixel: React.FC<ChestOpenerPixelProps> = ({ reward, onCl
               transition={{ duration: 1.5, repeat: Infinity }}
             >
               {(() => {
-                const overlayKey = (reward.pixel_art_data as any)?.overlay_key;
-                const pixelItem = overlayKey ? PIXEL_ITEMS.find(p => p.key === overlayKey) : null;
+                const pixelItem = resolveOverlay(reward as any);
                 if (pixelItem) {
                   return <PixelIcon pixels={pixelItem.pixels.slice(0, 8)} palette={pixelItem.palette} pixelSize={5} />;
                 }

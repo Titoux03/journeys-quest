@@ -15,6 +15,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { playSound } from '@/utils/soundManager';
 import { AvatarRenderer, PixelIcon } from './AvatarRenderer';
 import { ChestOpenerPixel } from './ChestOpenerPixel';
+import { resolveOverlay, ALL_OVERLAYS } from './resolveOverlay';
+import { EXTENDED_SLOTS } from './ItemCatalog';
 import { Progress } from '@/components/ui/progress';
 import {
   AvatarConfig,
@@ -196,27 +198,31 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
     }
   };
 
-  const allPixelItems = useMemo(() => [...PIXEL_ITEMS, ...PREMIUM_PIXEL_ITEMS], []);
+  const allPixelItems = useMemo(() => ALL_OVERLAYS, []);
+  const ALL_SLOT_IDS = useMemo(
+    () => [...SLOT_META.map(s => s.id), ...EXTENDED_SLOTS.map(s => s.id)],
+    []
+  );
 
   // Build equipped overlays — supports MULTIPLE items simultaneously
   const equippedOverlays: PixelItemOverlay[] = useMemo(() => {
     const overlays: PixelItemOverlay[] = [];
 
     // Collect ALL equipped items across ALL slots
-    for (const s of SLOT_META) {
-      const item = getEquippedForSlot(s.id);
+    for (const slotId of ALL_SLOT_IDS) {
+      const item = getEquippedForSlot(slotId);
       if (!item) continue;
-      const overlayKey = (item.pixel_art_data as any)?.overlay_key as string | undefined;
-      if (!overlayKey) continue;
-      const pixelItem = allPixelItems.find(p => p.key === overlayKey);
+      // resolveOverlay: les items en base n'ont pas d'overlay_key renseigné
+      const pixelItem = resolveOverlay(item as any);
       if (pixelItem) overlays.push(pixelItem);
     }
 
     // Single item preview — replaces slot but keeps others
     if (previewingItem) {
       const previewDbItem = allItems.find(i => i.id === previewingItem);
-      const previewKey = previewDbItem ? (previewDbItem.pixel_art_data as any)?.overlay_key : previewingItem;
-      const previewPixel = allPixelItems.find(p => p.key === previewKey);
+      const previewPixel = previewDbItem
+        ? resolveOverlay(previewDbItem as any)
+        : ALL_OVERLAYS.find(p => p.key === previewingItem);
       if (previewPixel) {
         const filtered = overlays.filter(o => o.slot !== previewPixel.slot);
         filtered.push(previewPixel);
@@ -225,7 +231,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
     }
 
     return overlays;
-  }, [getEquippedForSlot, previewingItem, allItems, allPixelItems]);
+  }, [getEquippedForSlot, previewingItem, allItems, ALL_SLOT_IDS]);
 
   const getLocalItemsForSlot = useCallback((slot: string) => {
     return allPixelItems.filter(p => p.slot === slot);
@@ -718,8 +724,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                         <div className="grid grid-cols-3 gap-2">
                           {getOwnedItemsForSlot(selectedSlot).map(item => {
                             const isEquipped = getEquippedForSlot(selectedSlot)?.id === item.id;
-                            const overlayKey = (item.pixel_art_data as any)?.overlay_key;
-                            const pixelItem = overlayKey ? allPixelItems.find(p => p.key === overlayKey) : null;
+                            const pixelItem = resolveOverlay(item as any);
                             return (
                               <motion.button
                                 key={item.id}
@@ -754,8 +759,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                             </div>
                             <div className="grid grid-cols-3 gap-2">
                               {getLockedItemsForSlot(selectedSlot).map(item => {
-                                const overlayKey = (item.pixel_art_data as any)?.overlay_key;
-                                const pixelItem = overlayKey ? allPixelItems.find(p => p.key === overlayKey) : null;
+                                const pixelItem = resolveOverlay(item as any);
                                 const isPremiumLocked = item.is_premium && !isPremium;
                                 const isPreviewing = previewingItem === item.id || previewingItem === overlayKey;
                                 return (
@@ -809,7 +813,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                         const localItems = getLocalItemsForSlot(slot.id);
                         if (localItems.length === 0) return null;
                         const equippedItem = getEquippedForSlot(slot.id);
-                        const equippedKey = equippedItem ? (equippedItem.pixel_art_data as any)?.overlay_key : null;
+                        const equippedKey = equippedItem ? resolveOverlay(equippedItem as any)?.key ?? null : null;
                         return (
                           <div key={slot.id}>
                             <button

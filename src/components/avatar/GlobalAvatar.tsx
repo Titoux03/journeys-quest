@@ -11,12 +11,18 @@ import { AvatarRenderer } from './AvatarRenderer';
 import {
   AvatarConfig,
   DEFAULT_AVATAR_CONFIG,
-  PIXEL_ITEMS,
-  PREMIUM_PIXEL_ITEMS,
   SLOT_META,
   getEvolutionStage,
   PixelItemOverlay,
 } from './AvatarEngine';
+import { EXTENDED_SLOTS } from './ItemCatalog';
+import { resolveOverlay } from './resolveOverlay';
+
+/** Tous les emplacements équipables : base + étendus (couvre-chef, dos, décor, familier). */
+const ALL_SLOT_IDS = [
+  ...SLOT_META.map((s) => s.id),
+  ...EXTENDED_SLOTS.map((s) => s.id),
+];
 
 interface GlobalAvatarProps {
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
@@ -49,21 +55,18 @@ export const GlobalAvatar: React.FC<GlobalAvatarProps> = ({
   const level = levelData?.level || 1;
   const evolution = useMemo(() => getEvolutionStage(level), [level]);
 
-  const allPixelItems = useMemo(() => [...PIXEL_ITEMS, ...PREMIUM_PIXEL_ITEMS], []);
-
-  // Build equipped overlays from ALL slots
+  // Build equipped overlays from ALL slots (base + emplacements étendus)
   const equippedOverlays: PixelItemOverlay[] = useMemo(() => {
     const overlays: PixelItemOverlay[] = [];
-    for (const s of SLOT_META) {
-      const item = getEquippedForSlot(s.id);
+    for (const slotId of ALL_SLOT_IDS) {
+      const item = getEquippedForSlot(slotId);
       if (!item) continue;
-      const overlayKey = (item.pixel_art_data as any)?.overlay_key as string | undefined;
-      if (!overlayKey) continue;
-      const pixelItem = allPixelItems.find(p => p.key === overlayKey);
+      // resolveOverlay gère les items dont `pixel_art_data.overlay_key` n'est pas renseigné
+      const pixelItem = resolveOverlay(item as any);
       if (pixelItem) overlays.push(pixelItem);
     }
     return overlays;
-  }, [getEquippedForSlot, allPixelItems]);
+  }, [getEquippedForSlot]);
 
   const autoGlow = showGlow ?? level >= 50;
 
