@@ -168,7 +168,7 @@ export const usePerformanceOptimization = (options: PerformanceHookOptions = {})
     window.addEventListener('offline', handleOffline);
 
     // Report metrics every minute
-    let metricsInterval: NodeJS.Timeout;
+    let metricsInterval: ReturnType<typeof setTimeout>;
     if (monitoringEnabled) {
       metricsInterval = setInterval(reportMetrics, 60000);
     }

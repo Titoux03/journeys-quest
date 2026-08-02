@@ -32,7 +32,7 @@ const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) 
   const [duration, setDuration] = useState(15); // minutes
   const [timeLeft, setTimeLeft] = useState(15 * 60); // seconds
   const [timerState, setTimerState] = useState<TimerState>('idle');
-  const intervalRef = useRef<NodeJS.Timeout>();
+  const intervalRef = useRef<ReturnType<typeof setTimeout>>();
   const { toast } = useToast();
   const { playStart, playEnd } = useGongSounds();
 
