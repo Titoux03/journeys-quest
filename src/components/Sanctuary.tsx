@@ -18,6 +18,7 @@ import {
   RARITY_LABELS,
   SLOT_META,
 } from '@/components/avatar/AvatarEngine';
+import { EXTENDED_ITEMS, EXTENDED_SLOTS } from '@/components/avatar/ItemCatalog';
 import { CHESTS, ChestKind, formatOdds, Rarity } from '@/utils/soulEconomy';
 
 interface SanctuaryProps {
@@ -29,6 +30,26 @@ interface SanctuaryProps {
 }
 
 const RARITY_ORDER: Rarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic'];
+
+/**
+ * Recadre l'aperçu sur la zone réellement dessinée.
+ * Sans ça, un item dessiné en bas de la grille (ailes, décors) rendrait une vignette vide.
+ */
+function cropPreview(pixels: number[][]): number[][] {
+  const rows = pixels.filter((r) => r.some((v) => v !== 0));
+  if (rows.length === 0) return [[0]];
+  let minC = Infinity;
+  let maxC = -1;
+  for (const r of rows) {
+    r.forEach((v, c) => {
+      if (v !== 0) {
+        minC = Math.min(minC, c);
+        maxC = Math.max(maxC, c);
+      }
+    });
+  }
+  return rows.slice(0, 8).map((r) => r.slice(minC, maxC + 1));
+}
 
 export const Sanctuary: React.FC<SanctuaryProps> = ({
   level,
@@ -42,7 +63,16 @@ export const Sanctuary: React.FC<SanctuaryProps> = ({
   const allItems: (PixelItemOverlay & { premium?: boolean })[] = useMemo(
     () => [
       ...PIXEL_ITEMS.map((i) => ({ ...i, premium: false })),
+      ...EXTENDED_ITEMS.map((i) => ({ ...i, premium: false })),
       ...PREMIUM_PIXEL_ITEMS.map((i) => ({ ...i, premium: true })),
+    ],
+    []
+  );
+
+  const allSlots = useMemo(
+    () => [
+      ...SLOT_META.map((s) => ({ id: s.id, label: s.label })),
+      ...EXTENDED_SLOTS,
     ],
     []
   );
@@ -169,7 +199,7 @@ export const Sanctuary: React.FC<SanctuaryProps> = ({
           >
             Tout
           </button>
-          {SLOT_META.map((s) => (
+          {allSlots.map((s) => (
             <button
               key={s.id}
               onClick={() => setSlotFilter(s.id)}
@@ -211,7 +241,7 @@ export const Sanctuary: React.FC<SanctuaryProps> = ({
                   }}
                 >
                   <div className={unlocked ? '' : 'opacity-25 grayscale'}>
-                    <PixelIcon pixels={item.pixels.slice(0, 6)} palette={item.palette} pixelSize={3} />
+                    <PixelIcon pixels={cropPreview(item.pixels)} palette={item.palette} pixelSize={3} />
                   </div>
 
                   <p
