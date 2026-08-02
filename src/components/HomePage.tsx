@@ -1,8 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { DailyQuote } from '@/components/DailyQuote';
-import { LevelDisplay } from '@/components/LevelDisplay';
+import { SoulHero } from '@/components/SoulHero';
 import { GlobalAvatar } from '@/components/avatar/GlobalAvatar';
+import { useNavigate } from 'react-router-dom';
 import { getNextUnlock, getEvolutionStage, RARITY_COLORS } from '@/components/avatar/AvatarEngine';
 import { PixelIcon } from '@/components/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -40,6 +41,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
   const { isPremium, showUpgradeModal } = usePremium();
   const { user } = useAuth();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { levelData: homeLevelData } = useLevel(user?.id);
   const { 
     addictionTypes, 
@@ -76,109 +78,50 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
 
   return (
     <div className="min-h-screen p-4 sm:p-6 pb-24 flex flex-col">
-      {/* Header avec salutation */}
-      <div className="text-center mb-6 sm:mb-8 animate-slide-up">
-        <div className="floating-element inline-block">
-          <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-primary mx-auto mb-4" />
-        </div>
-        <h1 className="text-2xl sm:text-4xl font-bold text-gradient-primary mb-2">
+      {/* Greeting compact */}
+      <div className="mb-6 text-center animate-slide-up">
+        <h1 className="text-xl sm:text-2xl font-bold text-gradient-primary">
           {greeting.message} {greeting.emoji}
         </h1>
-        <p className="text-sm sm:text-lg text-muted-foreground max-w-md mx-auto">
-          {user 
-            ? t('home.welcomeAuth')
-            : t('home.welcomeGuest')
-          }
-        </p>
-        
-        {!user && (
-          <div className="mt-4 p-4 bg-gradient-to-r from-primary/10 to-primary-glow/5 rounded-xl border border-primary/20 relative overflow-hidden">
-            <p className="text-xs sm:text-sm font-medium text-foreground mb-1">
-              {t('home.createAccount')}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {t('home.accessPremium')}
-            </p>
-          </div>
-        )}
-
-        {user && !isPremium && (
-          <div className="mt-4 p-4 bg-gradient-to-r from-warning/10 to-warning/5 rounded-xl border border-warning/20">
-            <div className="flex items-center space-x-2 mb-2">
-              <Crown className="w-4 h-4 text-warning" />
-              <span className="text-sm font-medium text-warning">{t('home.freeAccount')}</span>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {t('home.unlockFeatures')}
-            </p>
-          </div>
-        )}
       </div>
 
-      {/* Character Card - Uses GlobalAvatar with ALL equipped items */}
-      {user && (
-        <motion.button
-          onClick={() => onNavigate('avatar')}
-          className="w-full mb-6 relative overflow-hidden rounded-2xl border border-primary/20 text-left"
-          style={{
-            background: 'linear-gradient(145deg, hsl(220 50% 6%), hsl(220 45% 10%))',
-            boxShadow: '0 0 30px hsl(45 100% 65% / 0.1)',
-          }}
-          whileHover={{ scale: 1.01 }}
-          whileTap={{ scale: 0.99 }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+      {/* SOUL HERO — l'âme qui évolue, au centre de l'accueil (invité inclus) */}
+      <SoulHero
+        level={homeLevel}
+        progress={homeLevelData?.progressPercentage ?? 0}
+        xp={homeLevelData?.xp}
+        xpForNext={homeLevelData?.xpForNextLevel}
+        evolution={evo}
+        title={homeLevelData?.title || undefined}
+        isGuest={!user}
+        onOpenAvatar={() => onNavigate('avatar')}
+        onSignup={() => navigate('/auth')}
+      />
+
+      {/* Rappel premium discret (connecté non-premium) */}
+      {user && !isPremium && (
+        <button
+          onClick={showUpgradeModal}
+          className="mb-6 flex w-full items-center gap-3 rounded-2xl border border-warning/20 bg-gradient-to-r from-warning/10 to-warning/5 p-3 text-left"
         >
-          <div className={`absolute inset-0 bg-gradient-to-br ${evo.color} opacity-[0.07]`} />
-          <div className="relative flex items-center gap-4 p-4">
-            {/* GlobalAvatar shows equipped items automatically */}
-            <GlobalAvatar size="lg" animate showGlow={homeLevel >= 25} />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-sm font-bold text-foreground">Mon personnage</span>
-                <span className={`text-[9px] font-bold bg-gradient-to-r ${evo.color} text-white px-1.5 py-0.5 rounded-full`}>{evo.name}</span>
-              </div>
-              <div className="text-[11px] text-muted-foreground mb-1">Niveau {homeLevel}</div>
-              <div className="text-xs text-primary font-medium flex items-center gap-1">
-                Personnaliser
-                <Sparkles className="w-3 h-3" />
-              </div>
-              {nextItem && (
-                <div className="mt-2 space-y-1">
-                  <div className="flex items-center gap-1.5">
-                    <PixelIcon pixels={nextItem.item.pixels.slice(0, 3)} palette={nextItem.item.palette} pixelSize={2} />
-                    <span className="text-[10px] text-muted-foreground truncate">{nextItem.item.nameFr}</span>
-                    <span className="text-[8px] font-bold px-1 rounded" style={{ color: RARITY_COLORS[nextItem.item.rarity] }}>
-                      Nv.{nextItem.level}
-                    </span>
-                  </div>
-                  <Progress value={Math.min(100, (homeLevel / nextItem.level) * 100)} className="h-1.5" />
-                </div>
-              )}
-            </div>
-            <div className="text-xs text-muted-foreground">→</div>
+          <Crown className="h-5 w-5 shrink-0 text-warning" />
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-warning">{t('home.freeAccount')}</p>
+            <p className="text-xs text-muted-foreground">{t('home.unlockFeatures')}</p>
           </div>
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent pointer-events-none"
-            animate={{ x: ['-100%', '200%'] }}
-            transition={{ duration: 4, repeat: Infinity }}
-          />
-        </motion.button>
+        </button>
       )}
 
-      {/* Premium Status */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        {isPremium && (
-          <div className="journey-card-glow">
-            <div className="flex items-center justify-center space-x-3">
-              <Crown className="w-6 h-6 text-primary" />
-              <span className="text-lg font-semibold text-gradient-primary">Journeys Premium</span>
-              <Crown className="w-6 h-6 text-primary" />
-            </div>
+      {/* Badge premium (abonnés) */}
+      {isPremium && (
+        <div className="journey-card-glow mb-6">
+          <div className="flex items-center justify-center space-x-3">
+            <Crown className="w-6 h-6 text-primary" />
+            <span className="text-lg font-semibold text-gradient-primary">Journeys Premium</span>
+            <Crown className="w-6 h-6 text-primary" />
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
 
       {/* Recent Badges */}
@@ -235,11 +178,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
         }
         loginStreak={loginStreak?.current_streak || 0}
       />
-
-      {/* Daily Quote */}
-      <div className="mb-10">
-        <DailyQuote />
-      </div>
 
       {/* Quick Actions Grid */}
       <div className="grid grid-cols-2 gap-4 mb-8">
@@ -438,6 +376,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
           })}
         </div>
       )}
+
+      {/* Citation du jour — reléguée en secondaire, tout en bas */}
+      <div className="mb-8 opacity-90">
+        <DailyQuote />
+      </div>
 
       {/* Premium Teasers */}
       {!isPremium && <PremiumTodoTeaser />}
