@@ -1,10 +1,14 @@
 /**
  * SoulHero — L'écran d'accueil tourne autour de l'ÂME (l'avatar qui évolue).
- * C'est le héros de la page : grand, aura mystique, niveau + progression XP.
+ * C'est le héros de la page : grand, aura mystique vivante, niveau + progression XP.
  * Affiché pour TOUT LE MONDE (invité inclus) → vend le concept dès la 1re seconde.
+ *
+ * Motion (méthode Apple / Fluid Interfaces) : entrées en spring critique (pas d'overshoot
+ * gratuit), boucles lentes en transform/opacity uniquement (compositor 60fps),
+ * tout désactivé sous prefers-reduced-motion.
  */
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useMemo } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { GlobalAvatar } from '@/components/avatar/GlobalAvatar';
 import { EvolutionStage } from '@/components/avatar/AvatarEngine';
 import { Sparkles, ChevronRight } from 'lucide-react';
@@ -21,6 +25,50 @@ interface SoulHeroProps {
   onSignup: () => void;
 }
 
+/** Braises d'âme qui s'élèvent doucement autour du personnage. */
+const SoulEmbers: React.FC<{ aura: string }> = ({ aura }) => {
+  const reduce = useReducedMotion();
+  const motes = useMemo(
+    () =>
+      Array.from({ length: 9 }).map((_, i) => ({
+        id: i,
+        x: (i * 37) % 120 - 60,          // -60..60 réparti, stable
+        size: 2 + ((i * 7) % 4),          // 2..5 px
+        delay: (i * 0.6) % 5,
+        duration: 4.5 + ((i * 5) % 4),    // 4.5..8.5 s
+        gold: i % 3 === 0,
+      })),
+    []
+  );
+  if (reduce) return null;
+  return (
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+      <div className="relative h-40 w-40">
+        {motes.map((m) => (
+          <motion.span
+            key={m.id}
+            className="absolute left-1/2 top-1/2 rounded-full"
+            style={{
+              width: m.size,
+              height: m.size,
+              background: m.gold ? 'hsl(45 100% 70%)' : aura.replace(/\/\s*[\d.]+\)/, '/ 0.9)'),
+              boxShadow: `0 0 6px ${m.gold ? 'hsl(45 100% 65% / 0.8)' : aura}`,
+            }}
+            initial={{ opacity: 0, x: m.x, y: 40 }}
+            animate={{ opacity: [0, 0.9, 0], y: [-10, -120], x: [m.x, m.x + (m.gold ? 8 : -8)] }}
+            transition={{
+              duration: m.duration,
+              delay: m.delay,
+              repeat: Infinity,
+              ease: 'easeOut',
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export const SoulHero: React.FC<SoulHeroProps> = ({
   level,
   progress,
@@ -32,6 +80,7 @@ export const SoulHero: React.FC<SoulHeroProps> = ({
   onOpenAvatar,
   onSignup,
 }) => {
+  const reduce = useReducedMotion();
   // Couleur d'aura : glow du palier si dispo, sinon magenta "Force âme"
   const aura = evolution.glowColor || 'hsl(300 100% 50% / 0.22)';
 
@@ -39,7 +88,7 @@ export const SoulHero: React.FC<SoulHeroProps> = ({
     <motion.section
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ type: 'spring', bounce: 0, duration: 0.6 }}
       className="relative mb-8"
     >
       {/* Halo d'ambiance derrière tout le hero */}
@@ -49,19 +98,34 @@ export const SoulHero: React.FC<SoulHeroProps> = ({
       />
 
       <div className="relative flex flex-col items-center text-center">
-        {/* Avatar + aura pulsée */}
+        {/* Avatar + aura vivante */}
         <button
           onClick={onOpenAvatar}
           className="relative mb-5 outline-none"
           aria-label="Ouvrir mon âme"
         >
-          {/* Anneau d'aura qui respire */}
+          {/* Anneau conique qui tourne très lentement (halo mystique) */}
+          {!reduce && (
+            <motion.span
+              className="absolute left-1/2 top-1/2 -z-10 h-44 w-44 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40 blur-md"
+              style={{
+                background: `conic-gradient(from 0deg, transparent, ${aura}, transparent 60%)`,
+              }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
+            />
+          )}
+          {/* Aura qui respire */}
           <motion.span
             className="absolute left-1/2 top-1/2 -z-10 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl"
             style={{ background: `radial-gradient(circle, ${aura}, transparent 65%)` }}
-            animate={{ scale: [1, 1.12, 1], opacity: [0.55, 0.85, 0.55] }}
+            animate={reduce ? undefined : { scale: [1, 1.12, 1], opacity: [0.55, 0.85, 0.55] }}
             transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
           />
+
+          {/* Braises */}
+          <SoulEmbers aura={aura} />
+
           {/* Cercle de confinement premium */}
           <motion.div
             className="relative flex h-32 w-32 items-center justify-center rounded-full border border-primary/25"
@@ -71,6 +135,7 @@ export const SoulHero: React.FC<SoulHeroProps> = ({
             }}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
+            transition={{ type: 'spring', bounce: 0.2, duration: 0.4 }}
           >
             <GlobalAvatar size="xl" animate showGlow={false} />
           </motion.div>
@@ -98,7 +163,7 @@ export const SoulHero: React.FC<SoulHeroProps> = ({
               style={{ boxShadow: `0 0 12px ${aura}` }}
               initial={{ width: 0 }}
               animate={{ width: `${Math.max(3, Math.min(100, progress))}%` }}
-              transition={{ duration: 1, delay: 0.3, ease: 'easeOut' }}
+              transition={{ type: 'spring', bounce: 0, duration: 1, delay: 0.3 }}
             />
           </div>
           <div className="mt-1.5 flex items-center justify-between text-[10px] text-muted-foreground">
@@ -113,6 +178,7 @@ export const SoulHero: React.FC<SoulHeroProps> = ({
             onClick={onSignup}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
+            transition={{ type: 'spring', bounce: 0.2, duration: 0.4 }}
             className="mt-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-5 py-2.5 text-sm font-semibold text-primary"
           >
             <Sparkles className="h-4 w-4" />
