@@ -98,16 +98,26 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({
           </p>
         </div>
 
-        {/* Score display - masqué en écriture libre */}
+        {/* État de l'âme — jamais un score rouge, toujours bienveillant */}
         {!freeWriting && (
           <div className="journey-card mb-6 text-center animate-scale-in">
-            <p className="text-sm text-muted-foreground mb-2">Votre score du jour</p>
-            <div className={`score-indicator mx-auto ${
-              mood === 'high' ? 'score-high' : 
-              mood === 'medium' ? 'score-medium' : 'score-low'
-            }`}>
-              {totalScore.toFixed(1)}
-            </div>
+            <p className="text-2xl mb-1">
+              {mood === 'high' ? '✨' : mood === 'medium' ? '🌗' : '🌙'}
+            </p>
+            <p className="text-base font-semibold text-foreground">
+              {mood === 'high'
+                ? 'Journée lumineuse'
+                : mood === 'medium'
+                ? 'Journée traversée'
+                : 'Journée à ménager'}
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {mood === 'high'
+                ? "Prends un instant pour savourer ce qui a brillé."
+                : mood === 'medium'
+                ? "Tu avances, un jour après l'autre."
+                : "Une journée basse ne casse pas ta trajectoire. Tu es là, c'est l'essentiel."}
+            </p>
           </div>
         )}
 

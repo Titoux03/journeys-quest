@@ -10,6 +10,8 @@ import { toast } from 'sonner';
 import { PremiumTeaser } from '@/components/PremiumTeaser';
 import { customCriteriaSchema } from '@/utils/validation';
 import { useTranslation } from 'react-i18next';
+import { getBenevolentSummary, getSoulGrowthMessage } from '@/utils/benevolentScore';
+import { BenevolentSummary } from '@/components/BenevolentSummary';
 
 interface DailyJournalProps {
   onComplete: (scores: Record<string, number>, totalScore: number) => void;
@@ -169,29 +171,36 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
 
   const handleComplete = async () => {
     const totalScore = calculateTotalScore();
-    
+    const soulMessage = getSoulGrowthMessage(getBenevolentSummary(scores).tone);
+
     // Sauvegarder en base si l'utilisateur est connecté
     if (user) {
       setSaving(true);
       const mood = totalScore <= 4 ? 'low' : totalScore <= 7 ? 'medium' : 'high';
       const result = await saveJournalEntry(scores, totalScore, mood);
-      
+
       if (result?.success) {
-        toast.success('Votre journal a été sauvegardé !');
+        toast.success(soulMessage);
       } else {
         toast.error('Erreur lors de la sauvegarde');
       }
       setSaving(false);
     } else {
-      // Indiquer que les données sont sauvegardées localement
-      toast.success('Journal sauvegardé ! Créez un compte pour synchroniser vos données.');
+      toast.success(`${soulMessage} Crée un compte pour la garder avec toi.`);
     }
-    
+
     onComplete(scores, totalScore);
   };
 
   const totalScore = calculateTotalScore();
   const mood = totalScore >= 7 ? 'high' : totalScore >= 4 ? 'medium' : 'low';
+
+  // Bilan bienveillant : jamais de verdict, on éclaire les "lumières" du jour
+  const criteriaLabels = criteria.reduce<Record<string, string>>((acc, c) => {
+    acc[c.key] = t(`journal.criteria.${c.key}`, { defaultValue: c.label });
+    return acc;
+  }, {});
+  const summary = getBenevolentSummary(scores, criteriaLabels);
 
   return (
     <div className="min-h-screen p-4 sm:p-6 pb-24">
@@ -217,33 +226,8 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
           )}
         </div>
 
-        {/* Score global */}
-        <div className="journey-card-premium mb-8 text-center animate-scale-in">
-          <h3 className="text-lg font-medium mb-4">Score global</h3>
-          <div className={`score-indicator mx-auto ${
-            mood === 'high' ? 'score-high' : 
-            mood === 'medium' ? 'score-medium' : 'score-low'
-          }`}>
-            {totalScore.toFixed(1)}
-          </div>
-          <p className="text-sm text-muted-foreground mt-2">
-            {mood === 'high' && 'Excellente journée ! 🌟'}
-            {mood === 'medium' && 'Journée équilibrée 😊'}
-            {mood === 'low' && 'Prenez soin de vous 💙'}
-          </p>
-          
-          {/* Phrase motivante pour score > 7 */}
-          {totalScore > 7 && (
-            <div className="mt-4 p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl border border-primary/20 animate-pulse-glow">
-              <p className="text-primary font-medium text-lg">
-                {getRandomMotivationalPhrase()}
-              </p>
-              <p className="text-xs text-muted-foreground mt-2">
-                Continuez sur cette voie exceptionnelle ! 💫
-              </p>
-            </div>
-          )}
-        </div>
+        {/* Bilan bienveillant — remplace le score froid */}
+        <BenevolentSummary summary={summary} />
 
         {/* Critères d'évaluation */}
         <div className="space-y-6 mb-8">
@@ -288,9 +272,9 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
                     className="w-full"
                   />
                   <div className="flex justify-between text-xs text-muted-foreground mt-2">
-                    <span>0 - Difficile</span>
-                    <span>5 - Correct</span>
-                    <span>10 - Parfait</span>
+                    <span>Rude</span>
+                    <span>Ça allait</span>
+                    <span>Lumineux</span>
                   </div>
                 </div>
               </div>
@@ -336,7 +320,7 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
           disabled={saving}
         >
           <Plus className="w-6 h-6" />
-          {saving ? 'Sauvegarde...' : 'Terminer l\'évaluation'}
+          {saving ? 'Sauvegarde...' : 'Terminer mon bilan'}
         </button>
       </div>
     </div>
