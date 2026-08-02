@@ -11,6 +11,7 @@ import React, { useMemo } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { GlobalAvatar } from '@/components/avatar/GlobalAvatar';
 import { EvolutionStage } from '@/components/avatar/AvatarEngine';
+import { getSoulReflection } from '@/utils/soulEconomy';
 import { Sparkles, ChevronRight } from 'lucide-react';
 
 interface SoulHeroProps {
@@ -21,6 +22,8 @@ interface SoulHeroProps {
   evolution: EvolutionStage;
   title?: string;
   isGuest: boolean;
+  /** moyenne des derniers jours — l'âme reflète, avec douceur, jamais en reproche */
+  recentAverage?: number | null;
   onOpenAvatar: () => void;
   onSignup: () => void;
 }
@@ -77,12 +80,15 @@ export const SoulHero: React.FC<SoulHeroProps> = ({
   evolution,
   title,
   isGuest,
+  recentAverage = null,
   onOpenAvatar,
   onSignup,
 }) => {
   const reduce = useReducedMotion();
   // Couleur d'aura : glow du palier si dispo, sinon magenta "Force âme"
   const aura = evolution.glowColor || 'hsl(300 100% 50% / 0.22)';
+  // Le Reflet : l'âme reflète tes derniers jours — douceur uniquement, jamais de punition
+  const reflection = getSoulReflection(recentAverage);
 
   return (
     <motion.section
@@ -115,12 +121,23 @@ export const SoulHero: React.FC<SoulHeroProps> = ({
               transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
             />
           )}
-          {/* Aura qui respire */}
+          {/* Aura qui respire — son intensité et son rythme reflètent tes derniers jours */}
           <motion.span
             className="absolute left-1/2 top-1/2 -z-10 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl"
             style={{ background: `radial-gradient(circle, ${aura}, transparent 65%)` }}
-            animate={reduce ? undefined : { scale: [1, 1.12, 1], opacity: [0.55, 0.85, 0.55] }}
-            transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+            animate={
+              reduce
+                ? undefined
+                : {
+                    scale: [1, 1.12, 1],
+                    opacity: [
+                      0.55 * reflection.auraOpacity,
+                      0.85 * reflection.auraOpacity,
+                      0.55 * reflection.auraOpacity,
+                    ],
+                  }
+            }
+            transition={{ duration: reflection.breathDuration, repeat: Infinity, ease: 'easeInOut' }}
           />
 
           {/* Braises */}
@@ -151,9 +168,16 @@ export const SoulHero: React.FC<SoulHeroProps> = ({
         </div>
 
         {/* Niveau / titre */}
-        <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+        <p className="mb-2 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
           Niveau {level}{title ? ` · ${title}` : ''}
         </p>
+
+        {/* Le Reflet — état de l'âme, toujours doux */}
+        {!isGuest && (
+          <p className="mb-4 max-w-xs text-xs italic leading-relaxed text-muted-foreground/80">
+            {reflection.message}
+          </p>
+        )}
 
         {/* Barre de progression XP */}
         <div className="w-full max-w-xs">

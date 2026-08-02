@@ -9,6 +9,7 @@ import { AbstinenceTracker } from '@/components/AbstinenceTracker';
 import { StretchingRoutine } from '@/components/StretchingRoutine';
 import TodoList from '@/components/TodoList';
 import { AvatarCustomizer, LevelUpCelebration } from '@/components/avatar';
+import { Sanctuary } from '@/components/Sanctuary';
 import { DailyQuote } from '@/components/DailyQuote';
 import { PremiumUpgrade } from '@/components/PremiumUpgrade';
 import { MarketingNotifications } from '@/components/MarketingNotifications';
@@ -37,11 +38,11 @@ interface JournalEntry {
 
 const Index = () => {
   const { user, signOut, loading } = useAuth();
-  const { upgradeModalVisible, hideUpgradeModal, isPremium } = usePremium();
+  const { upgradeModalVisible, hideUpgradeModal, isPremium, showUpgradeModal } = usePremium();
   const { journalEntries, saveJournalEntry, deleteJournalEntry } = useProgress();
   const { playWelcome } = useGongSounds();
   const navigate = useNavigate();
-  const { levelUpEvent, dismissLevelUp } = useLevel(user?.id);
+  const { levelUpEvent, dismissLevelUp, levelData } = useLevel(user?.id);
   const { 
     shouldShowIntro, 
     shouldShowTutorial, 
@@ -246,6 +247,14 @@ const Index = () => {
         return <TodoList onNavigate={setCurrentScreen} />;
       case 'avatar':
         return <AvatarCustomizer onNavigate={setCurrentScreen} />;
+      case 'sanctuary':
+        return (
+          <Sanctuary
+            level={levelData?.level || 1}
+            isPremium={isPremium}
+            onUpgrade={showUpgradeModal}
+          />
+        );
       default:
         return <HomePage onNavigate={setCurrentScreen} entries={entries} />;
     }

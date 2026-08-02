@@ -72,6 +72,16 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
   };
 
   const greeting = getGreeting();
+
+  // Le Reflet : moyenne des 5 derniers bilans (l'âme reflète la période, pas un seul jour)
+  const recentAverage = React.useMemo(() => {
+    const recent = [...entries]
+      .sort((a, b) => b.date.localeCompare(a.date))
+      .slice(0, 5);
+    if (recent.length === 0) return null;
+    return recent.reduce((sum, e) => sum + e.totalScore, 0) / recent.length;
+  }, [entries]);
+
   const homeLevel = homeLevelData?.level || 1;
   const nextItem = getNextUnlock(homeLevel);
   const evo = getEvolutionStage(homeLevel);
@@ -94,9 +104,26 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
         evolution={evo}
         title={homeLevelData?.title || undefined}
         isGuest={!user}
+        recentAverage={recentAverage}
         onOpenAvatar={() => onNavigate('avatar')}
         onSignup={() => navigate('/auth')}
       />
+
+      {/* Accès au Sanctuaire — la collection à compléter */}
+      <button
+        onClick={() => onNavigate('sanctuary')}
+        className="mb-6 flex w-full items-center gap-3 rounded-2xl border border-primary/15 p-4 text-left transition-colors hover:border-primary/35"
+        style={{ background: 'linear-gradient(160deg, hsl(220 45% 9%), hsl(220 50% 6%))' }}
+      >
+        <Sparkles className="h-5 w-5 shrink-0 text-primary" />
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold text-foreground">Le Sanctuaire</p>
+          <p className="text-xs text-muted-foreground">
+            Tout ce que ton âme peut devenir
+          </p>
+        </div>
+        <span className="text-xs text-muted-foreground">→</span>
+      </button>
 
       {/* Rappel premium discret (connecté non-premium) */}
       {user && !isPremium && (
