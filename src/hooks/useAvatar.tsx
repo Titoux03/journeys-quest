@@ -186,26 +186,33 @@ export const useAvatar = (userId: string | undefined) => {
 
     // Get items matching this rarity or lower that user doesn't own
     const ownedIds = new Set(userItems.map(ui => ui.item_id));
-    const rarityOrder = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
+    const rarityOrder = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic'];
     const chestRarityIdx = rarityOrder.indexOf(chest.rarity);
-    
+
     // Higher rarity chests give better items
-    const eligibleItems = allItems.filter(item => {
+    let eligibleItems = allItems.filter(item => {
       if (ownedIds.has(item.id)) return false;
       const itemRarityIdx = rarityOrder.indexOf(item.rarity);
       // Chest gives items of its rarity ± 1
       return Math.abs(itemRarityIdx - chestRarityIdx) <= 1;
     });
 
+    // Plus rien dans cette tranche de rareté : on élargit à tout ce qui n'est pas possédé,
+    // plutôt que de montrer un objet qui ne serait jamais ajouté à l'inventaire.
     if (eligibleItems.length === 0) {
-      // All items owned, give random item
-      const randomItem = allItems[Math.floor(Math.random() * allItems.length)];
-      toast({ title: '📦 Coffre ouvert !', description: `Tu as déjà tous les items de cette rareté !`, duration: 3000 });
-      
-      // Mark chest as opened
+      eligibleItems = allItems.filter(item => !ownedIds.has(item.id));
+    }
+
+    if (eligibleItems.length === 0) {
+      // Collection réellement complète : on l'annonce clairement, sans faire miroiter un gain.
+      toast({
+        title: 'Coffre ouvert',
+        description: "Tu possèdes déjà toute la collection. Cet objet se transforme en éclats.",
+        duration: 3000,
+      });
       await supabase.from('user_chests' as any).update({ is_opened: true, opened_at: new Date().toISOString() }).eq('id', chestId);
       await loadAllData();
-      return randomItem;
+      return null;
     }
 
     // Weighted random - higher rarity = less likely
@@ -225,12 +232,24 @@ export const useAvatar = (userId: string | undefined) => {
       }
     }
 
-    // Add item to inventory
-    await supabase.from('user_avatar_items' as any).insert({
+    // Ajout à l'inventaire — si ça échoue, on NE consomme PAS le coffre et on ne
+    // fait pas miroiter un objet que l'utilisateur ne retrouverait jamais.
+    const { error: inventoryError } = await supabase.from('user_avatar_items' as any).insert({
       user_id: userId,
       item_id: selectedItem.id,
       obtained_via: 'chest'
     });
+
+    if (inventoryError) {
+      console.error('[openChest] échec de l\'ajout à l\'inventaire:', inventoryError);
+      toast({
+        title: 'Coffre non ouvert',
+        description: "L'objet n'a pas pu être ajouté. Ton coffre est conservé, réessaie.",
+        variant: 'destructive',
+        duration: 4000,
+      });
+      return null;
+    }
 
     // Mark chest as opened
     await supabase.from('user_chests' as any).update({ is_opened: true, opened_at: new Date().toISOString() }).eq('id', chestId);

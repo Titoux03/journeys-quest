@@ -127,7 +127,7 @@ function extractPetSprite(overlay: PixelItemOverlay): { pixels: number[][]; cols
 
 // ── Slot render order (back-to-front) ──
 // Ordre d'empilement, du fond vers l'avant.
-const SLOT_RENDER_ORDER = ['backdrop', 'aura', 'back', 'cape', 'body', 'face', 'head', 'weapon'];
+const SLOT_RENDER_ORDER = ['background', 'aura', 'back', 'cape', 'body', 'face', 'head', 'weapon'];
 
 export const AvatarRenderer: React.FC<AvatarRendererProps> = ({
   config,

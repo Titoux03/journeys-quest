@@ -174,11 +174,11 @@ const BACK_SHAPES: Shape[] = [
   },
 ];
 
-/* ─────────────────────────  DÉCORS D'ÂME (slot 'backdrop') — uniques  ───────────────────────── */
+/* ─────────────────────────  DÉCORS D'ÂME (slot 'background') — uniques  ───────────────────────── */
 
 export const BACKDROP_ITEMS: PixelItemOverlay[] = [
   {
-    key: 'backdrop_lune', name: 'Moon', nameFr: 'Lune Veilleuse', slot: 'backdrop',
+    key: 'background_lune', name: 'Moon', nameFr: 'Lune Veilleuse', slot: 'background',
     rarity: 'uncommon', levelRequired: 9,
     palette: ['', '#FFF1B8AA', '#E8D48866'],
     pixels: [
@@ -189,7 +189,7 @@ export const BACKDROP_ITEMS: PixelItemOverlay[] = [
     ],
   },
   {
-    key: 'backdrop_etoiles', name: 'Stars', nameFr: 'Voûte Étoilée', slot: 'backdrop',
+    key: 'background_etoiles', name: 'Stars', nameFr: 'Voûte Étoilée', slot: 'background',
     rarity: 'common', levelRequired: 5,
     palette: ['', '#FFFFFFAA', '#AFC8FF88'],
     pixels: [
@@ -204,7 +204,7 @@ export const BACKDROP_ITEMS: PixelItemOverlay[] = [
     ],
   },
   {
-    key: 'backdrop_aurore', name: 'Aurora', nameFr: 'Aurore', slot: 'backdrop',
+    key: 'background_aurore', name: 'Aurora', nameFr: 'Aurore', slot: 'background',
     rarity: 'rare', levelRequired: 28,
     palette: ['', '#6CF0C255', '#8B7BF055', '#FF9ED855'],
     pixels: [
@@ -214,7 +214,7 @@ export const BACKDROP_ITEMS: PixelItemOverlay[] = [
     ],
   },
   {
-    key: 'backdrop_montagne', name: 'Peaks', nameFr: 'Cimes Lointaines', slot: 'backdrop',
+    key: 'background_montagne', name: 'Peaks', nameFr: 'Cimes Lointaines', slot: 'background',
     rarity: 'uncommon', levelRequired: 13,
     palette: ['', '#3C4A6688', '#2A3550AA'],
     pixels: [
@@ -226,7 +226,7 @@ export const BACKDROP_ITEMS: PixelItemOverlay[] = [
     ],
   },
   {
-    key: 'backdrop_portail', name: 'Portal', nameFr: "Portail d'Âme", slot: 'backdrop',
+    key: 'background_portail', name: 'Portal', nameFr: "Portail d'Âme", slot: 'background',
     rarity: 'epic', levelRequired: 45,
     palette: ['', '#B07BF088', '#6C5CE788', '#FFD9FF66'],
     pixels: [
@@ -247,7 +247,7 @@ export const BACKDROP_ITEMS: PixelItemOverlay[] = [
     ],
   },
   {
-    key: 'backdrop_pluie', name: 'Starfall', nameFr: "Pluie d'Étoiles", slot: 'backdrop',
+    key: 'background_pluie', name: 'Starfall', nameFr: "Pluie d'Étoiles", slot: 'background',
     rarity: 'legendary', levelRequired: 60,
     palette: ['', '#FFE9A8AA', '#FFFFFF88'],
     pixels: [
@@ -393,10 +393,26 @@ export const EXTENDED_ITEMS: PixelItemOverlay[] = [
   ...PET_ITEMS,
 ];
 
-/** Métadonnées des nouveaux emplacements. */
+/** Métadonnées des nouveaux emplacements (même forme que SLOT_META pour l'UI). */
 export const EXTENDED_SLOTS = [
-  { id: 'head', label: 'Couvre-chef' },
-  { id: 'back', label: 'Dos' },
-  { id: 'backdrop', label: "Décor d'âme" },
-  { id: 'pet', label: 'Familier' },
+  {
+    id: 'head', label: 'Couvre-chef',
+    iconPalette: ['', '#FFD34D', '#C9A227'],
+    iconPixels: [[1, 0, 1, 0, 1], [1, 1, 1, 1, 1], [2, 2, 2, 2, 2]],
+  },
+  {
+    id: 'back', label: 'Dos',
+    iconPalette: ['', '#EDF2F7', '#B8C2CE'],
+    iconPixels: [[1, 0, 0, 0, 1], [1, 1, 0, 1, 1], [2, 0, 0, 0, 2]],
+  },
+  {
+    id: 'background', label: "Décor d'âme",
+    iconPalette: ['', '#FFF1B8', '#8B7BF0'],
+    iconPixels: [[1, 0, 2, 0, 1], [0, 0, 0, 0, 0], [2, 0, 1, 0, 2]],
+  },
+  {
+    id: 'pet', label: 'Familier',
+    iconPalette: ['', '#5FBF6A', '#2F7A3A'],
+    iconPixels: [[1, 0, 0, 1, 0], [1, 1, 1, 1, 0], [2, 0, 0, 2, 0]],
+  },
 ];

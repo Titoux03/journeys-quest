@@ -199,10 +199,8 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
   };
 
   const allPixelItems = useMemo(() => ALL_OVERLAYS, []);
-  const ALL_SLOT_IDS = useMemo(
-    () => [...SLOT_META.map(s => s.id), ...EXTENDED_SLOTS.map(s => s.id)],
-    []
-  );
+  const UI_SLOTS = useMemo(() => [...SLOT_META, ...EXTENDED_SLOTS], []);
+  const ALL_SLOT_IDS = useMemo(() => UI_SLOTS.map(s => s.id), [UI_SLOTS]);
 
   // Build equipped overlays — supports MULTIPLE items simultaneously
   const equippedOverlays: PixelItemOverlay[] = useMemo(() => {
@@ -261,7 +259,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
   const nextUnlock = useMemo(() => getNextUnlock(level), [level]);
   const evolution = useMemo(() => getEvolutionStage(level), [level]);
 
-  const collectionCount = SLOT_META.reduce((sum, s) => sum + getOwnedItemsForSlot(s.id).length, 0);
+  const collectionCount = UI_SLOTS.reduce((sum, s) => sum + getOwnedItemsForSlot(s.id).length, 0);
   const totalItems = allItems.length;
   const collectionPct = totalItems > 0 ? Math.round((collectionCount / totalItems) * 100) : 0;
 
@@ -674,7 +672,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
               {equipmentTab === 'items' && (
                 <div>
                   <div className="flex gap-2 overflow-x-auto pb-3 mb-3 scrollbar-hide">
-                    {SLOT_META.map(slot => {
+                    {UI_SLOTS.map(slot => {
                       const equipped = getEquippedForSlot(slot.id);
                       const isSelected = selectedSlot === slot.id;
                       const ownedCount = getOwnedItemsForSlot(slot.id).length;
@@ -809,7 +807,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
 
                   {!selectedSlot && (
                     <div className="space-y-4">
-                      {SLOT_META.map(slot => {
+                      {UI_SLOTS.map(slot => {
                         const localItems = getLocalItemsForSlot(slot.id);
                         if (localItems.length === 0) return null;
                         const equippedItem = getEquippedForSlot(slot.id);
