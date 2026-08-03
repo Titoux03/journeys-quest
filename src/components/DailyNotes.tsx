@@ -3,6 +3,7 @@ import { Send, BookOpen, Edit3, Trash2 } from 'lucide-react';
 import { Button } from './ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useDailyNotes, DailyNote } from '@/hooks/useDailyNotes';
+import { useSoulRewards } from '@/hooks/useSoulRewards';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { dailyNotesSchema } from '@/utils/validation';
@@ -15,6 +16,7 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { notes, loading, saveNote, updateNote, deleteNote } = useDailyNotes();
+  const { reward } = useSoulRewards();
   const [noteContent, setNoteContent] = useState('');
   const [saving, setSaving] = useState(false);
   const [editingNote, setEditingNote] = useState<DailyNote | null>(null);
@@ -33,6 +35,7 @@ export const DailyNotes: React.FC<DailyNotesProps> = ({ onNavigate }) => {
     
     try {
       const result = await saveNote(noteContent.trim());
+      if (result) await reward('free_note');
 
       if (result?.success) {
         toast.success(t('notes.saveSuccess'));

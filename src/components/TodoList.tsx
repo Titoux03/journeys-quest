@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useSoulRewards } from '@/hooks/useSoulRewards';
 import { useTodos } from '@/hooks/useTodos';
 import { useAuth } from '@/hooks/useAuth';
 import { usePremium } from '@/hooks/usePremium';
@@ -38,6 +39,7 @@ const TodoList: React.FC<TodoListProps> = ({ onNavigate }) => {
     getTodayStats,
     loadTodos,
   } = useTodos();
+  const { reward } = useSoulRewards();
 
   useEffect(() => {
     if (user && isPremium) {
@@ -76,7 +78,10 @@ const TodoList: React.FC<TodoListProps> = ({ onNavigate }) => {
     }
 
     // Toggle the todo
+    const wasCompleted = todos.find(t => t.id === todoId)?.is_completed;
     await toggleTodo(todoId);
+    // Cocher une tâche nourrit l'âme (on ne récompense pas le décochage)
+    if (!wasCompleted) await reward('daily_review', { silent: true });
   };
 
   // Fonction pour reporter les tâches importantes de la veille

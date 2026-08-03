@@ -12,6 +12,7 @@ import { customCriteriaSchema } from '@/utils/validation';
 import { useTranslation } from 'react-i18next';
 import { getBenevolentSummary, getSoulGrowthMessage } from '@/utils/benevolentScore';
 import { BenevolentSummary } from '@/components/BenevolentSummary';
+import { useSoulRewards } from '@/hooks/useSoulRewards';
 
 interface DailyJournalProps {
   onComplete: (scores: Record<string, number>, totalScore: number) => void;
@@ -100,6 +101,7 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
   const { user } = useAuth();
   const { isPremium } = usePremium();
   const { saveJournalEntry } = useProgress();
+  const { reward } = useSoulRewards();
   const { t } = useTranslation();
   const [scores, setScores] = useState<Record<string, number>>(
     defaultCriteria.reduce((acc, criterion) => ({
@@ -181,6 +183,8 @@ export const DailyJournal: React.FC<DailyJournalProps> = ({ onComplete }) => {
 
       if (result?.success) {
         toast.success(soulMessage);
+        // L'action réelle nourrit l'âme (XP + éclats)
+        await reward('daily_review');
       } else {
         toast.error('Erreur lors de la sauvegarde');
       }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, RotateCcw, Brain, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useSoulRewards } from '@/hooks/useSoulRewards';
 import { useGongSounds } from '@/hooks/useGongSounds';
 import { useToast } from '@/hooks/use-toast';
 import { PremiumTeaser, PremiumBadge } from '@/components/PremiumTeaser';
@@ -35,6 +36,7 @@ const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) 
   const intervalRef = useRef<ReturnType<typeof setTimeout>>();
   const { toast } = useToast();
   const { playStart, playEnd } = useGongSounds();
+  const { reward } = useSoulRewards();
 
   useEffect(() => {
     if (timerState === 'running') {
@@ -44,6 +46,8 @@ const MeditationTimerContent: React.FC<MeditationTimerProps> = ({ onNavigate }) 
             setTimerState('completed');
             // Jouer le triple gong de fin
             playEnd();
+            // La session terminée nourrit l'âme
+            reward('focus_session');
             return 0;
           }
           return prev - 1;

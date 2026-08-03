@@ -8,6 +8,7 @@ import { BadgesList } from '@/components/BadgesList';
 import { LoginStreakDisplay } from '@/components/LoginStreakDisplay';
 import { AllBadgesDisplay } from '@/components/AllBadgesDisplay';
 import { ProcrastinationTasks } from '@/components/ProcrastinationTasks';
+import { useSoulRewards } from '@/hooks/useSoulRewards';
 import { useAddictions } from '@/hooks/useAddictions';
 import { useGongSounds } from '@/hooks/useGongSounds';
 import { useTranslation } from 'react-i18next';
@@ -37,6 +38,30 @@ const AbstinenceTrackerContent: React.FC<AbstinenceTrackerProps> = ({ onNavigate
     markRelapse,
     deactivateAddiction
   } = useAddictions();
+  const { reward } = useSoulRewards();
+
+  // Chaque nouveau jour tenu nourrit l'âme — une fois par jour, jamais rétroactivement.
+  // On ne récompense pas la performance : juste le fait d'être encore là aujourd'hui.
+  React.useEffect(() => {
+    if (!userAddictions?.length) return;
+    const today = new Date().toISOString().split('T')[0];
+    const key = `abstinence_rewarded_${today}`;
+    try {
+      if (localStorage.getItem(key)) return;
+      const stillHolding = userAddictions.some(a => {
+        const days = Math.floor(
+          (Date.now() - new Date(a.start_date).getTime()) / (1000 * 60 * 60 * 24)
+        );
+        return days >= 1;
+      });
+      if (stillHolding) {
+        localStorage.setItem(key, '1');
+        reward('abstinence_day');
+      }
+    } catch {
+      /* stockage indisponible : on n'interrompt pas l'utilisateur */
+    }
+  }, [userAddictions, reward]);
   const { playPremium } = useGongSounds();
   
   const [showCommitment, setShowCommitment] = useState(false);

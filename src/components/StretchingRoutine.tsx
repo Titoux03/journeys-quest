@@ -2,6 +2,7 @@ import React from 'react';
 import { Check, Clock, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PremiumLock } from '@/components/PremiumLock';
+import { useSoulRewards } from '@/hooks/useSoulRewards';
 import { useStretching } from '@/hooks/useStretching';
 import { useTranslation } from 'react-i18next';
 
@@ -28,6 +29,17 @@ const StretchingRoutineContent: React.FC<StretchingRoutineProps> = ({ onNavigate
     totalCount, 
     isCompleted 
   } = useStretching();
+  const { reward } = useSoulRewards();
+
+  // La routine terminée nourrit l'âme — une seule fois par session
+  const rewardedRef = React.useRef(false);
+  React.useEffect(() => {
+    if (isCompleted && !rewardedRef.current) {
+      rewardedRef.current = true;
+      reward('stretching');
+    }
+    if (!isCompleted) rewardedRef.current = false;
+  }, [isCompleted, reward]);
 
   if (isLoading) {
     return (
