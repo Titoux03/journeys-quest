@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { DailyQuote } from '@/components/DailyQuote';
 import { SoulHero } from '@/components/SoulHero';
+import { useSoulRewards } from '@/hooks/useSoulRewards';
 import { GlobalAvatar } from '@/components/avatar/GlobalAvatar';
 import { useNavigate } from 'react-router-dom';
 import { getNextUnlock, getEvolutionStage, RARITY_COLORS } from '@/components/avatar/AvatarEngine';
@@ -42,6 +43,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
   const { user } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { shards } = useSoulRewards();
   const { levelData: homeLevelData } = useLevel(user?.id);
   const { 
     addictionTypes, 
@@ -105,6 +107,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, entries }) => {
         title={homeLevelData?.title || undefined}
         isGuest={!user}
         recentAverage={recentAverage}
+        shards={shards}
         onOpenAvatar={() => onNavigate('avatar')}
         onSignup={() => navigate('/auth')}
       />

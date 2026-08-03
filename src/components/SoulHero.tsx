@@ -24,6 +24,8 @@ interface SoulHeroProps {
   isGuest: boolean;
   /** moyenne des derniers jours — l'âme reflète, avec douceur, jamais en reproche */
   recentAverage?: number | null;
+  /** éclats d'âme gagnés par les actions réelles */
+  shards?: number | null;
   onOpenAvatar: () => void;
   onSignup: () => void;
 }
@@ -81,6 +83,7 @@ export const SoulHero: React.FC<SoulHeroProps> = ({
   title,
   isGuest,
   recentAverage = null,
+  shards = null,
   onOpenAvatar,
   onSignup,
 }) => {
@@ -177,6 +180,14 @@ export const SoulHero: React.FC<SoulHeroProps> = ({
           <p className="mb-4 max-w-xs text-xs italic leading-relaxed text-muted-foreground/80">
             {reflection.message}
           </p>
+        )}
+
+        {/* Éclats d'âme — la monnaie gagnée par les actions réelles */}
+        {!isGuest && shards != null && (
+          <div className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+            <Sparkles className="h-3 w-3" />
+            {shards} éclats
+          </div>
         )}
 
         {/* Barre de progression XP */}
