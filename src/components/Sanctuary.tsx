@@ -19,7 +19,9 @@ import {
   SLOT_META,
 } from '@/components/avatar/AvatarEngine';
 import { EXTENDED_ITEMS, EXTENDED_SLOTS } from '@/components/avatar/ItemCatalog';
-import { CHESTS, ChestKind, formatOdds, Rarity } from '@/utils/soulEconomy';
+import { CHESTS, ChestKind, formatOdds, Rarity, rollRarity } from '@/utils/soulEconomy';
+import { SoulChestOpening } from '@/components/avatar/SoulChestOpening';
+import { AnimatePresence } from 'framer-motion';
 
 interface SanctuaryProps {
   level: number;
@@ -59,6 +61,7 @@ export const Sanctuary: React.FC<SanctuaryProps> = ({
 }) => {
   const [slotFilter, setSlotFilter] = useState<string>('all');
   const [showOdds, setShowOdds] = useState<ChestKind | null>(null);
+  const [previewChest, setPreviewChest] = useState<{ kind: ChestKind; item: PixelItemOverlay } | null>(null);
 
   const allItems: (PixelItemOverlay & { premium?: boolean })[] = useMemo(
     () => [
@@ -160,9 +163,27 @@ export const Sanctuary: React.FC<SanctuaryProps> = ({
                   <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">
                     {chest.howTo}
                   </p>
-                  <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-medium text-primary">
-                    <Info className="h-3 w-3" />
-                    {showOdds === kind ? 'Masquer' : 'Voir les chances'}
+                  <span className="mt-2 flex items-center gap-3">
+                    <span className="inline-flex items-center gap-1 text-[10px] font-medium text-primary">
+                      <Info className="h-3 w-3" />
+                      {showOdds === kind ? 'Masquer' : 'Voir les chances'}
+                    </span>
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const rarity = rollRarity(kind);
+                        const pool = allItems.filter((i) => i.rarity === rarity);
+                        const pick = (pool.length ? pool : allItems)[
+                          Math.floor(Math.random() * (pool.length || allItems.length))
+                        ];
+                        setPreviewChest({ kind, item: pick });
+                      }}
+                      className="inline-flex items-center gap-1 text-[10px] font-medium text-muted-foreground hover:text-foreground"
+                    >
+                      Aperçu
+                    </span>
                   </span>
 
                   {showOdds === kind && (
@@ -273,6 +294,17 @@ export const Sanctuary: React.FC<SanctuaryProps> = ({
               );
             })}
         </div>
+
+        <AnimatePresence>
+          {previewChest && (
+            <SoulChestOpening
+              kind={previewChest.kind}
+              item={previewChest.item}
+              preview
+              onClose={() => setPreviewChest(null)}
+            />
+          )}
+        </AnimatePresence>
 
         {/* Invitation premium — jamais culpabilisante */}
         {!isPremium && (
