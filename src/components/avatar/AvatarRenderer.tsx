@@ -13,6 +13,8 @@ import {
   getAvatarColors,
   getBaseSprite,
   getHairStyleSprite,
+  getFacialHairRows,
+  getExpressionRows,
   GRID_COLS,
   GRID_ROWS,
   PixelItemOverlay,
@@ -145,9 +147,19 @@ export const AvatarRenderer: React.FC<AvatarRendererProps> = ({
   const baseSprite = useMemo(() => {
     const base = getBaseSprite(config.gender);
     const hairRows = getHairStyleSprite(config.gender, config.hairStyleIndex ?? 0);
-    if (!hairRows) return base;
-    return base.map((row, r) => r < hairRows.length ? hairRows[r] : row);
-  }, [config.gender, config.hairStyleIndex]);
+    let sprite = hairRows
+      ? base.map((row, r) => (r < hairRows.length ? hairRows[r] : row))
+      : base;
+
+    // Expression puis pilosité : la barbe se pose par-dessus la bouche.
+    const expression = getExpressionRows(config.expressionIndex);
+    const beard = getFacialHairRows(config.beardIndex);
+    if (expression || beard) {
+      sprite = sprite.map((row, r) => expression?.[r] ?? row);
+      sprite = sprite.map((row, r) => beard?.[r] ?? row);
+    }
+    return sprite;
+  }, [config.gender, config.hairStyleIndex, config.expressionIndex, config.beardIndex]);
 
   // Separate pet overlays from character overlays
   const { characterOverlays, petOverlays } = useMemo(() => {

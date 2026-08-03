@@ -40,6 +40,8 @@ import {
   getEvolutionStage,
   getHairstylesForGender,
   HairStyle,
+  FACIAL_HAIRS,
+  EXPRESSIONS,
 } from './AvatarEngine';
 
 interface AvatarCustomizerProps {
@@ -164,7 +166,7 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
   const [chestReward, setChestReward] = useState<AvatarItem | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [colorCategory, setColorCategory] = useState<'skin' | 'eyes' | 'hair' | 'hairstyle'>('skin');
+  const [colorCategory, setColorCategory] = useState<'skin' | 'eyes' | 'hair' | 'hairstyle' | 'beard' | 'expression'>('skin');
   const [equipmentTab, setEquipmentTab] = useState<'items' | 'quests' | 'chests'>('items');
   const [previewingItem, setPreviewingItem] = useState<string | null>(null);
   const [showSparkle, setShowSparkle] = useState(false);
@@ -362,6 +364,38 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
   );
 
   // Hairstyle selector
+  /** Sélecteur de trait (barbe, expression) — chaque vignette montre le rendu réel. */
+  const TraitSelector: React.FC<{
+    options: { id: string; nameFr: string }[];
+    selectedIndex: number;
+    onSelect: (i: number) => void;
+    config: AvatarConfig;
+    apply: (c: AvatarConfig, i: number) => AvatarConfig;
+  }> = ({ options, selectedIndex, onSelect, config: currentConfig, apply }) => (
+    <div className="grid grid-cols-4 gap-2">
+      {options.map((opt, i) => {
+        const isSelected = selectedIndex === i;
+        return (
+          <motion.button
+            key={opt.id}
+            onClick={() => { onSelect(i); playSound('click'); }}
+            className={`relative p-1.5 rounded-xl border text-center transition-all ${
+              isSelected
+                ? 'border-primary bg-primary/10 ring-2 ring-primary/20'
+                : 'border-border/20 bg-card hover:border-primary/30'
+            }`}
+            whileTap={{ scale: 0.95 }}
+          >
+            <div className="flex justify-center mb-1">
+              <AvatarRenderer config={apply(currentConfig, i)} size="xs" animate={false} />
+            </div>
+            <div className="text-[9px] font-medium truncate text-center">{opt.nameFr}</div>
+          </motion.button>
+        );
+      })}
+    </div>
+  );
+
   const HairstyleSelector: React.FC<{
     gender: AvatarGender;
     selectedIndex: number;
@@ -607,6 +641,8 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                   { id: 'eyes' as const, label: 'Yeux' },
                   { id: 'hair' as const, label: 'Cheveux' },
                   { id: 'hairstyle' as const, label: 'Coiffure' },
+                  { id: 'beard' as const, label: 'Barbe' },
+                  { id: 'expression' as const, label: 'Expression' },
                 ]).map(cat => (
                   <button
                     key={cat.id}
@@ -625,6 +661,8 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                   {colorCategory === 'skin' ? 'Couleur de peau' :
                    colorCategory === 'eyes' ? 'Couleur des yeux' :
                    colorCategory === 'hair' ? 'Couleur des cheveux' :
+                   colorCategory === 'beard' ? 'Pilosité' :
+                   colorCategory === 'expression' ? 'Expression' :
                    'Coiffure'}
                 </h3>
                 {colorCategory === 'skin' && (
@@ -638,6 +676,24 @@ export const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onNavigate }
                 )}
                 {colorCategory === 'hairstyle' && (
                   <HairstyleSelector gender={config.gender} selectedIndex={config.hairStyleIndex} level={level} onSelect={i => updateConfig({ hairStyleIndex: i })} config={config} />
+                )}
+                {colorCategory === 'beard' && (
+                  <TraitSelector
+                    options={FACIAL_HAIRS}
+                    selectedIndex={config.beardIndex ?? 0}
+                    onSelect={i => updateConfig({ beardIndex: i })}
+                    config={config}
+                    apply={(c, i) => ({ ...c, beardIndex: i })}
+                  />
+                )}
+                {colorCategory === 'expression' && (
+                  <TraitSelector
+                    options={EXPRESSIONS}
+                    selectedIndex={config.expressionIndex ?? 0}
+                    onSelect={i => updateConfig({ expressionIndex: i })}
+                    config={config}
+                    apply={(c, i) => ({ ...c, expressionIndex: i })}
+                  />
                 )}
               </div>
             </motion.div>

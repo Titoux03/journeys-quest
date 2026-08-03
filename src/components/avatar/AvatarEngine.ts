@@ -39,6 +39,10 @@ export interface AvatarConfig {
   shoesIndex: number;
   hairIndex: number;
   hairStyleIndex: number;
+  /** pilosité faciale (0 = aucune) — suit la couleur des cheveux */
+  beardIndex?: number;
+  /** expression du visage (0 = neutre) */
+  expressionIndex?: number;
 }
 
 // ── Color Palettes ─────────────────────────────────────────
@@ -1534,4 +1538,123 @@ export function getHairStyleSprite(gender: AvatarGender, hairStyleIndex: number)
   const style = styles[hairStyleIndex];
   if (!style) return null;
   return style.rows;
+}
+
+// ══════════════════════════════════════════════════════════
+// ── PILOSITÉ FACIALE ──
+// Marqueur d'identité n°1 pour l'avatar masculin.
+// Les indices 6/7 = cheveux/ombre des cheveux → la barbe suit
+// automatiquement la couleur de cheveux choisie.
+// Repères : row6 = joues, row7 = bouche, row8 = menton, row9 = cou.
+// ══════════════════════════════════════════════════════════
+
+export interface FacialHair {
+  id: string;
+  nameFr: string;
+  /** lignes partielles fusionnées sur le sprite de base (index de ligne -> valeurs) */
+  rows: Record<number, number[]>;
+}
+
+export const FACIAL_HAIRS: FacialHair[] = [
+  { id: 'none', nameFr: 'Glabre', rows: {} },
+  {
+    id: 'stubble', nameFr: 'Barbe de 3 jours',
+    rows: {
+      7: [0, 0, 0, 7, 1, 10, 10, 1, 7, 0, 0, 0],
+      8: [0, 0, 0, 0, 7, 7, 7, 7, 0, 0, 0, 0],
+    },
+  },
+  {
+    id: 'moustache', nameFr: 'Moustache',
+    rows: {
+      7: [0, 0, 0, 1, 6, 6, 6, 6, 1, 0, 0, 0],
+    },
+  },
+  {
+    id: 'goatee', nameFr: 'Bouc',
+    rows: {
+      7: [0, 0, 0, 1, 6, 6, 6, 6, 1, 0, 0, 0],
+      8: [0, 0, 0, 0, 6, 6, 6, 6, 0, 0, 0, 0],
+      9: [0, 0, 0, 0, 0, 7, 7, 0, 0, 0, 0, 0],
+    },
+  },
+  {
+    id: 'full', nameFr: 'Barbe pleine',
+    rows: {
+      6: [0, 0, 6, 1, 1, 11, 11, 1, 1, 6, 0, 0],
+      7: [0, 0, 6, 6, 6, 10, 10, 6, 6, 6, 0, 0],
+      8: [0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0],
+      9: [0, 0, 0, 0, 7, 7, 7, 7, 0, 0, 0, 0],
+    },
+  },
+  {
+    id: 'long', nameFr: 'Barbe longue',
+    rows: {
+      6: [0, 0, 6, 1, 1, 11, 11, 1, 1, 6, 0, 0],
+      7: [0, 0, 6, 6, 6, 10, 10, 6, 6, 6, 0, 0],
+      8: [0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0],
+      9: [0, 0, 0, 6, 6, 7, 7, 6, 6, 0, 0, 0],
+    },
+  },
+  {
+    id: 'sideburns', nameFr: 'Favoris',
+    rows: {
+      6: [0, 0, 6, 1, 1, 11, 11, 1, 1, 6, 0, 0],
+      7: [0, 0, 6, 1, 1, 10, 10, 1, 1, 6, 0, 0],
+    },
+  },
+];
+
+export function getFacialHairRows(index: number | undefined): Record<number, number[]> | null {
+  if (!index) return null;
+  return FACIAL_HAIRS[index]?.rows ?? null;
+}
+
+// ══════════════════════════════════════════════════════════
+// ── EXPRESSIONS ──
+// L'âme doit pouvoir porter une humeur. Modifie la bouche (row7)
+// et parfois les yeux (row5). Index 10 = teinte des lèvres.
+// ══════════════════════════════════════════════════════════
+
+export interface Expression {
+  id: string;
+  nameFr: string;
+  rows: Record<number, number[]>;
+}
+
+export const EXPRESSIONS: Expression[] = [
+  { id: 'neutral', nameFr: 'Neutre', rows: {} },
+  {
+    id: 'smile', nameFr: 'Sourire',
+    rows: {
+      7: [0, 0, 0, 1, 10, 1, 1, 10, 1, 0, 0, 0],
+      8: [0, 0, 0, 0, 2, 10, 10, 2, 0, 0, 0, 0],
+    },
+  },
+  {
+    id: 'determined', nameFr: 'Déterminé',
+    rows: {
+      4: [0, 0, 7, 7, 1, 1, 1, 1, 7, 7, 0, 0],
+      7: [0, 0, 0, 1, 1, 10, 10, 1, 1, 0, 0, 0],
+    },
+  },
+  {
+    id: 'serene', nameFr: 'Serein',
+    rows: {
+      5: [0, 0, 1, 5, 5, 1, 1, 5, 5, 1, 0, 0],
+      7: [0, 0, 0, 1, 10, 10, 10, 10, 1, 0, 0, 0],
+    },
+  },
+  {
+    id: 'weary', nameFr: 'Fatigué',
+    rows: {
+      5: [0, 0, 1, 7, 9, 1, 1, 7, 9, 1, 0, 0],
+      7: [0, 0, 0, 1, 1, 10, 10, 1, 1, 0, 0, 0],
+    },
+  },
+];
+
+export function getExpressionRows(index: number | undefined): Record<number, number[]> | null {
+  if (!index) return null;
+  return EXPRESSIONS[index]?.rows ?? null;
 }
